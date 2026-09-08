@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2026-09-08
+
+### Added
+
+- **`scripts/verify-dogfood.sh`** + `pnpm run verify:dogfood` — structural harness dogfood (bundle · 16 skills · guard loop · install seed)
+- `templates/dogfood/plan-fixture.md` — guard fixture SSOT for automated dogfood
+- `docs/dogfood.md` — environment variables · verify commands · manual `dsh web` notes
+
+### Changed
+
+- `docs/quickstart.md` · `docs/quickstart.zh.md` — link structural dogfood before interactive walkthrough
+- README Roadmap — **v1.2** harness dogfood ✅
+
 ## [1.1.0] - 2026-09-08
 
 ### Added

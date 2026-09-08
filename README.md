@@ -185,6 +185,7 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 ```sh
 pnpm run build
 pnpm run verify
+pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
@@ -200,9 +201,10 @@ pnpm run typecheck
 | **v0.1** | MVP：`master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
-| **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ current |
-| **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ current |
-| **Next** | Harness dogfood + defer skills | planned |
+| **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ |
+| **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ |
+| **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ current |
+| **Next** | defer skills（`mcp` · `study` · `user-manual` · `test-report`） | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -213,6 +215,7 @@ pnpm run typecheck
 | Doc | Content |
 |---|---|
 | [quickstart.md](docs/quickstart.md) / [quickstart.zh.md](docs/quickstart.zh.md) | 安装与 dogfood |
+| [dogfood.md](docs/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
 | [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |

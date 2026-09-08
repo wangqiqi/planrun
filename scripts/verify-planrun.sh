@@ -126,6 +126,17 @@ if [[ -f "$ROOT/scripts/dsh-guard.sh" ]]; then
   fi
 fi
 
+echo "==> Checking verify:dogfood script"
+if [[ ! -f "$ROOT/scripts/verify-dogfood.sh" ]]; then
+  echo "MISSING: scripts/verify-dogfood.sh"
+  FAIL=1
+elif ! grep -q '"verify:dogfood"' "$ROOT/package.json"; then
+  echo "MISSING: package.json script verify:dogfood"
+  FAIL=1
+else
+  echo "OK: verify:dogfood"
+fi
+
 if [[ "$FAIL" -ne 0 ]]; then
   exit 1
 fi

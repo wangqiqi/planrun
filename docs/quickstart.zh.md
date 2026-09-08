@@ -85,11 +85,24 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 
 ## 6. Dogfood（deepseek-harness）
 
+**结构闭环（推荐先做）** — 不依赖 `dsh web`：
+
+```sh
+export PLANRUN_HOME=/path/to/planrun
+export DEEPSEEK_HARNESS_HOME=/path/to/deepseek-harness
+pnpm run build
+pnpm run verify:dogfood
+```
+
+详见 [dogfood.md](dogfood.md)。
+
+**交互走查**（需 `dsh` CLI）：
+
 ```sh
 export PLANRUN_HOME=/path/to/planrun
 cd /path/to/deepseek-harness
 "$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
-# bundle 见 §2；启动 dsh web + standard preset 后加载 master / sprint-plan / run / review
+# bundle 见 §2；启动 dsh web + planrun preset 后加载 master / sprint-plan / run / review
 ```
 
 bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 `cordis.patch.yml` 那样热加载。

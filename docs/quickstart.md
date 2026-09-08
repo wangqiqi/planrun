@@ -48,7 +48,18 @@ With the **standard** preset:
 | PR / code review | `review` |
 | Single-task design | DSH **`/plan`** (plan mode) |
 
-## 5. Super Cursor mapping
+## 5. Structural dogfood
+
+```sh
+export PLANRUN_HOME=/path/to/planrun
+export DEEPSEEK_HARNESS_HOME=/path/to/deepseek-harness
+pnpm run build
+pnpm run verify:dogfood
+```
+
+See [dogfood.md](dogfood.md). `pnpm run verify` does not require `DEEPSEEK_HARNESS_HOME`.
+
+## 6. Super Cursor mapping
 
 See [mapping-from-super-cursor.md](mapping-from-super-cursor.md) and [naming.md](naming.md).
 
