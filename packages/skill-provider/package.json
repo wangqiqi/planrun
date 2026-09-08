@@ -1,7 +1,7 @@
 {
-  "name": "@dsh-super/skill-provider",
-  "description": "Bundled Super Cursor–adapted skills for DeepSeek Harness",
-  "version": "0.1.0",
+  "name": "@planrun/skill-provider",
+  "description": "PlanRun bundled skills for DeepSeek Harness",
+  "version": "1.0.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",

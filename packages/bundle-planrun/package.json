@@ -1,7 +1,7 @@
 {
-  "name": "@dsh-super/bundle-super",
-  "description": "DSH profile bundle: mounts @dsh-super/skill-provider on base-backed profiles",
-  "version": "0.1.0",
+  "name": "@planrun/bundle-planrun",
+  "description": "PlanRun profile bundle: mounts @planrun/skill-provider on base-backed profiles",
+  "version": "1.0.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -25,7 +25,7 @@
     }
   },
   "dependencies": {
-    "@dsh-super/skill-provider": "file:../skill-provider"
+    "@planrun/skill-provider": "file:../skill-provider"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",

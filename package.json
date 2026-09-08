@@ -1,8 +1,8 @@
 {
-  "name": "dsh-super",
+  "name": "planrun",
   "private": true,
-  "version": "0.1.0",
-  "description": "DSH-native workflow SOP collection adapted from Super Cursor",
+  "version": "1.0.0",
+  "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "type": "module",
   "scripts": {
     "build": "pnpm -r run build",

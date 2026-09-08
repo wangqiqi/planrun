@@ -1,7 +1,7 @@
 /**
- * Bundled dsh-super skill provider.
+ * Bundled PlanRun skill provider.
  *
- * @module @dsh-super/skill-provider
+ * @module @planrun/skill-provider
  */
 
 import type { Context, SkillCandidate, SkillDefinition, SkillProvider } from './dsh-skill-shim.js'
@@ -29,7 +29,7 @@ const provider: SkillProvider = {
 }
 
 /** Cordis plugin name. */
-export const name = 'dsh-super-skill-provider'
+export const name = 'planrun-skill-provider'
 
 /** Registers on the skill registry. */
 export const inject = ['skills']

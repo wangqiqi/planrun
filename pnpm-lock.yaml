@@ -8,9 +8,9 @@ importers:
 
   .: {}
 
-  packages/bundle-super:
+  packages/bundle-planrun:
     dependencies:
-      '@dsh-super/skill-provider':
+      '@planrun/skill-provider':
         specifier: file:../skill-provider
         version: link:../skill-provider
     devDependencies:

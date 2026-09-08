@@ -1,7 +1,7 @@
 /**
  * Parse bundled skill directories and build immutable provider candidates.
  *
- * @module @dsh-super/skill-provider/load-bundled-skills
+ * @module @planrun/skill-provider/load-bundled-skills
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs'
@@ -16,7 +16,7 @@ import {
   type SkillInvocationPolicy,
 } from './dsh-skill-shim.js'
 
-const PROVIDER_NAME = 'dsh-super'
+const PROVIDER_NAME = 'planrun'
 const SKILLS_ROOT = fileURLToPath(new URL('../skills/', import.meta.url))
 
 interface BundledSkillRecord {
