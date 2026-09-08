@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# dsh-guard.sh — workflow guard MVP for planrun (gate-check · plan-check · task-verify · next-task)
+# dsh-guard.sh — workflow guard MVP for PlanRun (gate-check · plan-check · task-verify · next-task)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

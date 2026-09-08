@@ -28,7 +28,7 @@ Priority:
 
 1. `DSH_GROWTH_PLAN` — explicit path
 2. `.dsh/growth/plan.md` — target projects (after `install-planrun.sh`)
-3. `.cursorGrowth/plan.md` — mother-repo development of planrun itself
+3. `.cursorGrowth/plan.md` — mother-repo development of PlanRun itself
 
 ## HTML metadata (SSOT)
 
@@ -69,7 +69,7 @@ Super Cursor–compatible columns:
 
 ## vs Super Cursor
 
-| Super Cursor | planrun guard |
+| Super Cursor | PlanRun guard |
 |--------------|-----------------|
 | `.cursor/bin/runner.sh` | `scripts/dsh-guard.sh` |
 | `.cursor/config/workflow.json` | env + plan HTML meta |

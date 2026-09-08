@@ -64,7 +64,7 @@ Between Sprints: optional pause; cross-day use **`/long resume`**.
 3. open Sprint → continue **`run`** (ACTIVE)
 4. closed Sprint → **`sprint-plan`** for next Sprint (steps 2a–f)
 
-Project verify must pass before marking Sprint ✅ (v0.3: `@planrun/workflow` guard).
+Project verify must pass before marking Sprint ✅ (v1.1: `@planrun/workflow` guard).
 
 ## Division of labor
 

@@ -168,7 +168,7 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 
 ## Naming vs Super Cursor
 
-| Super Cursor | planrun | Notes |
+| Super Cursor | PlanRun | Notes |
 |---|---|---|
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
@@ -200,7 +200,7 @@ pnpm run typecheck
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
 | **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ current |
-| **v0.3** | `@planrun/workflow` — optional hooks injection | planned |
+| **v1.1** | `@planrun/workflow` — optional hooks injection | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 

@@ -1,4 +1,4 @@
-# Discipline (planrun)
+# Discipline (PlanRun)
 
 Compressed standing rules adapted from Super Cursor `core.mdc` + `workflow.mdc` + `constitution.mdc`. Skills carry procedures; this file carries **must / must-not**.
 

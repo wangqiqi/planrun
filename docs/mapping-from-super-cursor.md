@@ -6,7 +6,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 ## Skills (27 → v0.2: 16 bundled)
 
-| Super Cursor | planrun | Status |
+| Super Cursor | PlanRun | Status |
 |---|---|---|
 | master | master | **keep** (adapted routes) |
 | plan | sprint-plan | **rename** · **keep** |
@@ -31,7 +31,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 ## Rules (48 → ~12 bullets)
 
-| Super Cursor | planrun | Status |
+| Super Cursor | PlanRun | Status |
 |---|---|---|
 | core.mdc, workflow.mdc, constitution.mdc | docs/discipline.md | **merge** |
 | feedback/verify, changelog, release | run + release skills + dsh-pre-push-checks | **merge** |
@@ -42,9 +42,9 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 ## Runtime
 
-| Super Cursor | planrun | Status |
+| Super Cursor | PlanRun | Status |
 |---|---|---|
-| hooks.json | @planrun/workflow plugin | defer v0.3 (optional hooks) |
+| hooks.json | @planrun/workflow plugin | defer v1.1 (optional hooks) |
 | runner.sh | `scripts/dsh-guard.sh` + `pnpm run gate-check` | **keep** (guard MVP) |
 | plan.md HTML meta SSOT | `.dsh/growth/plan.md` + guard | **keep** (session todos still parallel) |
 | commands/*.md | skill description + user slash | **merge** |
@@ -52,7 +52,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 ## Install
 
-| Super Cursor | planrun |
+| Super Cursor | PlanRun |
 |---|---|
 | copy `.cursor/` | `dsh plugin add @planrun/bundle-planrun` |
 | `.cursorGrowth/` seeds | `install-planrun.sh` → `.dsh/growth/` |
@@ -66,4 +66,4 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | Plan mode | `@deepseek-ai/dsh-plan-mode` |
 | Skill registry | `@deepseek-ai/dsh-skill` + filesystem provider |
 
-planrun skills should **link** to harness gates, not duplicate command lists.
+PlanRun skills should **link** to harness gates, not duplicate command lists.

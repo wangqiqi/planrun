@@ -57,7 +57,7 @@ pnpm run task-verify    # 任务收尾前
 pnpm run next-task      # 找下一项
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发 planrun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
+plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
 
 ## 5. 在会话中使用
 

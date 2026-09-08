@@ -31,7 +31,7 @@
 
 ## DSH-specific notes
 
-| Super Cursor | planrun |
+| Super Cursor | PlanRun |
 |---|---|
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
 | `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |

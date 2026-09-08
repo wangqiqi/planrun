@@ -65,5 +65,5 @@ stateDiagram-v2
 ## References
 
 - pacing → [pacing-checkpoint.md](pacing-checkpoint.md)
-- single-Sprint autonomy → session continuation until decision (v0.3: `@planrun/workflow`)
+- single-Sprint autonomy → session continuation until decision (v1.1: `@planrun/workflow`)
 - scale gate → **`sprint-plan`** · [docs/discipline.md](../../../docs/discipline.md)

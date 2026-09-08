@@ -20,7 +20,7 @@ pnpm run verify          # planrun repo
 git status && git diff --stat
 ```
 
-v0.3: `@planrun/workflow` may add guard hooks; until then use project verify + explicit user confirm for tag/push.
+v1.1: `@planrun/workflow` may add guard hooks; until then use project verify + explicit user confirm for tag/push.
 
 ## Branch closeout (merge / PR)
 

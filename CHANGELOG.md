@@ -29,6 +29,7 @@
 - `verify-planrun.sh` — guard script and npm script checks
 - `master/routes.md` — full v0.2 route table
 - `docs/mapping-from-super-cursor.md` · `docs/naming.md` · `README.md` · `quickstart.zh.md` — 16 skill inventory
+- PlanRun naming polish (`sprint-09-followup`): comparison tables use **PlanRun**; `quickstart.md` cordis id `planrun-skills`; README roadmap **v1.1** for `@planrun/workflow`; bundled skill copy aligned
 
 ### Fixed
 

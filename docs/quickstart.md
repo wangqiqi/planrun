@@ -24,7 +24,7 @@ Or append to `$DSH_HOME/profiles/web/cordis.patch.yml`:
 
 ```yaml
 - insert:
-    - id: super-skills
+    - id: planrun-skills
       name: '@planrun/skill-provider'
 ```
 

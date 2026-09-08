@@ -1,6 +1,6 @@
 # Naming conventions
 
-| Super Cursor | planrun | Notes |
+| Super Cursor | PlanRun | Notes |
 |---|---|---|
 | `plan` skill | **`sprint-plan`** | Avoid clash with DSH `/plan` plan mode |
 | `/plan` slash | DSH **`/plan`** | Plan mode — explore then `exit_plan_mode` |
@@ -18,4 +18,4 @@
 
 ## Skill IDs (kebab-case)
 
-Bundled (v0.2): `master`, `sprint-plan`, `run`, `review`, `learn`, `git`, `scaffold`, `long`, `release`, `delivery`, `debug`, `test`
+Bundled (v1.0, 16 skills): `master`, `sprint-plan`, `run`, `review`, `learn`, `git`, `scaffold`, `long`, `release`, `delivery`, `debug`, `test`, `security`, `api`, `refactor`, `perf`
