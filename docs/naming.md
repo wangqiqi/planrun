@@ -16,6 +16,10 @@
 - `@planrun/skill-provider` — bundled skills Cordis plugin
 - `@planrun/bundle-planrun` — profile bundle patch
 
-## Skill IDs (kebab-case)
+## Bundled skills (v1.4, 27 skills)
 
-Bundled (v1.0, 16 skills): `master`, `sprint-plan`, `run`, `review`, `learn`, `git`, `scaffold`, `long`, `release`, `delivery`, `debug`, `test`, `security`, `api`, `refactor`, `perf`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design`
+
+## Personas (12)
+
+`config/roles.json` in `@planrun/skill-provider` · default `dashu` · session state `.dsh/growth/session/persona.json`

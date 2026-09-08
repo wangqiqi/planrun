@@ -10,6 +10,7 @@ import { ensureGrowth, resolvePlanrunHome } from './growth.js'
 import { buildRunStartContext } from './run-start.js'
 import { buildRunStopSteer } from './run-stop.js'
 import { loadPlanSnapshot, resolvePlanPath } from './plan-parser.js'
+import { buildPersonaStartContext } from './persona.js'
 
 const PLUGIN_SOURCE = { kind: 'plugin' as const, plugin: 'planrun-workflow' }
 
@@ -59,8 +60,11 @@ export function apply(ctx: Context, config: Config = {}): void {
     const cwd = projectCwd(agent)
     ensureGrowth(cwd, planrunHome)
     const planPath = resolvePlanPath(cwd, config.planPath)
-    const context = buildRunStartContext(loadPlanSnapshot(planPath))
-    if (context) injectContext(agent, context)
+    const blocks = [
+      buildPersonaStartContext(cwd, planrunHome),
+      buildRunStartContext(loadPlanSnapshot(planPath)),
+    ].filter(Boolean) as string[]
+    if (blocks.length) injectContext(agent, blocks.join('\n\n'))
   })
 
   ctx.on('agent/pre-step', async ({ agent }, next) => {

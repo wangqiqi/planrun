@@ -14,6 +14,8 @@ user-invocable: true
 
 Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
 
+**Persona**: planning tone follows active session persona; technical gates unchanged.
+
 ## Scale gate · plan ≥ 5 items
 
 | Condition | Action |

@@ -6,6 +6,7 @@ import assert from 'node:assert/strict'
 import { ensureGrowth, resolvePlanrunHome } from '../lib/growth.js'
 import { loadPlanSnapshot, nextTaskId } from '../lib/plan-parser.js'
 import { buildRunStopSteer } from '../lib/run-stop.js'
+import { buildPersonaStartContext, resolvePersonaByQuery } from '../lib/persona.js'
 
 test('resolvePlanrunHome finds repo templates', () => {
   const repoRoot = join(import.meta.dirname, '../../..')
@@ -66,6 +67,24 @@ test('buildRunStopSteer chains to next task', () => {
   const steer = buildRunStopSteer({ planPath, loopCount: 1 })
   assert.match(steer ?? '', /TASK-002/)
   rmSync(dir, { recursive: true, force: true })
+})
+
+test('buildPersonaStartContext uses dashu by default', () => {
+  const root = mkdtempSync(join(tmpdir(), 'planrun-persona-'))
+  const planrunHome = resolvePlanrunHome(join(import.meta.dirname, '../../..'))
+  assert.ok(planrunHome)
+  const hint = buildPersonaStartContext(root, planrunHome)
+  assert.ok(hint)
+  assert.match(hint, /dashu/)
+  rmSync(root, { recursive: true, force: true })
+})
+
+test('resolvePersonaByQuery finds nickname', () => {
+  const planrunHome = resolvePlanrunHome(join(import.meta.dirname, '../../..'))
+  assert.ok(planrunHome)
+  const result = resolvePersonaByQuery('老周', process.cwd(), planrunHome)
+  assert.equal(result.status, 'ok')
+  if (result.status === 'ok') assert.equal(result.persona.id, 'dashu')
 })
 
 test('nextTaskId respects execution order', () => {

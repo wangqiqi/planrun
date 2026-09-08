@@ -5,7 +5,7 @@ Super Cursor `hooks.json` → DSH Cordis extension points via **`@planrun/workfl
 | Super Cursor | DSH event (`@planrun/workflow`) | Handler | Behavior |
 |---|---|---|---|
 | `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | Idempotent `.dsh/growth/` seed from `templates/growth` |
-| `sessionStart` → `run-start.sh` | `agent/session-start` | `buildRunStartContext()` | Inject plan gate / ACTIVE / AUTONOMOUS hint |
+| `sessionStart` → `run-start.sh` | `agent/session-start` | `buildRunStartContext()` + `buildPersonaStartContext()` | Inject plan gate / ACTIVE / AUTONOMOUS + **Persona hint** |
 | `stop` → `run-stop.sh` | `agent/turn-stopping` | `buildRunStopSteer()` | `agent.steer()` next TASK when `AUTONOMOUS:true` |
 
 ## Plan file resolution (same as `dsh-guard.sh`)

@@ -89,6 +89,16 @@ if [[ ! -f "$GROWTH/archive/README.md" ]]; then
   cp "$SOURCE/templates/growth/archive/README.md" "$GROWTH/archive/README.md"
 fi
 
+SESSION="$GROWTH/session"
+mkdir -p "$SESSION"
+if [[ ! -f "$SESSION/persona.json" ]]; then
+  cp "$SOURCE/templates/growth/session/persona.json" "$SESSION/persona.json"
+  echo "已写入 $SESSION/persona.json"
+fi
+if [[ ! -f "$SESSION/aliases.json" ]]; then
+  cp "$SOURCE/templates/growth/session/aliases.json" "$SESSION/aliases.json"
+fi
+
 if [[ "$INSTALL_PRESET" == true ]]; then
   PRESET_DEST="${DSH_HOME:-$HOME/.dsh}/.agent-presets/planrun"
   mkdir -p "$(dirname "$PRESET_DEST")"
@@ -106,7 +116,8 @@ PlanRun 项目模板已安装到: $GROWTH
      dsh plugin --profile web add "file:$SOURCE/packages/bundle-planrun"
   2. 启动 dsh web，使用 standard preset
   3. 加载 skill: master · sprint-plan · run · review
-  4. Sprint 闸门（在 planrun 仓或已复制 scripts 的项目）:
+  4. 呼叫人格: 「呼叫老周」「切换御姐」→ master §人格·呼叫；默认 dashu
+  5. Sprint 闸门（在 planrun 仓或已复制 scripts 的项目）:
      pnpm run gate-check    # PLAN_APPROVED + ACTIVE
      pnpm run plan-check    # handoff 结构
      pnpm run task-verify   # 当前 ACTIVE 验收

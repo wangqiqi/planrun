@@ -45,6 +45,8 @@ export function ensureGrowth(projectRoot: string, planrunHome?: string): EnsureG
   }
   mkdirSync(join(growthDir, 'learn'), { recursive: true })
   mkdirSync(join(growthDir, 'archive'), { recursive: true })
+  const sessionDir = join(growthDir, 'session')
+  mkdirSync(sessionDir, { recursive: true })
   if (templateDir && existsSync(templateDir)) {
     if (!existsSync(join(growthDir, 'plan.md'))) {
       cpSync(join(templateDir, 'plan.md'), join(growthDir, 'plan.md'))
@@ -55,6 +57,17 @@ export function ensureGrowth(projectRoot: string, planrunHome?: string): EnsureG
     }
     if (!existsSync(join(growthDir, 'archive/README.md')) && existsSync(join(templateDir, 'archive/README.md'))) {
       cpSync(join(templateDir, 'archive/README.md'), join(growthDir, 'archive/README.md'))
+    }
+    const sessionTemplate = join(templateDir, 'session')
+    if (existsSync(sessionTemplate)) {
+      for (const name of ['persona.json', 'aliases.json']) {
+        const from = join(sessionTemplate, name)
+        const to = join(sessionDir, name)
+        if (existsSync(from) && !existsSync(to)) {
+          cpSync(from, to)
+          created = true
+        }
+      }
     }
   }
   return { growthDir, created }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0] - 2026-09-08
+
+### Added
+
+- **12 personas** — `@planrun/skill-provider/config/roles.json`（default **`dashu`**）· `.dsh/growth/session/persona.json` · `aliases.json` templates
+- **`resolve-persona`** — `packages/workflow/src/persona.ts` · `scripts/resolve-persona.sh` · session-start Persona hint inject
+- Bundled skills **batch-5**: `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design`
+
+### Changed
+
+- `master/routes.md` — §人格·呼叫 + 7 new routes; **27** bundled skills
+- `docs/discipline.md` — §Persona（voice only · verify 不糊弄）
+- `install-planrun.sh` — seeds `session/`; `ensureGrowth` copies persona templates
+- README · `docs/mapping-from-super-cursor.md` — personas **keep** · **v1.4**
+
 ## [1.3.0] - 2026-09-08
 
 ### Added

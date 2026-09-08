@@ -12,7 +12,7 @@
 | `learn` | Learn this repo | **`learn`** | conventions, module-map — **not** `study` (new tech) |
 | `long` | Multi-Sprint Epic | **`long`** | Epic, 长程, resume, 多 Sprint |
 | `fix` | Bug / verify blocked | **`run`** / **`debug`** / **`sprint-plan`** | hotfix, verify failed, stuck |
-| `more` | Review / ship / quality | see below | PR, release, test, delivery, security, api |
+| `more` | Review / ship / quality / UX / tools | see below | PR, release, test, delivery, security, api, UX, 周报 |
 
 ## `more` sub-routes (round 2)
 
@@ -30,6 +30,13 @@
 | `perf` | Performance investigation | **`perf`** |
 | `mcp` | Build MCP server / tool design | **`mcp`** |
 | `study` | Learn new tech (not this repo) | **`study`** |
+| `ux` | UX unclear — route to ia / delivery / sprint-plan | **`ux`** |
+| `ia` | Navigation, role home, workflow branches | **`ia`** |
+| `pencil` | Pencil CLI mockup / .pen design | **`pencil-design`** |
+| `week` | Multi-repo CHANGELOG weekly summary | **`week`** |
+| `disk` | Disk usage snapshot and diff | **`disk`** |
+| `maintain` | Linux dev environment cleanup | **`maintain`** |
+| `code-stats` | Git line counts / language / commit heatmap | **`code-stats-viz`** |
 | `manual` | User manual / screenshot regen | **`user-manual`** |
 | `report` | Test report / verify summary | **`test-report`** |
 
@@ -42,6 +49,29 @@
 | User choices | **`ask_user_question`** tool |
 | Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../docs/workflow-guard.md) |
 
-## Bundled skills (20)
+## Persona · 呼叫（12 人格）
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report`
+**用这个**：用户说「呼叫老周」「切换御姐」「叫小妮」→ 解析人格、写 session、改语气。**不是那个**：每句自报人设名开场。
+
+| 字段 | 含义 |
+|---|---|
+| `given_name` | 用户点名匹配（如「呼叫老周」） |
+| `voice_cues` | 落地语气：称呼、句长、语气词 |
+| `speech_examples` | 句式锚点（≥3 条） |
+
+**默认人格**: `dashu`（老周）· catalog: `@planrun/skill-provider/config/roles.json`
+
+### 呼叫流程
+
+1. `bash scripts/resolve-persona.sh '<称呼>' [项目根]` — 唯一命中 → JSON persona；exit 2 → `ask_user_question` 消歧
+2. **唯一命中** → 写 `.dsh/growth/session/persona.json`（`persona_id` · `resolved_via` · `updated_at` ISO8601）
+3. **本会话**改用该人格语气（`skills` 仍 full；**禁止**因人设跳过 verify / gate-check）
+4. **禁止**以 `given_name` 或 nicknames 开场（`speech_rules.forbid_self_name_opener`）
+
+项目昵称覆盖：`.dsh/growth/session/aliases.json`（优先于 roles.json nicknames）。
+
+`@planrun/workflow` 在 `session-start` 注入 Persona hint（含 `voice_cues` · `emotion_cues`）。
+
+## Bundled skills (27)
+
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `pencil-design` · `week` · `disk` · `maintain` · `code-stats-viz`

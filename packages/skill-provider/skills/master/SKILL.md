@@ -24,6 +24,8 @@ Canonical route table: [routes.md](routes.md)
 
 **Do not intercept** when the user already named a skill (`sprint-plan`, `run`, `review`) or DSH plan mode (`/plan` for single-task design).
 
+**Persona summons**（「呼叫老周」「切换御姐」）→ [routes.md §人格·呼叫](routes.md#persona--呼叫12-人格) — not casual chat.
+
 ## Flow
 
 1. **Quick sense** (optional): read `.dsh/growth/plan.md`, `git status`, project scripts — do not dump internals to the user.

@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS="$ROOT/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report)
+EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design)
 FORBIDDEN_PATTERNS='\.cursorGrowth|AskQuestion|runner\.sh'
 FAIL=0
 
@@ -75,12 +75,47 @@ if ! grep -q 'sprint-plan' "$SKILLS/master/routes.md"; then
   echo "MISSING: master/routes.md should reference sprint-plan"
   FAIL=1
 fi
-for skill in learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report; do
+for skill in learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design; do
   if ! grep -q "\`$skill\`" "$SKILLS/master/routes.md"; then
     echo "MISSING: master/routes.md should reference $skill"
     FAIL=1
   fi
 done
+
+echo "==> Checking persona catalog (12 personas)"
+ROLES="$ROOT/packages/skill-provider/config/roles.json"
+if [[ ! -f "$ROLES" ]]; then
+  echo "MISSING: packages/skill-provider/config/roles.json"
+  FAIL=1
+else
+  persona_count="$(python3 -c "import json; d=json.load(open('$ROLES')); print(len(d.get('personas',[])))")"
+  default_id="$(python3 -c "import json; print(json.load(open('$ROLES')).get('default',''))")"
+  if [[ "$persona_count" != "12" ]]; then
+    echo "FAIL: expected 12 personas, got $persona_count"
+    FAIL=1
+  elif [[ "$default_id" != "dashu" ]]; then
+    echo "FAIL: default persona should be dashu, got $default_id"
+    FAIL=1
+  else
+    echo "OK: roles.json ($persona_count personas, default=$default_id)"
+  fi
+fi
+for f in templates/growth/session/persona.json templates/growth/session/aliases.json scripts/resolve-persona.sh scripts/resolve-persona.mjs; do
+  if [[ ! -f "$ROOT/$f" ]]; then
+    echo "MISSING: $f"
+    FAIL=1
+  else
+    echo "OK: $f"
+  fi
+done
+if ! grep -q 'session/persona.json' "$ROOT/scripts/install-planrun.sh"; then
+  echo "MISSING: install-planrun.sh should seed session/persona.json"
+  FAIL=1
+fi
+if ! grep -q 'Persona' "$ROOT/packages/workflow/src/index.ts"; then
+  echo "MISSING: workflow session-start persona inject"
+  FAIL=1
+fi
 
 echo "==> Checking DSH adaptation (no Cursor-only tokens in bundled skills)"
 while IFS= read -r skill_dir; do

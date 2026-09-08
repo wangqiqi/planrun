@@ -14,6 +14,8 @@ user-invocable: true
 
 Read `.dsh/growth/learn/` when present. Discipline: [docs/discipline.md](../../../docs/discipline.md)
 
+**Persona**: default `dashu`; user may summon via **master** §人格·呼叫. Voice changes only — never skip verify or gate-check for tone.
+
 ## Before coding
 
 ```sh

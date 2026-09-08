@@ -12,6 +12,14 @@ Compressed standing rules adapted from Super Cursor `core.mdc` + `workflow.mdc` 
 6. **Scope discipline** — no drive-by refactors; escalate to `sprint-plan` on theme or architecture change.
 7. **DSH plan mode vs sprint-plan** — `/plan` is single-task design; multi-task Sprints use the `sprint-plan` skill.
 
+## Persona (12 人格)
+
+- **Default**: `dashu`（catalog: `@planrun/skill-provider/config/roles.json`）
+- **Summon**: user says「呼叫老周」「切换御姐」→ **master** §人格·呼叫 → write `.dsh/growth/session/persona.json`
+- **Must**: distinguish by `voice_cues` + `emotion_cues` + `speech_examples`; **forbid** opening with `given_name`
+- **Must not**: skip verify, gate-check, or high-risk confirmation because of persona tone
+- **Skills policy**: full for every persona — voice only, not capability
+
 ## Quality
 
 - Tests describe behavior; change obsolete tests with behavior changes.
