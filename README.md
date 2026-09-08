@@ -20,7 +20,7 @@ PlanRun 填这个缝：
 | 你得到 | 不是什么 |
 |---|---|
 | 27 bundled **skills** + **12 personas**（Cordis plugin mount） | 不是 fork `deepseek-harness` |
-| **`@planrun/bundle-planrun`** — `dsh plugin add` 一键进 profile | 不是 Cursor rules 复制粘贴 |
+| **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` 一键进 profile | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
@@ -57,7 +57,7 @@ flowchart LR
 ```
 packages/
   skill-provider/     # @planrun/skill-provider — Cordis plugin + skills/
-  bundle-planrun/       # @planrun/bundle-planrun — dsh.bundle.patch
+  bundle-planrun/       # @planrun/bundle — dsh.bundle.patch
   workflow/             # @planrun/workflow — session hooks (growth · run-start · run-stop)
 presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
 templates/growth/     # plan.md · learn/ · archive/ 种子
@@ -68,7 +68,7 @@ docs/                 # mapping · naming · quickstart · workflow-guard
 | Piece | Package / path | Role |
 |---|---|---|
 | Bundled skills | `@planrun/skill-provider` | 27 workflow skills + `config/roles.json` (12 personas) |
-| Profile bundle | `@planrun/bundle-planrun` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
+| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
 | Agent preset | `presets/planrun/` | 可选 `planrun` preset |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
 | Installer | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
@@ -97,9 +97,16 @@ pnpm run verify          # 27 skills + 12 personas + DSH adapter token checks
 
 ### 2 · Install bundle（DSH profile）
 
-```sh
-export PLANRUN_HOME=/path/to/planrun   # 或省略，直接用 clone 路径
+**已发布（推荐）**：
 
+```sh
+dsh plugin --profile web add @planrun/bundle
+```
+
+**本仓开发**（先 `pnpm run build`）：
+
+```sh
+export PLANRUN_HOME=/path/to/planrun
 dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
@@ -112,7 +119,7 @@ ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 
 **不要**在 profile 的 `cordis.patch.yml` 里再手动 insert 同一插件 — bundle 已挂载，双挂载会 boot 失败。
 
-从 git 安装时若 pnpm ≥10 拦截 `prepare` build，按 CLI 提示把 key 写入 profile 的 `pnpm-workspace.yaml` → `allowBuilds`，再重跑 `dsh plugin add`。详见 [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
+详见 [publish.md](docs/publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
 
 ### 3 · Seed project growth
 
@@ -209,8 +216,9 @@ pnpm run typecheck
 | **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ |
 | **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ |
 | **v1.3** | defer skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
-| **v1.4** | **12 personas** + `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design` · 27 skills | ✅ current |
-| **Next** | npm publish · subagent presets | planned |
+| **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
+| **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ current |
+| **Next** | subagent presets | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -226,6 +234,7 @@ pnpm run typecheck
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 | [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
+| [publish.md](docs/publish.md) | npm 发布与用户安装 |
 
 ---
 

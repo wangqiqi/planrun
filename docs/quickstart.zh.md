@@ -13,7 +13,15 @@ pnpm run verify
 
 ## 2. 安装 bundle
 
-在已安装 `dsh` 的机器上（**先 `pnpm run build`**）：
+**已发布（推荐）**：
+
+```sh
+dsh plugin --profile web add @planrun/bundle
+```
+
+发布与维护说明 → [publish.md](publish.md)
+
+**本仓开发**（先 `pnpm run build`）：
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
@@ -27,7 +35,7 @@ dsh --profile web --dump-config | grep planrun-skills
 ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 ```
 
-`bundle-planrun` 会通过 `file:../skill-provider` 把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
+`@planrun/bundle`（目录 `packages/bundle-planrun/`）会通过依赖把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
 
 从 harness 仓开发时可用：
 
@@ -36,7 +44,7 @@ cd /path/to/deepseek-harness
 pnpm dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
-**常见错误**：若 `bundle-planrun` 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
+**常见错误**：若 bundle 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
 
 ## 3. 项目内 growth 模板
 

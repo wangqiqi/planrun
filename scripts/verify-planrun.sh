@@ -44,7 +44,13 @@ if [[ ! -f "$SKILLS/scaffold/catalog.md" ]]; then
   FAIL=1
 fi
 
-echo "==> Checking bundle patch"
+echo "==> Checking bundle package"
+if ! grep -q '"name": "@planrun/bundle"' "$ROOT/packages/bundle-planrun/package.json"; then
+  echo "FAIL: bundle package name should be @planrun/bundle"
+  FAIL=1
+else
+  echo "OK: @planrun/bundle package.json"
+fi
 if ! grep -q '@planrun/skill-provider' "$ROOT/packages/bundle-planrun/cordis.patch.yml"; then
   echo "MISSING: bundle references skill-provider"
   FAIL=1
@@ -160,6 +166,55 @@ if [[ -f "$ROOT/scripts/dsh-guard.sh" ]]; then
     FAIL=1
   fi
 fi
+
+echo "==> Checking publish readiness"
+for pkg in packages/skill-provider packages/workflow packages/bundle-planrun; do
+  if ! grep -q '"publishConfig"' "$ROOT/$pkg/package.json"; then
+    echo "MISSING: publishConfig in $pkg"
+    FAIL=1
+  elif ! grep -q '"prepare"' "$ROOT/$pkg/package.json"; then
+    echo "MISSING: prepare script in $pkg"
+    FAIL=1
+  else
+    echo "OK: $pkg publish metadata"
+  fi
+done
+if ! grep -q '"verify:publish"' "$ROOT/package.json"; then
+  echo "MISSING: verify:publish script"
+  FAIL=1
+else
+  echo "OK: verify:publish"
+fi
+if [[ ! -f "$ROOT/templates/growth/scripts/dsh-guard.sh" ]]; then
+  echo "MISSING: templates/growth/scripts/dsh-guard.sh"
+  FAIL=1
+else
+  echo "OK: growth guard templates"
+fi
+
+echo "==> Checking guard cwd resolution"
+GUARD_TMP="$(mktemp -d)"
+mkdir -p "$GUARD_TMP/nested/.dsh/growth"
+cp "$ROOT/templates/dogfood/plan-fixture.md" "$GUARD_TMP/nested/.dsh/growth/plan.md"
+if ! (cd "$GUARD_TMP/nested" && bash "$ROOT/scripts/dsh-guard.sh" gate-check >/dev/null); then
+  echo "FAIL: gate-check from nested cwd"
+  FAIL=1
+else
+  echo "OK: guard resolves plan from cwd walk-up"
+fi
+rm -rf "$GUARD_TMP"
+
+echo "==> Checking install guard seed"
+INSTALL_TMP="$(mktemp -d)"
+git -C "$INSTALL_TMP" init -q
+PLANRUN_HOME="$ROOT" bash "$ROOT/scripts/install-planrun.sh" "$INSTALL_TMP" --copy-plan >/dev/null
+if [[ ! -f "$INSTALL_TMP/scripts/dsh-guard.sh" ]]; then
+  echo "FAIL: install-planrun.sh did not seed scripts/dsh-guard.sh"
+  FAIL=1
+else
+  echo "OK: install-planrun.sh guard seed"
+fi
+rm -rf "$INSTALL_TMP"
 
 echo "==> Checking verify:dogfood script"
 if [[ ! -f "$ROOT/scripts/verify-dogfood.sh" ]]; then

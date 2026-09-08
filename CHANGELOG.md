@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.0] - 2026-09-08
+
+### Added
+
+- **npm publish path** — `@planrun/skill-provider` · `@planrun/workflow` · **`@planrun/bundle`** (`prepare` · `publishConfig` · `pnpm run publish:packages` · `verify:publish`)
+- **`docs/publish.md`** — maintainer + user install guide
+- **Target project guard seed** — `templates/growth/scripts/` · `install-planrun.sh` copies `dsh-guard.sh` + merges `package.json` scripts
+
+### Changed
+
+- **Breaking (rename)**: npm bundle package **`@planrun/bundle-planrun` → `@planrun/bundle`** (directory still `packages/bundle-planrun/`)
+- **`dsh-guard.sh`** — resolve `plan.md` by walking up from **cwd** (aligned with `@planrun/workflow`)
+- Bundle dependencies use **`workspace:^`** (rewritten to semver on `pnpm publish`)
+- README · quickstart — `dsh plugin add @planrun/bundle` as primary install
+
 ## [1.4.0] - 2026-09-08
 
 ### Added

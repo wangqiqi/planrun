@@ -27,8 +27,10 @@ bash scripts/dsh-guard.sh task-verify TASK-001
 Priority:
 
 1. `DSH_GROWTH_PLAN` — explicit path
-2. `.dsh/growth/plan.md` — target projects (after `install-planrun.sh`)
-3. `.cursorGrowth/plan.md` — mother-repo development of PlanRun itself
+2. Walk up from **current working directory** for `.dsh/growth/plan.md` or `.cursorGrowth/plan.md`
+3. Fallback: PlanRun repo root (when `scripts/` live in the planrun checkout)
+
+Target projects: run `install-planrun.sh` to copy guard scripts to `scripts/` and merge npm scripts into `package.json`.
 
 ## HTML metadata (SSOT)
 

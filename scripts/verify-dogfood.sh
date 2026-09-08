@@ -189,9 +189,11 @@ check_install_seed() {
   else
     echo "OK: install-planrun.sh → .dsh/growth/plan.md"
   fi
-  if [[ ! -f "$tmp/.dsh/growth/learn/README.md" ]]; then
-    echo "FAIL: .dsh/growth/learn/README.md not created"
+  if [[ ! -f "$tmp/scripts/dsh-guard.sh" ]]; then
+    echo "FAIL: scripts/dsh-guard.sh not created"
     FAIL=1
+  else
+    echo "OK: install-planrun.sh → scripts/dsh-guard.sh"
   fi
   rm -rf "$tmp"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@planrun/skill-provider",
   "description": "PlanRun bundled skills for DeepSeek Harness",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -10,7 +10,8 @@
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./config/roles.json": "./config/roles.json"
   },
   "files": [
     "lib/index.js",
@@ -19,10 +20,20 @@
     "config"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangqiqi/planrun.git",
+    "directory": "packages/skill-provider"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",
     "clean": "rm -rf lib",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "pnpm run build",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "yaml": "^2.8.1"

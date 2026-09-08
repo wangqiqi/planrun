@@ -1,7 +1,7 @@
 {
   "name": "@planrun/workflow",
   "description": "PlanRun workflow Cordis plugin — growth-init, run-start, run-stop for DSH",
-  "version": "1.1.0",
+  "version": "1.5.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -17,11 +17,21 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangqiqi/planrun.git",
+    "directory": "packages/workflow"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",
     "clean": "rm -rf lib",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm run build && node --test tests/*.test.mjs"
+    "test": "pnpm run build && node --test tests/*.test.mjs",
+    "prepare": "pnpm run build",
+    "prepublishOnly": "pnpm run build"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=1.0.0",

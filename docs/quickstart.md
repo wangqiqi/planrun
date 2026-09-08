@@ -13,19 +13,19 @@ DevDependencies point at sibling `deepseek-harness` for `@deepseek-ai/cordis` an
 
 ## 2. Install the bundle
 
-On a machine with `dsh` installed:
+**Published (recommended)**:
 
 ```sh
-export PLANRUN_HOME=/data/test-jw/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+dsh plugin --profile web add @planrun/bundle
 ```
 
-Or append to `$DSH_HOME/profiles/web/cordis.patch.yml`:
+See [publish.md](publish.md) for maintainer steps.
 
-```yaml
-- insert:
-    - id: planrun-skills
-      name: '@planrun/skill-provider'
+**From this repo** (run `pnpm run build` first):
+
+```sh
+export PLANRUN_HOME=/path/to/planrun
+dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
 ## 3. Project growth templates

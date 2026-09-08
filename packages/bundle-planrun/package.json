@@ -1,7 +1,7 @@
 {
-  "name": "@planrun/bundle-planrun",
+  "name": "@planrun/bundle",
   "description": "PlanRun profile bundle: mounts @planrun/skill-provider on base-backed profiles",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -19,19 +19,29 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangqiqi/planrun.git",
+    "directory": "packages/bundle-planrun"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
   },
   "dependencies": {
-    "@planrun/skill-provider": "file:../skill-provider",
-    "@planrun/workflow": "file:../workflow"
+    "@planrun/skill-provider": "workspace:^",
+    "@planrun/workflow": "workspace:^"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",
     "clean": "rm -rf lib",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "pnpm run build",
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
