@@ -68,6 +68,6 @@ This seeds `.dsh/growth/` and copies **guard scripts** to `scripts/` with npm sc
 
 ## Related
 
-- [quickstart.md](quickstart.md) / [quickstart.zh.md](quickstart.zh.md)
+- [quickstart.md](quickstart.md) / [zh/quickstart](../zh/quickstart.md)
 - [workflow-guard.md](workflow-guard.md)
 - [naming.md](naming.md)

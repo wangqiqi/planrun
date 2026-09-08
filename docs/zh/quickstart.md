@@ -21,7 +21,7 @@ pnpm run verify
 dsh plugin --profile web add @planrun/bundle
 ```
 
-发布与维护说明 → [publish.md](../en/publish.md)（English）
+发布与维护说明 → [publish.md](publish.md)
 
 **本仓开发**（先 `pnpm run build`）：
 
@@ -67,7 +67,7 @@ pnpm run task-verify    # 任务收尾前
 pnpm run next-task      # 找下一项
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](../en/workflow-guard.md)（English）。
+plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
 
 ## 5. 在会话中使用
 
@@ -99,7 +99,7 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 ./scripts/install-planrun.sh --preset   # 复制 planrun* → ~/.dsh/.agent-presets/
 ```
 
-详见 [subagents.md](../en/subagents.md)（English）。日常仍可用 **standard** preset + bundle skills；需要 `subagent_review` / `subagent_spike` / `subagent_ship` 时切换到 **planrun** preset 或专用子 preset。
+详见 [subagents.md](subagents.md)。日常仍可用 **standard** preset + bundle skills；需要 `subagent_review` / `subagent_spike` / `subagent_ship` 时切换到 **planrun** preset 或专用子 preset。
 
 ## 6. Dogfood（deepseek-harness）
 
@@ -112,7 +112,7 @@ pnpm run build
 pnpm run verify:dogfood
 ```
 
-详见 [dogfood.md](../en/dogfood.md)（English）。
+详见 [dogfood.md](dogfood.md)。
 
 **交互走查**（需 `dsh` CLI）：
 
@@ -127,6 +127,6 @@ bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 `cordi
 
 ## 7. 与 Super Cursor 对照
 
-见 [mapping-from-super-cursor.md](../en/mapping-from-super-cursor.md) 与 [naming.md](../en/naming.md)（English）。
+见 [mapping-from-super-cursor.md](mapping-from-super-cursor.md) 与 [naming.md](naming.md)。
 
 English: [en/quickstart.md](../en/quickstart.md)

@@ -16,7 +16,7 @@
 - `@planrun/skill-provider` — bundled skills Cordis plugin
 - `@planrun/bundle` — profile bundle patch（目录 `packages/bundle-planrun/`）
 
-## Bundled skills (v1.4, 27 skills)
+## Bundled skills (28)
 
 `master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design` · `md2docx-export`
 

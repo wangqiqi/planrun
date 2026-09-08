@@ -1,22 +1,16 @@
 ---
-layout: page
-title: PlanRun Docs
+layout: false
+title: PlanRun
 ---
 
-# PlanRun Documentation
+<script setup>
+import { onMounted } from 'vue'
 
-Choose your language / 选择语言：
+onMounted(() => {
+  const base = import.meta.env.BASE_URL
+  const lang = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en'
+  window.location.replace(`${base}${lang}/`)
+})
+</script>
 
-<div class="vp-doc" style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem">
-
-<a href="./en/" style="flex:1;min-width:200px;padding:1.5rem;border:1px solid var(--vp-c-divider);border-radius:12px;text-decoration:none;color:inherit">
-<strong style="font-size:1.25rem">English</strong><br>
-<span style="opacity:.75">Install · Quickstart · Reference</span>
-</a>
-
-<a href="./zh/" style="flex:1;min-width:200px;padding:1.5rem;border:1px solid var(--vp-c-divider);border-radius:12px;text-decoration:none;color:inherit">
-<strong style="font-size:1.25rem">简体中文</strong><br>
-<span style="opacity:.75">安装 · 快速开始 · 参考（部分 English）</span>
-</a>
-
-</div>
+<p style="padding:2rem;font-family:system-ui">Redirecting… <a href="./en/">English</a> · <a href="./zh/">简体中文</a></p>

@@ -24,5 +24,5 @@ Super Cursor `hooks.json` → DSH Cordis extension points via **`@planrun/workfl
 
 ## Related
 
-- `docs/workflow-guard.md` — guard commands
+- `docs/en/workflow-guard.md` — guard commands
 - `.cursor/skills/plan/reference/autonomy-chain.md` — AUTONOMOUS followup matrix (Super Cursor mother)

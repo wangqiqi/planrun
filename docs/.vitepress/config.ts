@@ -17,61 +17,72 @@ const versionNav: DefaultTheme.NavItemWithChildren = {
   ],
 }
 
-const enSidebar: DefaultTheme.SidebarItem[] = [
-  {
-    text: 'Getting started',
-    items: [
-      { text: 'Install', link: '/en/install' },
-      { text: 'Quickstart', link: '/en/quickstart' },
-      { text: 'Dogfood', link: '/en/dogfood' },
-      { text: 'Publish & install', link: '/en/publish' },
-    ],
-  },
-  {
-    text: 'Workflow',
-    items: [
-      { text: 'Discipline', link: '/en/discipline' },
-      { text: 'Workflow guard', link: '/en/workflow-guard' },
-      { text: 'Hooks map', link: '/en/workflow-hooks-map' },
-      { text: 'Subagents', link: '/en/subagents' },
-    ],
-  },
-  {
-    text: 'Reference',
-    items: [
-      { text: 'Super Cursor mapping', link: '/en/mapping-from-super-cursor' },
-      { text: 'Naming & packages', link: '/en/naming' },
-    ],
-  },
-]
+/** Same structure in en/zh so the locale switcher keeps the current page path. */
+function docSidebar(locale: 'en' | 'zh'): DefaultTheme.SidebarItem[] {
+  const p = `/${locale}`
+  if (locale === 'en') {
+    return [
+      {
+        text: 'Getting started',
+        items: [
+          { text: 'Install', link: `${p}/install` },
+          { text: 'Quickstart', link: `${p}/quickstart` },
+          { text: 'Dogfood', link: `${p}/dogfood` },
+          { text: 'Publish & install', link: `${p}/publish` },
+        ],
+      },
+      {
+        text: 'Workflow',
+        items: [
+          { text: 'Discipline', link: `${p}/discipline` },
+          { text: 'Workflow guard', link: `${p}/workflow-guard` },
+          { text: 'Hooks map', link: `${p}/workflow-hooks-map` },
+          { text: 'Subagents', link: `${p}/subagents` },
+        ],
+      },
+      {
+        text: 'Reference',
+        items: [
+          { text: 'Super Cursor mapping', link: `${p}/mapping-from-super-cursor` },
+          { text: 'Naming & packages', link: `${p}/naming` },
+        ],
+      },
+    ]
+  }
+  return [
+    {
+      text: '入门',
+      items: [
+        { text: '安装', link: `${p}/install` },
+        { text: '快速开始', link: `${p}/quickstart` },
+        { text: 'Dogfood', link: `${p}/dogfood` },
+        { text: '发布与用户安装', link: `${p}/publish` },
+      ],
+    },
+    {
+      text: '工作流',
+      items: [
+        { text: '纪律摘要', link: `${p}/discipline` },
+        { text: 'Workflow guard', link: `${p}/workflow-guard` },
+        { text: 'Hooks 映射', link: `${p}/workflow-hooks-map` },
+        { text: 'Subagents', link: `${p}/subagents` },
+      ],
+    },
+    {
+      text: '参考',
+      items: [
+        { text: 'Super Cursor 映射', link: `${p}/mapping-from-super-cursor` },
+        { text: '命名与包坐标', link: `${p}/naming` },
+      ],
+    },
+  ]
+}
 
-const zhSidebar: DefaultTheme.SidebarItem[] = [
-  {
-    text: '入门',
-    items: [
-      { text: '安装', link: '/zh/install' },
-      { text: '快速开始', link: '/zh/quickstart' },
-    ],
-  },
-  {
-    text: '工作流（English）',
-    items: [
-      { text: '纪律摘要', link: '/en/discipline' },
-      { text: 'Workflow guard', link: '/en/workflow-guard' },
-      { text: 'Hooks 映射', link: '/en/workflow-hooks-map' },
-      { text: 'Subagents', link: '/en/subagents' },
-    ],
-  },
-  {
-    text: '参考（English）',
-    items: [
-      { text: 'Super Cursor 映射', link: '/en/mapping-from-super-cursor' },
-      { text: '命名与包坐标', link: '/en/naming' },
-      { text: 'Dogfood', link: '/en/dogfood' },
-      { text: '发布与用户安装', link: '/en/publish' },
-    ],
-  },
-]
+const sharedTheme = {
+  logo: '/logo.svg',
+  socialLinks: sharedSocial,
+  search: { provider: 'local' as const },
+}
 
 export default defineConfig({
   title: 'PlanRun',
@@ -85,25 +96,6 @@ export default defineConfig({
   head: sharedHead,
 
   locales: {
-    root: {
-      label: 'Language',
-      lang: 'en-US',
-      title: 'PlanRun',
-      description: 'Choose documentation language',
-      themeConfig: {
-        logo: '/logo.svg',
-        nav: [
-          { text: 'English', link: '/en/' },
-          { text: '简体中文', link: '/zh/' },
-          versionNav,
-        ],
-        socialLinks: sharedSocial,
-        footer: {
-          message: 'MIT License',
-          copyright: 'PlanRun',
-        },
-      },
-    },
     en: {
       label: 'English',
       lang: 'en-US',
@@ -111,20 +103,18 @@ export default defineConfig({
       title: 'PlanRun',
       description: 'DSH-native agent workflow SOP — plan, run, verify, release',
       themeConfig: {
-        logo: '/logo.svg',
+        ...sharedTheme,
         nav: [
           { text: 'Install', link: '/en/install' },
           { text: 'Quickstart', link: '/en/quickstart' },
           { text: 'Reference', link: '/en/mapping-from-super-cursor' },
           versionNav,
         ],
-        sidebar: enSidebar,
-        socialLinks: sharedSocial,
+        sidebar: docSidebar('en'),
         footer: {
           message: 'MIT License',
           copyright: 'PlanRun — adapted from Super Cursor for DeepSeek Harness',
         },
-        search: { provider: 'local' },
         editLink: {
           pattern: 'https://github.com/wangqiqi/planrun/edit/main/docs/:path',
           text: 'Edit this page on GitHub',
@@ -138,20 +128,18 @@ export default defineConfig({
       title: 'PlanRun',
       description: 'DeepSeek Harness 原生 Agent 工作流 SOP',
       themeConfig: {
-        logo: '/logo.svg',
+        ...sharedTheme,
         nav: [
           { text: '安装', link: '/zh/install' },
           { text: '快速开始', link: '/zh/quickstart' },
-          { text: 'English docs', link: '/en/' },
+          { text: '参考', link: '/zh/mapping-from-super-cursor' },
           versionNav,
         ],
-        sidebar: zhSidebar,
-        socialLinks: sharedSocial,
+        sidebar: docSidebar('zh'),
         footer: {
           message: 'MIT License',
           copyright: 'PlanRun — 源自 Super Cursor，适配 DeepSeek Harness',
         },
-        search: { provider: 'local' },
         editLink: {
           pattern: 'https://github.com/wangqiqi/planrun/edit/main/docs/:path',
           text: '在 GitHub 上编辑此页',

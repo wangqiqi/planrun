@@ -2,7 +2,7 @@
 
 PlanRun **structural dogfood** validates bundle artifacts, 16 bundled skills, growth install, and the guard loop (`gate-check` · `plan-check` · `next-task`) against a local **deepseek-harness** checkout — **without** interactive `dsh web`.
 
-For interactive sessions (load `master` · `sprint-plan` · `run`), see [quickstart.zh.md](quickstart.zh.md) §6.
+For interactive sessions, see [quickstart.md](quickstart.md) §6 (Chinese: [zh/quickstart](../zh/quickstart.md)).
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 # restart dsh web · use planrun preset · load master / sprint-plan / run
 ```
 
-See [quickstart.zh.md](quickstart.zh.md) for full install steps.
+See [quickstart.md](quickstart.md) for full install steps.
 
 ## Related
 
