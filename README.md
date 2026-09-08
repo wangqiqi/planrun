@@ -25,7 +25,7 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-**Install (any user)** → [docs/en/install.md](docs/en/install.md) · Quick start → [docs/en/quickstart.md](docs/en/quickstart.md) · 中文 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [wangqiqi.github.io/planrun](https://wangqiqi.github.io/planrun/)
+**Install (any user)** → [docs/en/install.md](docs/en/install.md) · Quick start → [docs/en/quickstart.md](docs/en/quickstart.md) · 中文 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [znza.top/planrun](https://znza.top/planrun/)
 
 ---
 
@@ -260,7 +260,7 @@ pnpm run typecheck
 
 | Doc | Content |
 |---|---|
-| **站点** | [wangqiqi.github.io/planrun](https://wangqiqi.github.io/planrun/)（`docs/en/` · `docs/zh/`） |
+| **站点** | [znza.top/planrun](https://znza.top/planrun/)（`docs/en/` · `docs/zh/`） |
 | [en/quickstart.md](docs/en/quickstart.md) / [zh/quickstart.md](docs/zh/quickstart.md) | 安装与 dogfood |
 | [dogfood.md](docs/en/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
 | [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |

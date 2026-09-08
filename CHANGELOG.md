@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- **CI** — sync `pnpm-lock.yaml` with `packages/workflow`; correct `dsh-agent` / `dsh-llm` peer ranges to published `0.x` versions
+- **CI / docs deploy** — enable GitHub Pages (`build_type: workflow`); `configure-pages@v5` · Node 24 · artifact v4
 
 ### Added
 

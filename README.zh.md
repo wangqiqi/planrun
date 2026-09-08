@@ -27,7 +27,7 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-**安装（任意用户）** → [docs/zh/install.md](docs/zh/install.md) · 快速上手 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [wangqiqi.github.io/planrun/zh/](https://wangqiqi.github.io/planrun/zh/)
+**安装（任意用户）** → [docs/zh/install.md](docs/zh/install.md) · 快速上手 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [znza.top/planrun/zh/](https://znza.top/planrun/zh/)
 
 ---
 
