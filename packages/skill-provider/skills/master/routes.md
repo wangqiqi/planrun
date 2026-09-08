@@ -12,7 +12,7 @@
 | `learn` | Learn this repo | **`learn`** | conventions, module-map — **not** `study` (new tech) |
 | `long` | Multi-Sprint Epic | **`long`** | Epic, 长程, resume, 多 Sprint |
 | `fix` | Bug / verify blocked | **`run`** / **`debug`** / **`sprint-plan`** | hotfix, verify failed, stuck |
-| `more` | Review / ship / quality | see below | PR, release, test, delivery |
+| `more` | Review / ship / quality | see below | PR, release, test, delivery, security, api |
 
 ## `more` sub-routes (round 2)
 
@@ -24,18 +24,20 @@
 | `delivery` | Pre-ship checklist | **`delivery`** |
 | `test` | TDD / E2E focus | **`test`** |
 | `debug` | Debug loop | **`debug`** |
-| `security` | Security audit | `security` (defer) |
-| `api` | API design review | `api` (defer) |
+| `security` | Security audit | **`security`** |
+| `api` | API design review | **`api`** |
+| `refactor` | Safe refactor / dead code | **`refactor`** |
+| `perf` | Performance investigation | **`perf`** |
 
 ## DSH-specific notes
 
 | Super Cursor | dsh-super |
 |---|---|
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
-| `.cursorGrowth/plan.md` | **`.dsh/growth/plan.md`** (human mirror; session todos are SSOT in v0.3+) |
-| `AskQuestion` | **`ask_user_question`** tool |
-| `runner.sh gate-check` | Project verify scripts; `@dsh-super/workflow` plugin (v0.3) |
+| `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |
+| User choices | **`ask_user_question`** tool |
+| Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../docs/workflow-guard.md) |
 
-## Bundled skills (12)
+## Bundled skills (16)
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf`

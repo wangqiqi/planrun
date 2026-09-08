@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS="$ROOT/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test)
+EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf)
 FORBIDDEN_PATTERNS='\.cursorGrowth|AskQuestion|runner\.sh'
 FAIL=0
 
@@ -55,7 +55,7 @@ if ! grep -q 'sprint-plan' "$SKILLS/master/routes.md"; then
   echo "MISSING: master/routes.md should reference sprint-plan"
   FAIL=1
 fi
-for skill in learn git scaffold long release delivery debug test; do
+for skill in learn git scaffold long release delivery debug test security api refactor perf; do
   if ! grep -q "\`$skill\`" "$SKILLS/master/routes.md"; then
     echo "MISSING: master/routes.md should reference $skill"
     FAIL=1

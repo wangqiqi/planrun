@@ -2,7 +2,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-**中文**：把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — 12 个 workflow skill、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+**中文**：把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **16** 个 workflow skill、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%20%3E%3D24-brightgreen)](package.json)
@@ -19,7 +19,7 @@ dsh-super 填这个缝：
 
 | 你得到 | 不是什么 |
 |---|---|
-| 12 个 bundled **skills**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
+| 16 个 bundled **skills**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
 | **`@dsh-super/bundle-super`** — `dsh plugin add` 一键进 profile | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
@@ -66,7 +66,7 @@ docs/                 # mapping · naming · quickstart · workflow-guard
 
 | Piece | Package / path | Role |
 |---|---|---|
-| Bundled skills | `@dsh-super/skill-provider` | 12 workflow skills（见上表） |
+| Bundled skills | `@dsh-super/skill-provider` | 16 workflow skills（见上表） |
 | Profile bundle | `@dsh-super/bundle-super` | `cordis.patch.yml` 自动挂载 skill provider |
 | Agent preset | `presets/super/` | 可选 `super` preset |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
@@ -89,7 +89,7 @@ Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同�
 git clone <this-repo> dsh-super && cd dsh-super
 pnpm install
 pnpm run build
-pnpm run verify          # 12 skills + DSH 适配 token 结构检查
+pnpm run verify          # 16 skills + DSH 适配 token 结构检查
 ```
 
 开发时 `skill-provider` 的 peer 可指向同级 `deepseek-harness` checkout。
@@ -155,6 +155,10 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/pl
 | `delivery` | 上线前 7 维走查 |
 | `debug` | 复现优先调试循环 |
 | `test` | TDD · 分层测试 |
+| `security` | 合并前安全审查 |
+| `api` | REST/OpenAPI 设计审查 |
+| `refactor` | 安全重构 · 死代码删除 |
+| `perf` | 性能排查（测量优先） |
 
 单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。
 
@@ -184,7 +188,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-super-dsh.sh` 校验 12 个 skill 目录、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
+`verify-super-dsh.sh` 校验 **16** 个 skill 目录、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
 
 ---
 
@@ -195,7 +199,8 @@ pnpm run typecheck
 | **v0.1** | MVP：`master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
-| **v0.2 guard** | `dsh-guard.sh` · `pnpm run gate-check` | ✅ current |
+| **v0.2 batch-3** | `security` · `api` · `refactor` · `perf` | ✅ current |
+| **v0.2 guard** | `dsh-guard.sh` · `pnpm run gate-check` | ✅ |
 | **v0.3** | `@dsh-super/workflow` — optional hooks injection | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)

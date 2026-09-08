@@ -4,7 +4,7 @@ Reference: [`cursor-ai`](../cursor-ai) (Super Cursor v4.x).
 
 Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (v0.2+) · **drop**
 
-## Skills (27 → v0.2: 12 bundled)
+## Skills (27 → v0.2: 16 bundled)
 
 | Super Cursor | dsh-super | Status |
 |---|---|---|
@@ -20,9 +20,13 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | delivery | delivery | **keep** (batch-2) |
 | debug | debug | **keep** (batch-2) |
 | test | test | **keep** (batch-2) |
+| security | security | **keep** (batch-3) |
+| api | api | **keep** (batch-3) |
+| refactor | refactor | **keep** (batch-3) |
+| perf | perf | **keep** (batch-3) |
 | user-manual | user-manual | defer |
 | test-report | test-report | defer |
-| security, api, refactor, perf, mcp, study | same ids | defer |
+| mcp, study | same ids | defer |
 | ux, ia, week, disk, maintain, code-stats-viz, pencil-design | same ids | defer |
 
 ## Rules (48 → ~12 bullets)

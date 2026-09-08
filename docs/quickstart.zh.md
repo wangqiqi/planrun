@@ -77,6 +77,10 @@ plan 路径：`.dsh/growth/plan.md`（开发 dsh-super 本身可用 `.cursorGrow
 | 上线走查 | `delivery` |
 | 写测试 / TDD | `test` |
 | 查 bug / 测挂了 | `debug` |
+| 安全审查 / 密钥鉴权 | `security` |
+| API 设计 / OpenAPI | `api` |
+| 重构 / 删死代码 | `refactor` |
+| 性能慢 / bundle 大 | `perf` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
 
 ## 6. Dogfood（deepseek-harness）
