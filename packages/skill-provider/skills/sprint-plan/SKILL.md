@@ -68,7 +68,16 @@ Status values: `⬜` · `🔧` · `✅` (or `ACTIVE`/`TODO`/`DONE` in simplified
 
 ## SPIKE / DOC
 
-- **SPIKE-*** — read-only research; no production code
+- **SPIKE-*** — read-only research; no production code. Delegate with `subagent_spike` when planrun preset is installed:
+
+```
+subagent_spike(
+  label: "SPIKE-001 cache backend",
+  prompt: "Compare Redis vs in-process LRU for our guard scripts. Table + TASK-* suggestion.",
+  run_in_background: false
+)
+```
+
 - **DOC-*** — documentation-only tasks
 
 ## Relationship to DSH plan mode

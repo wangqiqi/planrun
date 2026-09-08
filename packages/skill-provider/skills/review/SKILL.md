@@ -56,7 +56,27 @@ Severity (Blocker / High / Medium / Low) · `file:line` · finding · suggestion
 
 ## Delegation
 
-When using DSH subagents: spawn a **readonly** child with this skill loaded in the prompt. Do not mutate files in review-only mode.
+When the **planrun** preset is installed (`install-planrun.sh --preset`) and the session uses preset **planrun** (or a copy with the same delegation rows):
+
+| Tool | Use |
+|------|-----|
+| `subagent_review` | Readonly PR/diff review — loads this skill |
+| `subagent_spike` | Readonly SPIKE-* research |
+| `subagent_ship` | Autonomous release after verify green |
+
+Example (foreground one-shot review):
+
+```
+subagent_review(
+  label: "REV-001 api diff",
+  prompt: "Load review skill. Scope: packages/workflow/src/*.ts since main. Dual-axis output.",
+  run_in_background: false
+)
+```
+
+Preset **planrun-review** / **planrun-spike** are dedicated readonly sessions (no bash/write tools). Agent definitions ship in `@planrun/skill-provider/agents/review.md`.
+
+Do not mutate files in review-only mode.
 
 ## deepseek-harness projects
 

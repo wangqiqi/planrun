@@ -216,6 +216,43 @@ else
 fi
 rm -rf "$INSTALL_TMP"
 
+echo "==> Checking subagent presets"
+for preset in planrun planrun-review planrun-spike planrun-ship; do
+  if [[ ! -f "$ROOT/presets/$preset/agent.cordis.yml" ]] || [[ ! -f "$ROOT/presets/$preset/preset.yml" ]]; then
+    echo "MISSING: presets/$preset (agent.cordis.yml + preset.yml)"
+    FAIL=1
+  else
+    echo "OK: presets/$preset"
+  fi
+done
+if ! grep -q 'tool-subagent-review' "$ROOT/presets/planrun/agent.cordis.yml"; then
+  echo "MISSING: planrun preset delegation tool-subagent-review"
+  FAIL=1
+elif ! grep -q 'toolFilter' "$ROOT/presets/planrun/agent.cordis.yml"; then
+  echo "MISSING: planrun preset toolFilter for readonly subagents"
+  FAIL=1
+else
+  echo "OK: planrun delegation + toolFilter"
+fi
+for agent in ship review spike; do
+  if [[ ! -f "$ROOT/packages/skill-provider/agents/$agent.md" ]]; then
+    echo "MISSING: packages/skill-provider/agents/$agent.md"
+    FAIL=1
+  else
+    echo "OK: agents/$agent.md"
+  fi
+done
+if ! grep -q '"agents"' "$ROOT/packages/skill-provider/package.json"; then
+  echo "MISSING: skill-provider package.json files should include agents/"
+  FAIL=1
+fi
+if [[ ! -f "$ROOT/docs/subagents.md" ]]; then
+  echo "MISSING: docs/subagents.md"
+  FAIL=1
+else
+  echo "OK: docs/subagents.md"
+fi
+
 echo "==> Checking verify:dogfood script"
 if [[ ! -f "$ROOT/scripts/verify-dogfood.sh" ]]; then
   echo "MISSING: scripts/verify-dogfood.sh"

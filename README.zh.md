@@ -211,8 +211,8 @@ pnpm run typecheck
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
 | **v1.3** | defer skills：`mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
-| **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ current |
-| **Next** | subagent 预设 | planned |
+| **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
+| **v1.6** | subagent 预设 · `agents/*.md` · `docs/subagents.md` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -227,6 +227,7 @@ pnpm run typecheck
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 | [publish.md](docs/publish.md) | npm 发布与用户安装 |
+| [subagents.md](docs/subagents.md) | ship · review · spike 预设与委派 |
 | [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
 
 ---

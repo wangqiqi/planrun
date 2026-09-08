@@ -81,7 +81,7 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 | Git 提交/合并 | `git` |
 | 空仓库脚手架 | `scaffold` |
 | PR / 代码回顾 | `review` |
-| 打版 / merge / tag | `release` |
+| 打版 / merge / tag | `release`（或委派 `subagent_ship`） |
 | 上线走查 | `delivery` |
 | 写测试 / TDD | `test` |
 | 查 bug / 测挂了 | `debug` |
@@ -90,6 +90,14 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 | 重构 / 删死代码 | `refactor` |
 | 性能慢 / bundle 大 | `perf` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
+
+### Subagent 预设（v1.6）
+
+```sh
+./scripts/install-planrun.sh --preset   # 复制 planrun* → ~/.dsh/.agent-presets/
+```
+
+详见 [subagents.md](subagents.md)。日常仍可用 **standard** preset + bundle skills；需要 `subagent_review` / `subagent_spike` / `subagent_ship` 时切换到 **planrun** preset 或专用子 preset。
 
 ## 6. Dogfood（deepseek-harness）
 

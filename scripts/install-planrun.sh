@@ -13,7 +13,7 @@ usage() {
   --here            安装到当前 Git 项目根
   --copy-plan       复制 plan.md 模板（若不存在）
   --no-guard        不复制 scripts/dsh-guard.sh 到目标项目
-  --preset          复制 presets/planrun 到 ~/.dsh/.agent-presets/planrun
+  --preset          复制 presets/planrun* 到 ~/.dsh/.agent-presets/
   -h, --help        显示帮助
 
 示例:
@@ -120,11 +120,22 @@ if [[ "$INSTALL_GUARD" == true ]]; then
 fi
 
 if [[ "$INSTALL_PRESET" == true ]]; then
-  PRESET_DEST="${DSH_HOME:-$HOME/.dsh}/.agent-presets/planrun"
-  mkdir -p "$(dirname "$PRESET_DEST")"
-  rm -rf "$PRESET_DEST"
-  cp -a "$SOURCE/presets/planrun" "$PRESET_DEST"
-  echo "已复制 preset → $PRESET_DEST"
+  PRESET_ROOT="${DSH_HOME:-$HOME/.dsh}/.agent-presets"
+  mkdir -p "$PRESET_ROOT"
+  copied=0
+  for dir in "$SOURCE/presets"/planrun*; do
+    [[ -d "$dir" ]] || continue
+    name="$(basename "$dir")"
+    dest="$PRESET_ROOT/$name"
+    rm -rf "$dest"
+    cp -a "$dir" "$dest"
+    echo "已复制 preset → $dest"
+    copied=$((copied + 1))
+  done
+  if [[ "$copied" -eq 0 ]]; then
+    echo "错误: 未找到 presets/planrun* 目录" >&2
+    exit 1
+  fi
 fi
 
 cat <<EOF

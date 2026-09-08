@@ -1,3 +1,5 @@
-name: PlanRun 工作流
-description: PlanRun 技能包：Sprint 规划（sprint-plan）、执行（run）、回顾（review）与路由（master）。配合 standard preset 使用。
+name: PlanRun workflow
+description: >-
+  PlanRun Sprint persona plus delegation tools (subagent_review · subagent_spike ·
+  subagent_ship). Use with @planrun/bundle skills; or pick child presets for dedicated sessions.
 order: 50

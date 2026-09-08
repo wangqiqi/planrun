@@ -1,19 +1,150 @@
-# PlanRun preset (v1.0)
-#
-# v1.0 uses the shipped `standard` preset for tools and plan mode.
-# Copy this directory to `$DSH_HOME/.agent-presets/planrun/` and set
-# `agent-presets.default: planrun` when a dedicated composition is ready.
-#
-# For now, install only the bundle:
-#   dsh plugin --profile web add file:/path/to/planrun/packages/bundle-planrun
-# Skills appear on the `standard` preset via the global skill provider layer.
+# PlanRun agent preset — Sprint workflow persona + delegation.
+# Install: install-planrun.sh --preset  →  ~/.dsh/.agent-presets/planrun/
+# Recommended session: keep DSH **standard** preset + @planrun/bundle skills;
+# switch to **planrun** when you want bundled subagent_review | subagent_spike | subagent_ship tools.
 
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
+    prefix: >-
+      You are a PlanRun workflow agent ({{model}}).
     suffix: >-
-      Your working directory is {{cwd}}.
-      For multi-task Sprints load the sprint-plan skill; for single-task design use /plan (plan mode).
-      Daily execution: run skill after plan mirror is approved.
+      Working directory: {{cwd}}.
+      Multi-task Sprints: load sprint-plan skill; single-task design: DSH /plan (plan mode).
+      After plan mirror is PLAN_APPROVED, load run skill.
+      Delegate readonly review to subagent_review; research to subagent_spike; release checklist to subagent_ship.
+      Persona voice: default dashu; user may summon via master §人格·呼叫 — never skip verify for tone.
 
-# v0.2: copy remaining rows from packages/preset/agent-presets/presets/standard/agent.cordis.yml
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: tool-bash
+  name: '@deepseek-ai/dsh-tool-bash'
+  disabled: !!js process.platform === 'win32'
+
+- id: tool-pwsh
+  name: '@deepseek-ai/dsh-tool-pwsh'
+  disabled: !!js process.platform !== 'win32'
+
+- id: tool-fs
+  name: '@deepseek-ai/dsh-tool-fs'
+
+- id: tool-fs-search
+  name: '@deepseek-ai/dsh-tool-fs-search'
+
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'
+
+- id: delegation
+  name: cordis:group
+  group: true
+  isolate:
+    workflowEngine: true
+  config:
+    - id: tool-subagent-control
+      name: '@deepseek-ai/dsh-tool-subagent-control'
+
+    - id: tool-subagent-list-agents
+      name: '@deepseek-ai/dsh-tool-subagent-control/list-agents'
+
+    - id: tool-subagent
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: spawn
+        toolName: subagent
+        backgroundMode: continuable
+
+    - id: tool-subagent-fork
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: fork
+        toolName: subagent_fork
+        backgroundMode: one-shot
+        enableRunInBackground: false
+
+    - id: tool-subagent-review
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: spawn
+        toolName: subagent_review
+        backgroundMode: one-shot
+        enableRunInBackground: false
+        persona: >-
+          You are the PlanRun review subagent (readonly). Load the review skill.
+          Output severity, file:line, and suggestions only — never edit files or commit.
+        toolFilter:
+          deny:
+            - write
+            - edit
+            - str_replace_editor
+            - bash
+            - pwsh
+            - terminal_open
+            - terminal_send
+            - terminal_signal
+            - todo_write
+            - subagent
+            - subagent_fork
+            - subagent_review
+            - subagent_spike
+            - subagent_ship
+            - ralph
+            - cordis_define
+            - cordis_run
+            - cordis_undefine
+
+    - id: tool-subagent-spike
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: spawn
+        toolName: subagent_spike
+        backgroundMode: one-shot
+        enableRunInBackground: false
+        persona: >-
+          You are the PlanRun spike subagent (readonly). Compare options; produce
+          tables and TASK-* suggestions. Do not implement code or edit files.
+        toolFilter:
+          deny:
+            - write
+            - edit
+            - str_replace_editor
+            - bash
+            - pwsh
+            - terminal_open
+            - terminal_send
+            - terminal_signal
+            - todo_write
+            - subagent
+            - subagent_fork
+            - subagent_review
+            - subagent_spike
+            - subagent_ship
+            - ralph
+            - cordis_define
+            - cordis_run
+            - cordis_undefine
+
+    - id: tool-subagent-ship
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: spawn
+        toolName: subagent_ship
+        backgroundMode: continuable
+        persona: >-
+          You are the PlanRun ship subagent. Follow the release skill §semver/tag
+          checklist. Run verify before tag; never force-push; stop on failure.
+        toolFilter:
+          deny:
+            - subagent
+            - subagent_fork
+            - subagent_review
+            - subagent_spike
+            - subagent_ship

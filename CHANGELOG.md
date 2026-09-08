@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.6.0] - 2026-09-08
+
+### Added
+
+- **Subagent presets** — `planrun` · `planrun-review` · `planrun-spike` · `planrun-ship` under `presets/`
+- **Named delegation tools** — `subagent_review` · `subagent_spike` · `subagent_ship` (`toolFilter` readonly for review/spike)
+- **`packages/skill-provider/agents/{ship,review,spike}.md`** — bundled agent definitions
+- **`docs/subagents.md`** — install, tool names, examples
+
+### Changed
+
+- `install-planrun.sh --preset` copies all `presets/planrun*` directories
+- Skills **review** · **release** · **run** · **sprint-plan** · **master/routes** — delegation spawn examples
+- `docs/mapping-from-super-cursor.md` — agents row → **keep** (v1.6)
+- `verify-planrun.sh` — preset + agents structure checks
+
 ## [1.5.0] - 2026-09-08
 
 ### Added

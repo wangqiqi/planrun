@@ -54,6 +54,16 @@ ACTIVE → implement → pnpm run task-verify → update plan.md → git commit 
 - New theme / architecture decision → mark `⚠️`, load **`sprint-plan`**.
 - No drive-by refactors.
 
+## Delegation
+
+| Need | Tool / preset |
+|------|----------------|
+| Readonly code review (`REV-*`) | `subagent_review` or preset **planrun-review** |
+| Readonly SPIKE before TASK split | `subagent_spike` or preset **planrun-spike** |
+| Implement fixes from review | stay on **`run`** — subagents do not write |
+
+Install presets: `install-planrun.sh --preset` → see [subagents.md](../../../docs/subagents.md).
+
 ## Verify commands
 
 Prefer project-native scripts:

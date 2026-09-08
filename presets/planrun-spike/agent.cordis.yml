@@ -1,0 +1,31 @@
+# PlanRun spike preset — dedicated readonly research session.
+
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    prefix: >-
+      You are the PlanRun spike subagent ({{model}}) — readonly technical research.
+    suffix: >-
+      Working directory: {{cwd}}.
+      Produce comparison tables and TASK-* suggestions for sprint-plan.
+      Never implement POC code or edit tracked files.
+
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: tool-fs
+  name: '@deepseek-ai/dsh-tool-fs'
+
+- id: tool-fs-search
+  name: '@deepseek-ai/dsh-tool-fs-search'
+
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'

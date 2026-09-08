@@ -98,3 +98,17 @@ Follow root `AGENTS.md` and [dsh-pre-push-checks](https://github.com/deepseek-ai
 ## Not a Sprint
 
 「打版 / 打 tag / merge only」is **not** a Sprint Goal — see **`sprint-plan`** goal gate. Deliver capability first, **`release`** as exit.
+
+## Delegation (ship subagent)
+
+When user delegates autonomous release and **planrun** preset delegation tools are available:
+
+```
+subagent_ship(
+  label: "release v1.6.0",
+  prompt: "Load release skill. Run pnpm run verify, update CHANGELOG, bump to 1.6.0, tag if user already approved push.",
+  run_in_background: true
+)
+```
+
+Or switch session preset to **planrun-ship** for a dedicated release thread. SSOT remains this skill §semver/tag — see `agents/ship.md` in skill-provider.

@@ -201,7 +201,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` checks **27** skill directories, **12** persona catalog, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills.
+`verify-planrun.sh` checks **27** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills.
 
 ---
 
@@ -217,8 +217,8 @@ pnpm run typecheck
 | **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ |
 | **v1.3** | defer skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
-| **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ current |
-| **Next** | subagent presets | planned |
+| **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
+| **v1.6** | subagent presets · `agents/*.md` · `docs/subagents.md` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -235,6 +235,7 @@ pnpm run typecheck
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 | [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
 | [publish.md](docs/publish.md) | npm 发布与用户安装 |
+| [subagents.md](docs/subagents.md) | ship · review · spike 预设与委派 |
 
 ---
 

@@ -72,6 +72,18 @@
 
 `@planrun/workflow` 在 `session-start` 注入 Persona hint（含 `voice_cues` · `emotion_cues`）。
 
+## Subagents · ship · review · spike
+
+**用这个**：委派专用子任务。**不是那个**：日常实现仍在 **`run`**。
+
+| id | Tool / preset | Skill |
+|---|---|---|
+| `subagent_review` | preset **planrun** 或 **planrun-review** | **`review`** |
+| `subagent_spike` | preset **planrun** 或 **planrun-spike** | **`sprint-plan`** SPIKE |
+| `subagent_ship` | preset **planrun** 或 **planrun-ship** | **`release`** |
+
+Install: `install-planrun.sh --preset` · [subagents.md](../../../docs/subagents.md) · bundled `agents/*.md` in `@planrun/skill-provider`.
+
 ## Bundled skills (27)
 
 `master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `pencil-design` · `week` · `disk` · `maintain` · `code-stats-viz`
