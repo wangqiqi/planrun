@@ -79,7 +79,7 @@ function docSidebar(locale: 'en' | 'zh'): DefaultTheme.SidebarItem[] {
 }
 
 const sharedTheme = {
-  logo: { src: '/planrun/logo.svg', alt: 'PlanRun' },
+  logo: '/logo.svg',
   socialLinks: sharedSocial,
   search: { provider: 'local' as const },
 }

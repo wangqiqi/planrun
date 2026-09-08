@@ -6,7 +6,7 @@ hero:
   text: Plan once · Run with gates · Ship with receipts.
   tagline: Super Cursor workflow SOP for DeepSeek Harness — 28 skills · 12 personas · one bundle
   image:
-    src: /planrun/logo.svg
+    src: /logo.svg
     alt: PlanRun
   actions:
     - theme: brand
