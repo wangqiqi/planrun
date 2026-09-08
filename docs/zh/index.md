@@ -6,15 +6,15 @@ hero:
   text: Plan once · Run with gates · Ship with receipts.
   tagline: Super Cursor 工作流 SOP，原生运行于 DeepSeek Harness — 28 skills · 12 personas · 一套 bundle
   image:
-    src: /logo.svg
+    src: /planrun/logo.svg
     alt: PlanRun
   actions:
     - theme: brand
       text: 安装指南
-      link: /zh/install
+      link: install
     - theme: alt
       text: 快速开始
-      link: /zh/quickstart
+      link: quickstart
     - theme: alt
       text: GitHub
       link: https://github.com/wangqiqi/planrun

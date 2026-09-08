@@ -79,7 +79,7 @@ function docSidebar(locale: 'en' | 'zh'): DefaultTheme.SidebarItem[] {
 }
 
 const sharedTheme = {
-  logo: '/logo.svg',
+  logo: { src: '/planrun/logo.svg', alt: 'PlanRun' },
   socialLinks: sharedSocial,
   search: { provider: 'local' as const },
 }
@@ -93,6 +93,8 @@ export default defineConfig({
   lastUpdated: true,
   ignoreDeadLinks: true,
 
+  srcExclude: ['_redirects/**'],
+
   head: sharedHead,
 
   locales: {
@@ -104,6 +106,7 @@ export default defineConfig({
       description: 'DSH-native agent workflow SOP — plan, run, verify, release',
       themeConfig: {
         ...sharedTheme,
+        logoLink: '/en/',
         nav: [
           { text: 'Install', link: '/en/install' },
           { text: 'Quickstart', link: '/en/quickstart' },
@@ -129,6 +132,7 @@ export default defineConfig({
       description: 'DeepSeek Harness 原生 Agent 工作流 SOP',
       themeConfig: {
         ...sharedTheme,
+        logoLink: '/zh/',
         nav: [
           { text: '安装', link: '/zh/install' },
           { text: '快速开始', link: '/zh/quickstart' },
