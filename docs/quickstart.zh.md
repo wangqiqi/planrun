@@ -54,7 +54,11 @@ pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 |---|---|
 | 不知道用哪个流程 | `master` |
 | 多任务 / Sprint 规划 | `sprint-plan` |
+| 跨 Sprint Epic | `long` |
 | 执行 ACTIVE 任务 | `run` |
+| 学本仓约定 | `learn` |
+| Git 提交/合并 | `git` |
+| 空仓库脚手架 | `scaffold` |
 | PR / 代码回顾 | `review` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
 

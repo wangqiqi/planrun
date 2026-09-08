@@ -34,13 +34,15 @@ Canonical route table: [routes.md](routes.md)
 
 | Intent | Skill | Notes |
 |---|---|---|
-| New / empty project | `scaffold` (v0.2) | Not bundled in v0.1 |
-| Sprint / multi-task planning | `sprint-plan` | Not DSH `/plan` plan mode |
-| Continue implementation | `run` | Requires approved plan mirror |
-| Learn this repo | `learn` (v0.2) | Project conventions |
-| Bug / verify blocked | `run` or `sprint-plan` | Re-plan if scope drift |
-| Ship / release | `release` (v0.2) | After Sprint done |
-| Code / PR review | `review` | Read-only checklist |
+| New / empty project | **`scaffold`** | Mother-repo CLI; see skill |
+| Sprint / multi-task planning | **`sprint-plan`** | Not DSH `/plan` plan mode |
+| Multi-Sprint Epic | **`long`** | Epic → Sprint chains |
+| Continue implementation | **`run`** | Requires plan mirror ACTIVE row |
+| Learn this repo | **`learn`** | `.dsh/growth/learn/` |
+| Git / commit / merge | **`git`** | Links harness pre-push when applicable |
+| Bug / verify blocked | **`run`** or **`sprint-plan`** | Re-plan if scope drift |
+| Ship / release | `release` (v0.2+) | After Sprint done |
+| Code / PR review | **`review`** | Read-only checklist |
 
 Full table: [routes.md](routes.md)
 

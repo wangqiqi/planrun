@@ -4,23 +4,24 @@ Reference: [`cursor-ai`](../cursor-ai) (Super Cursor v4.x).
 
 Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (v0.2+) · **drop**
 
-## Skills (27 → v0.1: 4)
+## Skills (27 → v0.2 batch-1: 8)
 
 | Super Cursor | dsh-super | Status |
 |---|---|---|
 | master | master | **keep** (adapted routes) |
-| plan | sprint-plan | **rename** |
+| plan | sprint-plan | **rename** · **keep** |
 | run | run | **keep** |
-| long | long | defer |
-| learn | learn | defer |
-| scaffold | scaffold | defer |
-| release | release | defer |
-| git | git | defer |
-| delivery | delivery | defer |
+| review | review | **keep** |
+| long | long | **keep** (v0.2 batch-1) |
+| learn | learn | **keep** (v0.2 batch-1) |
+| scaffold | scaffold | **keep** (v0.2 batch-1) |
+| git | git | **keep** (v0.2 batch-1) |
+| release | release | defer (batch-2) |
+| delivery | delivery | defer (batch-2) |
+| debug, test | same ids | defer (batch-2) |
 | user-manual | user-manual | defer |
 | test-report | test-report | defer |
-| review | review | **keep** |
-| debug, test, security, api, refactor, perf, mcp, study | same ids | defer |
+| security, api, refactor, perf, mcp, study | same ids | defer |
 | ux, ia, week, disk, maintain, code-stats-viz, pencil-design | same ids | defer |
 
 ## Rules (48 → ~12 bullets)

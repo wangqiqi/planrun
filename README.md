@@ -8,7 +8,7 @@ Skills, a profile bundle, and optional presets — not a fork of DSH and not a C
 
 | Piece | Package / path | Role |
 |---|---|---|
-| Bundled skills | `@dsh-super/skill-provider` | Sprint planning, run loop, review, routing (`master`) |
+| Bundled skills | `@dsh-super/skill-provider` | Sprint loop, review, routing, learn, git, scaffold, long (`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long`) |
 | Profile bundle | `@dsh-super/bundle-super` | `cordis.patch.yml` that mounts the skill provider |
 | Agent preset | `presets/super/` | Optional `super` preset (use with `standard` + bundle in v0.1) |
 | Growth templates | `templates/growth/` | Project-local `.dsh/growth/` seeds |
@@ -55,12 +55,18 @@ export DSH_SUPER_HOME=/data/test-jw/dsh-super
 
 With the `standard` preset (or `super` when registered), load skills by name:
 
-- `master` — route when unsure which workflow to use
-- `sprint-plan` — multi-task / Sprint planning (not DSH `/plan` plan mode)
-- `run` — execute ACTIVE tasks from the growth plan mirror
-- `review` — structured code / PR review
+| Skill | Role |
+|-------|------|
+| `master` | Route when unsure which workflow to use |
+| `sprint-plan` | Multi-task / Sprint planning (not DSH `/plan` plan mode) |
+| `run` | Execute ACTIVE tasks from `.dsh/growth/plan.md` |
+| `review` | Structured code / PR review |
+| `learn` | Project conventions → `.dsh/growth/learn/` |
+| `git` | Branches, commits, merge; harness pre-push when applicable |
+| `scaffold` | Empty-repo templates (mother-repo `scaffold.sh`) |
+| `long` | Multi-Sprint Epic scheduling |
 
-User invocation: `/master`, `/sprint-plan`, `/run` where the client supports skill slash commands.
+User invocation: skill slash commands where the DSH client supports them.
 
 ## Naming vs Super Cursor
 
@@ -87,8 +93,9 @@ scripts/             # install-super-dsh.sh, verify-super-dsh.sh
 
 ## Roadmap
 
-- **v0.1 (this repo)** — MVP skills + bundle + installer
-- **v0.2** — remaining Super Cursor skills, subagent roles
+- **v0.1** — MVP skills (`master` · `sprint-plan` · `run` · `review`) + bundle + installer
+- **v0.2 batch-1** — `learn` · `git` · `scaffold` · `long` (this release)
+- **v0.2 batch-2** — `release` · `delivery` · `debug` · `test` + subagent roles
 - **v0.3** — `@dsh-super/workflow` plugin (gates, pre-step injection)
 
 ## License
