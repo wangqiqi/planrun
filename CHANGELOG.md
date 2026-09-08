@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **CI** — sync `pnpm-lock.yaml` with `packages/workflow`; correct `dsh-agent` / `dsh-llm` peer ranges to published `0.x` versions
+
 ### Added
 
 - **`docs/install.md`** — platform-neutral install guide (npm · source · Super Cursor paths)

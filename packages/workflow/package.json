@@ -35,8 +35,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=1.0.0",
-    "@deepseek-ai/dsh-agent": ">=1.0.0",
-    "@deepseek-ai/dsh-llm": ">=1.0.0"
+    "@deepseek-ai/dsh-agent": ">=0.1.0-0",
+    "@deepseek-ai/dsh-llm": ">=0.0.1-0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/cordis": { "optional": true },
