@@ -1,9 +1,0 @@
-# Example user patch — append to $DSH_HOME/profiles/web/cordis.patch.yml
-#
-# Or install the super profile:
-#   cp -r profiles/super $DSH_HOME/profiles/super
-#   dsh plugin --profile super install
-
-- insert:
-    - id: super-skills
-      name: '@dsh-super/skill-provider'

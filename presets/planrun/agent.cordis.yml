@@ -1,11 +1,11 @@
-# Super preset (v0.1)
+# PlanRun preset (v1.0)
 #
-# v0.1 uses the shipped `standard` preset for tools and plan mode.
-# Copy this directory to `$DSH_HOME/.agent-presets/super/` and set
-# `agent-presets.default: super` when a dedicated composition is ready.
+# v1.0 uses the shipped `standard` preset for tools and plan mode.
+# Copy this directory to `$DSH_HOME/.agent-presets/planrun/` and set
+# `agent-presets.default: planrun` when a dedicated composition is ready.
 #
 # For now, install only the bundle:
-#   dsh plugin --profile web add @dsh-super/bundle-super
+#   dsh plugin --profile web add file:/path/to/planrun/packages/bundle-planrun
 # Skills appear on the `standard` preset via the global skill provider layer.
 
 - id: persona

@@ -1,0 +1,9 @@
+# Example user patch — append to $DSH_HOME/profiles/web/cordis.patch.yml
+#
+# Or install the planrun profile:
+#   cp -r profiles/planrun $DSH_HOME/profiles/planrun
+#   dsh plugin --profile planrun install
+
+- insert:
+    - id: planrun-skills
+      name: '@planrun/skill-provider'
