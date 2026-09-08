@@ -86,7 +86,7 @@ Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同�
 ### 1 · Build（本仓开发）
 
 ```sh
-git clone <this-repo> planrun && cd planrun
+git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install
 pnpm run build
 pnpm run verify          # 16 skills + DSH 适配 token 结构检查
@@ -199,8 +199,7 @@ pnpm run typecheck
 | **v0.1** | MVP：`master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
-| **v0.2 batch-3** | `security` · `api` · `refactor` · `perf` | ✅ current |
-| **v0.2 guard** | `dsh-guard.sh` · `pnpm run gate-check` | ✅ |
+| **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ current |
 | **v0.3** | `@planrun/workflow` — optional hooks injection | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
@@ -212,7 +211,7 @@ pnpm run typecheck
 | Doc | Content |
 |---|---|
 | [quickstart.md](docs/quickstart.md) / [quickstart.zh.md](docs/quickstart.zh.md) | 安装与 dogfood |
-| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → planrun 映射 |
+| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 
