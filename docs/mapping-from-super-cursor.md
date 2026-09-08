@@ -44,7 +44,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 | Super Cursor | PlanRun | Status |
 |---|---|---|
-| hooks.json | @planrun/workflow plugin | defer v1.1 (optional hooks) |
+| hooks.json | @planrun/workflow plugin | **keep** (v1.1 Cordis plugin) |
 | runner.sh | `scripts/dsh-guard.sh` + `pnpm run gate-check` | **keep** (guard MVP) |
 | plan.md HTML meta SSOT | `.dsh/growth/plan.md` + guard | **keep** (session todos still parallel) |
 | commands/*.md | skill description + user slash | **merge** |

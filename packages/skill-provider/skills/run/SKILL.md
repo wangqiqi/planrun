@@ -70,7 +70,7 @@ When `<!-- AUTONOMOUS: true -->` in plan.md and user asked for full Sprint execu
 - Continue to next `pnpm run next-task` in the **same session** after each TASK ✅ + commit
 - Only interrupt on decisions listed in plan or scope expansion (`⚠️` → **`sprint-plan`**)
 
-Cordis `@planrun/workflow` plugin (hooks injection) is a later release; **guard scripts are the baseline**.
+Cordis `@planrun/workflow` plugin provides session hooks (growth-init · run-start · run-stop); **guard scripts remain the portable baseline** when the plugin is not mounted.
 
 ## Closeout
 

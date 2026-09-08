@@ -58,6 +58,7 @@ flowchart LR
 packages/
   skill-provider/     # @planrun/skill-provider — Cordis plugin + skills/
   bundle-planrun/       # @planrun/bundle-planrun — dsh.bundle.patch
+  workflow/             # @planrun/workflow — session hooks (growth · run-start · run-stop)
 presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
 templates/growth/     # plan.md · learn/ · archive/ 种子
 scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
@@ -67,7 +68,7 @@ docs/                 # mapping · naming · quickstart · workflow-guard
 | Piece | Package / path | Role |
 |---|---|---|
 | Bundled skills | `@planrun/skill-provider` | 16 workflow skills（见上表） |
-| Profile bundle | `@planrun/bundle-planrun` | `cordis.patch.yml` 自动挂载 skill provider |
+| Profile bundle | `@planrun/bundle-planrun` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
 | Agent preset | `presets/planrun/` | 可选 `planrun` preset |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
 | Installer | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
@@ -200,7 +201,8 @@ pnpm run typecheck
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
 | **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ current |
-| **v1.1** | `@planrun/workflow` — optional hooks injection | planned |
+| **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ current |
+| **Next** | Harness dogfood + defer skills | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -214,6 +216,7 @@ pnpm run typecheck
 | [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
+| [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
 
 ---
 

@@ -25,7 +25,8 @@
     }
   },
   "dependencies": {
-    "@planrun/skill-provider": "file:../skill-provider"
+    "@planrun/skill-provider": "file:../skill-provider",
+    "@planrun/workflow": "file:../workflow"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",

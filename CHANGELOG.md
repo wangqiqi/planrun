@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0] - 2026-09-08
+
+### Added
+
+- **`@planrun/workflow`** Cordis plugin — DSH hooks parity for **growth-init** · **run-start** · **run-stop**
+- `docs/workflow-hooks-map.md` — Super Cursor `hooks.json` → DSH extension point mapping
+- `bundle-planrun` mounts `@planrun/workflow` alongside `@planrun/skill-provider`
+
+### Changed
+
+- `verify-planrun.sh` — checks workflow package and bundle patch
+- README Roadmap — **v1.1** workflow hooks ✅
+
 ## [1.0.0] - 2026-09-08
 
 ### Breaking

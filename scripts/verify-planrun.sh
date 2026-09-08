@@ -49,6 +49,26 @@ if ! grep -q '@planrun/skill-provider' "$ROOT/packages/bundle-planrun/cordis.pat
   echo "MISSING: bundle references skill-provider"
   FAIL=1
 fi
+if ! grep -q '@planrun/workflow' "$ROOT/packages/bundle-planrun/cordis.patch.yml"; then
+  echo "MISSING: bundle references workflow plugin"
+  FAIL=1
+else
+  echo "OK: bundle-planrun cordis.patch.yml"
+fi
+
+echo "==> Checking @planrun/workflow package"
+for f in packages/workflow/package.json packages/workflow/src/index.ts docs/workflow-hooks-map.md; do
+  if [[ ! -f "$ROOT/$f" ]]; then
+    echo "MISSING: $f"
+    FAIL=1
+  else
+    echo "OK: $f"
+  fi
+done
+if ! grep -q '"name": "@planrun/workflow"' "$ROOT/packages/workflow/package.json"; then
+  echo "MISSING: @planrun/workflow package name"
+  FAIL=1
+fi
 
 echo "==> Checking master routes"
 if ! grep -q 'sprint-plan' "$SKILLS/master/routes.md"; then

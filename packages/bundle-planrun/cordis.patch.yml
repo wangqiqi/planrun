@@ -4,6 +4,8 @@
 - insert:
     - id: planrun-skills
       name: '@planrun/skill-provider'
+    - id: planrun-workflow
+      name: '@planrun/workflow'
 
 # Optional: register the planrun preset root when copied to a known path.
 # Uncomment after `install-planrun.sh --preset`:

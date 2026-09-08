@@ -76,7 +76,7 @@ Super Cursor–compatible columns:
 | `.cursorGrowth/plan.md` | `.dsh/growth/plan.md` (+ mother `.cursorGrowth/`) |
 | `release-tag` | **`release`** skill (not in guard MVP) |
 
-Future: `@planrun/workflow` Cordis plugin may inject pre-step hooks; guard scripts remain the portable baseline.
+Future: `@planrun/workflow` Cordis plugin injects session hooks; **guard scripts remain the portable baseline** when the plugin is not mounted.
 
 ## Skills
 
