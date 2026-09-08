@@ -1,7 +1,7 @@
 {
   "name": "planrun",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "clean": "pnpm -r run clean",
     "typecheck": "pnpm -r run typecheck",
     "verify": "./scripts/verify-planrun.sh",
+    "verify:dogfood": "./scripts/verify-dogfood.sh",
     "gate-check": "bash scripts/dsh-guard.sh gate-check",
     "plan-check": "bash scripts/dsh-guard.sh plan-check",
     "task-verify": "bash scripts/dsh-guard.sh task-verify",
