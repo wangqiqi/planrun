@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0] - 2026-09-08
+
+### Added
+
+- Bundled skills **batch-4**: `mcp`, `study`, `user-manual`, `test-report` (+ `reference/` for mcp · user-manual · test-report)
+- DSH adaptations: `ask_user_question`, `.dsh/growth/`, `GetDynamicTools` / `CallDynamicTool` in **mcp**
+
+### Changed
+
+- `master/routes.md` — routes for manual · report · mcp · study; **20** bundled skills
+- `verify-planrun.sh` · `verify-dogfood.sh` — expect **20** skills
+- Removed「v0.2+ defer」footnotes from **learn** · **long** · **test** · **delivery**
+- README · `docs/mapping-from-super-cursor.md` — **v1.3** · 20-skill inventory
+
 ## [1.2.0] - 2026-09-08
 
 ### Added
