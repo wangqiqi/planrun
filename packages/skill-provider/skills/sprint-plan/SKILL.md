@@ -1,7 +1,7 @@
 ---
 name: sprint-plan
 description: >-
-  Sprint and multi-task planning for dsh-super. Use when breaking down goals into
+  Sprint and multi-task planning for planrun. Use when breaking down goals into
   TASKs, writing .dsh/growth/plan.md, or SPIKE/DOC work. Not DSH /plan plan mode
   (single-task design). No business code in this skill.
 disable-model-invocation: true

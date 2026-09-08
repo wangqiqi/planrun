@@ -81,4 +81,4 @@ Propose **`learn`** §ERRORS for repeated agent mistakes; don't auto-edit bundle
 
 Harness example: `cd deepseek-harness && pnpm run test` (focused package/test file).
 
-Mother-repo Playwright helpers live under dsh-super `.cursor/skills/test/scripts/` (contributor checkout only — **not** bundled in npm).
+Mother-repo Playwright helpers live under planrun `.cursor/skills/test/scripts/` (contributor checkout only — **not** bundled in npm).

@@ -1,4 +1,4 @@
-# master · Route table (dsh-super)
+# master · Route table (planrun)
 
 `ask_user_question` options and keywords → downstream skill. Without that tool: numbered prose options from this table.
 
@@ -31,7 +31,7 @@
 
 ## DSH-specific notes
 
-| Super Cursor | dsh-super |
+| Super Cursor | planrun |
 |---|---|
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
 | `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |

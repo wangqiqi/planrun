@@ -13,7 +13,7 @@ Implementation: `scripts/dsh-guard.sh` sources `scripts/plan-parse.sh` for plan 
 | `pnpm run task-verify` | Run ACTIVE task acceptance (or heuristic fallback) |
 | `pnpm run next-task` | Next pending TASK ID from 执行顺序 / table |
 | `pnpm run guard` | Status summary (`dsh-guard.sh status`) |
-| `pnpm run verify` | Full structural verify (`verify-super-dsh.sh`) |
+| `pnpm run verify` | Full structural verify (`verify-planrun.sh`) |
 
 Direct CLI:
 
@@ -27,8 +27,8 @@ bash scripts/dsh-guard.sh task-verify TASK-001
 Priority:
 
 1. `DSH_GROWTH_PLAN` — explicit path
-2. `.dsh/growth/plan.md` — target projects (after `install-super-dsh.sh`)
-3. `.cursorGrowth/plan.md` — mother-repo development of dsh-super itself
+2. `.dsh/growth/plan.md` — target projects (after `install-planrun.sh`)
+3. `.cursorGrowth/plan.md` — mother-repo development of planrun itself
 
 ## HTML metadata (SSOT)
 
@@ -44,7 +44,7 @@ Guard reads HTML comments at the top of `plan.md`:
 | `NEXT` | Suggested next TASK |
 | `LAST_DONE` | Last completed TASK |
 | `AUTONOMOUS` | `true` → same-session Sprint chain |
-| `VERIFY` | Full verify command (default `./scripts/verify-super-dsh.sh`) |
+| `VERIFY` | Full verify command (default `./scripts/verify-planrun.sh`) |
 | `MAX_LOOPS` | Autonomy loop cap (default 15) |
 
 Template: [templates/growth/plan.md](../templates/growth/plan.md)
@@ -57,7 +57,7 @@ Super Cursor–compatible columns:
 
 - **Status**: `⬜` · `🔧` · `✅` (growth template also maps `ACTIVE`/`TODO`/`DONE`)
 - **Acceptance**: executable command preferred (`pnpm run verify`, `bash scripts/...`)
-- Descriptive acceptance → heuristic fallback (`DSH_GUARD_FALLBACK_VERIFY`, default `./scripts/verify-super-dsh.sh`)
+- Descriptive acceptance → heuristic fallback (`DSH_GUARD_FALLBACK_VERIFY`, default `./scripts/verify-planrun.sh`)
 
 ## Environment
 
@@ -65,18 +65,18 @@ Super Cursor–compatible columns:
 |----------|---------|---------|
 | `DSH_GROWTH_PLAN` | — | Override plan path |
 | `DSH_GUARD_HEURISTICS` | `true` | Fallback when acceptance is descriptive |
-| `DSH_GUARD_FALLBACK_VERIFY` | `./scripts/verify-super-dsh.sh` | Fallback script |
+| `DSH_GUARD_FALLBACK_VERIFY` | `./scripts/verify-planrun.sh` | Fallback script |
 
 ## vs Super Cursor
 
-| Super Cursor | dsh-super guard |
+| Super Cursor | planrun guard |
 |--------------|-----------------|
 | `.cursor/bin/runner.sh` | `scripts/dsh-guard.sh` |
 | `.cursor/config/workflow.json` | env + plan HTML meta |
 | `.cursorGrowth/plan.md` | `.dsh/growth/plan.md` (+ mother `.cursorGrowth/`) |
 | `release-tag` | **`release`** skill (not in guard MVP) |
 
-Future: `@dsh-super/workflow` Cordis plugin may inject pre-step hooks; guard scripts remain the portable baseline.
+Future: `@planrun/workflow` Cordis plugin may inject pre-step hooks; guard scripts remain the portable baseline.
 
 ## Skills
 

@@ -3,7 +3,7 @@
 ## 1. Build
 
 ```sh
-cd /data/test-jw/dsh-super
+cd /data/test-jw/planrun
 pnpm install
 pnpm run build
 pnpm run verify
@@ -16,8 +16,8 @@ DevDependencies point at sibling `deepseek-harness` for `@deepseek-ai/cordis` an
 On a machine with `dsh` installed:
 
 ```sh
-export DSH_SUPER_HOME=/data/test-jw/dsh-super
-dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
+export PLANRUN_HOME=/data/test-jw/planrun
+dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
 Or append to `$DSH_HOME/profiles/web/cordis.patch.yml`:
@@ -25,13 +25,13 @@ Or append to `$DSH_HOME/profiles/web/cordis.patch.yml`:
 ```yaml
 - insert:
     - id: super-skills
-      name: '@dsh-super/skill-provider'
+      name: '@planrun/skill-provider'
 ```
 
 ## 3. Project growth templates
 
 ```sh
-./scripts/install-super-dsh.sh --here
+./scripts/install-planrun.sh --here
 ```
 
 Creates `.dsh/growth/` at the Git project root.

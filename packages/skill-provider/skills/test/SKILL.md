@@ -79,7 +79,7 @@ split FE/BE? → start both servers (project compose script) → E2E against FE 
 2. screenshot or list locators
 3. interact with discovered selectors
 
-Mother-repo examples: `$DSH_SUPER_HOME/.cursor/skills/test/scripts/` (contributor checkout only). Install Playwright in **target project**, not via skill-provider package.
+Mother-repo examples: `$PLANRUN_HOME/.cursor/skills/test/scripts/` (contributor checkout only). Install Playwright in **target project**, not via skill-provider package.
 
 With **`debug`**: capture console on UI failures; networkidle before assertions.
 

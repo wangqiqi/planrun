@@ -1,6 +1,6 @@
 # Sprint: <title>
 
-<!-- dsh-super plan mirror — HTML meta is SSOT for dsh-guard; session todos remain authoritative in DSH -->
+<!-- PlanRun plan mirror — HTML meta is SSOT for dsh-guard; session todos remain authoritative in DSH -->
 
 <!-- PLANNING: true -->
 <!-- SPRINT: SPRINT-01 -->

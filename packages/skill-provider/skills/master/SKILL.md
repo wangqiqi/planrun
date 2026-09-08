@@ -1,7 +1,7 @@
 ---
 name: master
 description: >-
-  Router when unsure which dsh-super workflow to use. Load for help, ambiguous goals,
+  Router when unsure which planrun workflow to use. Load for help, ambiguous goals,
   or new sessions. Routes to sprint-plan, run, learn, review, and release — does not
   execute downstream work itself.
 user-invocable: true
@@ -20,7 +20,7 @@ Canonical route table: [routes.md](routes.md)
 
 - User says they are lost or asks what to do next
 - Goal is clear but no workflow is named (scaffold, ship, verify failed, empty repo)
-- New session right after `install-super-dsh.sh`
+- New session right after `install-planrun.sh`
 
 **Do not intercept** when the user already named a skill (`sprint-plan`, `run`, `review`) or DSH plan mode (`/plan` for single-task design).
 
@@ -48,4 +48,4 @@ Full table: [routes.md](routes.md)
 
 ## Discipline
 
-Standing rules live in [docs/discipline.md](../../../docs/discipline.md) at the dsh-super repo root (or project `AGENTS.md` snippet after install).
+Standing rules live in [docs/discipline.md](../../../docs/discipline.md) at the planrun repo root (or project `AGENTS.md` snippet after install).

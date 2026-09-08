@@ -64,7 +64,7 @@ Between Sprints: optional pause; cross-day use **`/long resume`**.
 3. open Sprint → continue **`run`** (ACTIVE)
 4. closed Sprint → **`sprint-plan`** for next Sprint (steps 2a–f)
 
-Project verify must pass before marking Sprint ✅ (v0.3: `@dsh-super/workflow` guard).
+Project verify must pass before marking Sprint ✅ (v0.3: `@planrun/workflow` guard).
 
 ## Division of labor
 
@@ -94,4 +94,4 @@ Project verify must pass before marking Sprint ✅ (v0.3: `@dsh-super/workflow` 
 
 ## Acceptance (mother repo)
 
-When changing `skills/long/` in dsh-super: `pnpm run verify` green; Epic complete → `long-state.status: completed` · no Active block in plan mirror.
+When changing `skills/long/` in planrun: `pnpm run verify` green; Epic complete → `long-state.status: completed` · no Active block in plan mirror.

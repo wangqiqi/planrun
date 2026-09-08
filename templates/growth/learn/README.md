@@ -1,4 +1,4 @@
-# Project learnings (dsh-super)
+# Project learnings (planrun)
 
 Add durable project facts here — module map, conventions, verify commands.
 
@@ -8,4 +8,4 @@ Suggested files:
 - `module-map.md` — directory responsibilities
 - `verify.md` — which scripts to run and when
 
-Do not duplicate universal SOP from the dsh-super package; link to skills instead.
+Do not duplicate universal SOP from the planrun package; link to skills instead.

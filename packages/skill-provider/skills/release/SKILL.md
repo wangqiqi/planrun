@@ -16,11 +16,11 @@ Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
 After code is green and `.dsh/growth/archive/` notes exist: **merge to mainline, then tag** (if shipping).
 
 ```bash
-pnpm run verify          # dsh-super repo
+pnpm run verify          # planrun repo
 git status && git diff --stat
 ```
 
-v0.3: `@dsh-super/workflow` may add guard hooks; until then use project verify + explicit user confirm for tag/push.
+v0.3: `@planrun/workflow` may add guard hooks; until then use project verify + explicit user confirm for tag/push.
 
 ## Branch closeout (merge / PR)
 
@@ -72,7 +72,7 @@ When mainline is green and users need a version bump.
 | **minor** | user-visible feature, no breaking | user decides |
 | **major** | breaking change | user decides |
 
-### dsh-super repo checklist
+### planrun repo checklist
 
 - [ ] `pnpm run build && pnpm run verify` green
 - [ ] `CHANGELOG.md` — fold `[Unreleased]` into `## [x.y.z] - date`

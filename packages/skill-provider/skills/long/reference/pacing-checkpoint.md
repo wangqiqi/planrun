@@ -65,7 +65,7 @@ Path: **`.dsh/growth/long-state.json`** (gitignored, beside plan mirror).
 
 **Resume**: user says「继续长程」→ read long-state + plan mirror → continue ACTIVE or next Sprint **`sprint-plan`** handoff.
 
-**SSOT note (v0.1)**: DSH session todos are authoritative for in-flight work; long-state and plan mirror are **human-auditable** copies. v0.3 `@dsh-super/workflow` may unify gates.
+**SSOT note (v0.1)**: DSH session todos are authoritative for in-flight work; long-state and plan mirror are **human-auditable** copies. v0.3 `@planrun/workflow` may unify gates.
 
 ## Host loop (optional)
 

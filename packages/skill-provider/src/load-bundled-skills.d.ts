@@ -1,10 +1,10 @@
 /**
  * Parse bundled skill directories and build immutable provider candidates.
  *
- * @module @dsh-super/skill-provider/load-bundled-skills
+ * @module @planrun/skill-provider/load-bundled-skills
  */
 import { type SkillCandidate, type SkillDefinition } from './dsh-skill-shim.ts';
-declare const PROVIDER_NAME = "dsh-super";
+declare const PROVIDER_NAME = "planrun";
 interface BundledSkillRecord {
     candidate: SkillCandidate;
     bodyPath: string;

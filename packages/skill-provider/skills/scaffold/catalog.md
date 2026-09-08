@@ -1,8 +1,8 @@
-# Scaffold catalog (dsh-super)
+# Scaffold catalog (planrun)
 
-**Contributor note**: stack templates and `scaffold.sh` live in the **dsh-super mother repo** at `.cursor/templates/scaffold/` and `.cursor/bin/scaffold.sh`. They are **not** shipped inside `@dsh-super/skill-provider` npm files.
+**Contributor note**: stack templates and `scaffold.sh` live in the **planrun mother repo** at `.cursor/templates/scaffold/` and `.cursor/bin/scaffold.sh`. They are **not** shipped inside `@planrun/skill-provider` npm files.
 
-Source manifest: dsh-super checkout → `.cursor/templates/scaffold/manifest.json` · tier: **standard+** (lint/test/verify/README + CI + `.env.example`)
+Source manifest: planrun checkout → `.cursor/templates/scaffold/manifest.json` · tier: **standard+** (lint/test/verify/README + CI + `.env.example`)
 
 | id | category | tests | loop |
 |----|----------|-------|------|
@@ -38,8 +38,8 @@ After apply, run manifest `post_apply`, then `./scripts/verify.sh`.
 
 When the target has only `.dsh/growth/` and harness skills:
 
-1. Use **`install-super-dsh.sh --here`** for growth seeds
-2. For greenfield app stacks, either work from a **dsh-super checkout** (`$DSH_SUPER_HOME/.cursor/bin/scaffold.sh`) or hand-roll README + verify per stack conventions
+1. Use **`install-planrun.sh --here`** for growth seeds
+2. For greenfield app stacks, either work from a **planrun checkout** (`$PLANRUN_HOME/.cursor/bin/scaffold.sh`) or hand-roll README + verify per stack conventions
 3. Do **not** assume `scaffold.sh` exists in the target repo
 
 ## Extension

@@ -1,4 +1,4 @@
-# dsh-super
+# PlanRun
 
 > **Plan once · Run with gates · Ship with receipts.**
 
@@ -11,16 +11,16 @@
 
 ---
 
-## Why dsh-super
+## Why PlanRun
 
 Cursor 里用 `/plan` · `/run` · `/release` 跑 Sprint 的人，换到 DSH 后往往缺同一套**可审计、可验证**的流程约束。
 
-dsh-super 填这个缝：
+PlanRun 填这个缝：
 
 | 你得到 | 不是什么 |
 |---|---|
 | 16 个 bundled **skills**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
-| **`@dsh-super/bundle-super`** — `dsh plugin add` 一键进 profile | 不是 Cursor rules 复制粘贴 |
+| **`@planrun/bundle-planrun`** — `dsh plugin add` 一键进 profile | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
@@ -56,21 +56,21 @@ flowchart LR
 
 ```
 packages/
-  skill-provider/     # @dsh-super/skill-provider — Cordis plugin + skills/
-  bundle-super/       # @dsh-super/bundle-super — dsh.bundle.patch
-presets/super/        # 可选 agent preset（v0.1 配合 standard 使用）
+  skill-provider/     # @planrun/skill-provider — Cordis plugin + skills/
+  bundle-planrun/       # @planrun/bundle-planrun — dsh.bundle.patch
+presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
 templates/growth/     # plan.md · learn/ · archive/ 种子
-scripts/              # install-super-dsh.sh · dsh-guard.sh · verify-super-dsh.sh
+scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
 docs/                 # mapping · naming · quickstart · workflow-guard
 ```
 
 | Piece | Package / path | Role |
 |---|---|---|
-| Bundled skills | `@dsh-super/skill-provider` | 16 workflow skills（见上表） |
-| Profile bundle | `@dsh-super/bundle-super` | `cordis.patch.yml` 自动挂载 skill provider |
-| Agent preset | `presets/super/` | 可选 `super` preset |
+| Bundled skills | `@planrun/skill-provider` | 16 workflow skills（见上表） |
+| Profile bundle | `@planrun/bundle-planrun` | `cordis.patch.yml` 自动挂载 skill provider |
+| Agent preset | `presets/planrun/` | 可选 `planrun` preset |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
-| Installer | `scripts/install-super-dsh.sh` | 复制 growth 模板 + 打印 profile 说明 |
+| Installer | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
 | Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
 
 Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同模式）：
@@ -86,7 +86,7 @@ Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同�
 ### 1 · Build（本仓开发）
 
 ```sh
-git clone <this-repo> dsh-super && cd dsh-super
+git clone <this-repo> planrun && cd planrun
 pnpm install
 pnpm run build
 pnpm run verify          # 16 skills + DSH 适配 token 结构检查
@@ -97,16 +97,16 @@ pnpm run verify          # 16 skills + DSH 适配 token 结构检查
 ### 2 · Install bundle（DSH profile）
 
 ```sh
-export DSH_SUPER_HOME=/path/to/dsh-super   # 或省略，直接用 clone 路径
+export PLANRUN_HOME=/path/to/planrun   # 或省略，直接用 clone 路径
 
-dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
+dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
 验证：
 
 ```sh
-dsh --profile web --dump-config | grep super-skills
-ls "$DSH_HOME/profiles/web/node_modules/@dsh-super/skill-provider/skills/"
+dsh --profile web --dump-config | grep planrun-skills
+ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 ```
 
 **不要**在 profile 的 `cordis.patch.yml` 里再手动 insert 同一插件 — bundle 已挂载，双挂载会 boot 失败。
@@ -118,8 +118,8 @@ ls "$DSH_HOME/profiles/web/node_modules/@dsh-super/skill-provider/skills/"
 在目标 Git 仓库根：
 
 ```sh
-export DSH_SUPER_HOME=/path/to/dsh-super
-"$DSH_SUPER_HOME/scripts/install-super-dsh.sh" --here --copy-plan
+export PLANRUN_HOME=/path/to/planrun
+"$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
 ```
 
 创建 `.dsh/growth/`（plan · learn · archive），通常 gitignore。
@@ -139,7 +139,7 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/pl
 
 ### 4 · Use in a session
 
-用 **standard** preset（或 `install-super-dsh.sh --preset` 后的 **super**），按场景加载 skill：
+用 **standard** preset（或 `install-planrun.sh --preset` 后的 **planrun**），按场景加载 skill：
 
 | Skill | 何时加载 |
 |---|---|
@@ -168,7 +168,7 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 
 ## Naming vs Super Cursor
 
-| Super Cursor | dsh-super | Notes |
+| Super Cursor | planrun | Notes |
 |---|---|---|
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
@@ -188,7 +188,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-super-dsh.sh` 校验 **16** 个 skill 目录、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
+`verify-planrun.sh` 校验 **16** 个 skill 目录、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
 
 ---
 
@@ -201,7 +201,7 @@ pnpm run typecheck
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
 | **v0.2 batch-3** | `security` · `api` · `refactor` · `perf` | ✅ current |
 | **v0.2 guard** | `dsh-guard.sh` · `pnpm run gate-check` | ✅ |
-| **v0.3** | `@dsh-super/workflow` — optional hooks injection | planned |
+| **v0.3** | `@planrun/workflow` — optional hooks injection | planned |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -212,7 +212,7 @@ pnpm run typecheck
 | Doc | Content |
 |---|---|
 | [quickstart.md](docs/quickstart.md) / [quickstart.zh.md](docs/quickstart.zh.md) | 安装与 dogfood |
-| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → dsh-super 映射 |
+| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → planrun 映射 |
 | [naming.md](docs/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 

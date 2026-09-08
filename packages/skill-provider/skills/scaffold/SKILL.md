@@ -11,12 +11,12 @@ user-invocable: true
 
 Catalog: [catalog.md](catalog.md)
 
-**Mother repo only (contributor / dsh-super checkout)**:
+**Mother repo only (contributor / planrun checkout)**:
 
-- Templates: `$DSH_SUPER_HOME/.cursor/templates/scaffold/` (or dsh-super root `.cursor/templates/scaffold/`)
-- CLI: `$DSH_SUPER_HOME/.cursor/bin/scaffold.sh`
+- Templates: `$PLANRUN_HOME/.cursor/templates/scaffold/` (or planrun root `.cursor/templates/scaffold/`)
+- CLI: `$PLANRUN_HOME/.cursor/bin/scaffold.sh`
 
-**Not shipped** in `@dsh-super/skill-provider` npm package. Pure DSH target projects without a checkout → see [catalog.md §Pure DSH projects](catalog.md#pure-dsh-projects-no-cursor).
+**Not shipped** in `@planrun/skill-provider` npm package. Pure DSH target projects without a checkout → see [catalog.md §Pure DSH projects](catalog.md#pure-dsh-projects-no-cursor).
 
 **Gate**: scaffolding is **user-authorized** repo initialization. Empty repo (`detect` → `state=empty`) may run without a plan mirror. **Existing code** requires `audit` + `ask_user_question`, default `--dry-run`, no silent overwrite.
 
@@ -28,12 +28,12 @@ Catalog: [catalog.md](catalog.md)
 
 ## Flow (empty project)
 
-1. **Detect** (from dsh-super checkout):
+1. **Detect** (from planrun checkout):
 
 ```bash
-export DSH_SUPER_HOME=/path/to/dsh-super
-"$DSH_SUPER_HOME/.cursor/bin/scaffold.sh" detect
-"$DSH_SUPER_HOME/.cursor/bin/scaffold.sh" list
+export PLANRUN_HOME=/path/to/planrun
+"$PLANRUN_HOME/.cursor/bin/scaffold.sh" detect
+"$PLANRUN_HOME/.cursor/bin/scaffold.sh" list
 ```
 
 2. **`ask_user_question`** (stack, package manager, optional bundles — ≤4 options per round; if tool unavailable → numbered prose options per **`master`**)
@@ -42,13 +42,13 @@ export DSH_SUPER_HOME=/path/to/dsh-super
 |----------|----------|
 | project type | frontend · backend · systems |
 | stack | `react-vite-ts` · `go-api` · `python-fastapi` · … (see catalog) |
-| growth seeds | run **`install-super-dsh.sh --here --copy-plan`** after scaffold? |
+| growth seeds | run **`install-planrun.sh --here --copy-plan`** after scaffold? |
 
 3. **Preview** — before apply:
 
 ```bash
-"$DSH_SUPER_HOME/.cursor/bin/scaffold.sh" info <id>
-"$DSH_SUPER_HOME/.cursor/bin/scaffold.sh" apply <id> --dry-run
+"$PLANRUN_HOME/.cursor/bin/scaffold.sh" info <id>
+"$PLANRUN_HOME/.cursor/bin/scaffold.sh" apply <id> --dry-run
 ```
 
 List CREATE / SKIP files; explain `post_apply` and verify.
@@ -56,14 +56,14 @@ List CREATE / SKIP files; explain `post_apply` and verify.
 4. **Apply** — only after explicit user「确认 / apply」:
 
 ```bash
-"$DSH_SUPER_HOME/.cursor/bin/scaffold.sh" apply <id>
+"$PLANRUN_HOME/.cursor/bin/scaffold.sh" apply <id>
 ```
 
 5. **Closeout**
 
 - run manifest `post_apply`
 - `./scripts/verify.sh` or project equivalent
-- **`install-super-dsh.sh --here --copy-plan`** → `.dsh/growth/plan.md`
+- **`install-planrun.sh --here --copy-plan`** → `.dsh/growth/plan.md`
 - **`learn`** → write stack conventions to `.dsh/growth/learn/dev-conventions.md`
 - **`sprint-plan`** → first Sprint if multi-step work remains
 

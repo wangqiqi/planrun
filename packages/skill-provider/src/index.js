@@ -1,7 +1,7 @@
 /**
- * Bundled dsh-super skill provider.
+ * Bundled planrun skill provider.
  *
- * @module @dsh-super/skill-provider
+ * @module @planrun/skill-provider
  */
 import { bundledSkillMap, loadBundledSkills, PROVIDER_NAME, toDefinition, } from './load-bundled-skills.ts';
 const records = loadBundledSkills();
@@ -19,7 +19,7 @@ const provider = {
     },
 };
 /** Cordis plugin name. */
-export const name = 'dsh-super-skill-provider';
+export const name = 'planrun-skill-provider';
 /** Registers on the skill registry. */
 export const inject = ['skills'];
 /** Register bundled Super Cursor–adapted skills on `ctx.skills`. */

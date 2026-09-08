@@ -3,7 +3,7 @@
 ## 1. 构建
 
 ```sh
-cd /data/test-jw/dsh-super
+cd /data/test-jw/planrun
 pnpm install
 pnpm run build
 pnpm run verify
@@ -16,32 +16,32 @@ pnpm run verify
 在已安装 `dsh` 的机器上（**先 `pnpm run build`**）：
 
 ```sh
-export DSH_SUPER_HOME=/path/to/dsh-super
-dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
+export PLANRUN_HOME=/path/to/planrun
+dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
 验证：
 
 ```sh
-dsh --profile web --dump-config | grep super-skills
-ls "$DSH_HOME/profiles/web/node_modules/@dsh-super/skill-provider/skills/"
+dsh --profile web --dump-config | grep planrun-skills
+ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 ```
 
-`bundle-super` 会通过 `file:../skill-provider` 把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
+`bundle-planrun` 会通过 `file:../skill-provider` 把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
 
 从 harness 仓开发时可用：
 
 ```sh
 cd /path/to/deepseek-harness
-pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
+pnpm dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
 ```
 
-**常见错误**：若 `bundle-super` 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
+**常见错误**：若 `bundle-planrun` 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
 
 ## 3. 项目内 growth 模板
 
 ```sh
-./scripts/install-super-dsh.sh --here
+./scripts/install-planrun.sh --here
 ```
 
 会在 Git 项目根创建 `.dsh/growth/`（plan · learn · archive）。
@@ -57,11 +57,11 @@ pnpm run task-verify    # 任务收尾前
 pnpm run next-task      # 找下一项
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发 dsh-super 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
+plan 路径：`.dsh/growth/plan.md`（开发 planrun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
 
 ## 5. 在会话中使用
 
-使用 **standard** preset（或未来的 **super** preset）：
+使用 **standard** preset（或 **planrun** preset）：
 
 | 场景 | 加载 skill |
 |---|---|
@@ -86,9 +86,9 @@ plan 路径：`.dsh/growth/plan.md`（开发 dsh-super 本身可用 `.cursorGrow
 ## 6. Dogfood（deepseek-harness）
 
 ```sh
-export DSH_SUPER_HOME=/path/to/dsh-super
+export PLANRUN_HOME=/path/to/planrun
 cd /path/to/deepseek-harness
-"$DSH_SUPER_HOME/scripts/install-super-dsh.sh" --here --copy-plan
+"$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
 # bundle 见 §2；启动 dsh web + standard preset 后加载 master / sprint-plan / run / review
 ```
 

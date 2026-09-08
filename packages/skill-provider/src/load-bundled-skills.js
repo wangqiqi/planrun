@@ -1,14 +1,14 @@
 /**
  * Parse bundled skill directories and build immutable provider candidates.
  *
- * @module @dsh-super/skill-provider/load-bundled-skills
+ * @module @planrun/skill-provider/load-bundled-skills
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse as parseYaml } from 'yaml';
 import { BUNDLED_SKILL_RANK, isSkillName, } from './dsh-skill-shim.ts';
-const PROVIDER_NAME = 'dsh-super';
+const PROVIDER_NAME = 'planrun';
 const SKILLS_ROOT = fileURLToPath(new URL('../skills/', import.meta.url));
 function parseFrontmatter(raw) {
     const normalized = raw.replace(/\r\n/g, '\n');

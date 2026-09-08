@@ -23,7 +23,7 @@ Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
 
 ## Bootstrap
 
-1. **`install-super-dsh.sh`** — copies `templates/growth/` → target `.dsh/growth/`
+1. **`install-planrun.sh`** — copies `templates/growth/` → target `.dsh/growth/`
 2. First **`learn`** run fills seed files and absorbs CHANGELOG / archive / plan mirror
 
 | File | Content |

@@ -1,7 +1,7 @@
 ---
 name: run
 description: >-
-  Execute ACTIVE tasks from .dsh/growth/plan.md for dsh-super. Implement, verify,
+  Execute ACTIVE tasks from .dsh/growth/plan.md for planrun. Implement, verify,
   update plan mirror, commit per task. Load after sprint-plan approval. Sprint
   finish may hand off to release (v0.2).
 disable-model-invocation: true
@@ -70,7 +70,7 @@ When `<!-- AUTONOMOUS: true -->` in plan.md and user asked for full Sprint execu
 - Continue to next `pnpm run next-task` in the **same session** after each TASK ✅ + commit
 - Only interrupt on decisions listed in plan or scope expansion (`⚠️` → **`sprint-plan`**)
 
-Cordis `@dsh-super/workflow` plugin (hooks injection) is a later release; **guard scripts are the baseline**.
+Cordis `@planrun/workflow` plugin (hooks injection) is a later release; **guard scripts are the baseline**.
 
 ## Closeout
 
