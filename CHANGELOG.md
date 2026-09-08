@@ -8,12 +8,18 @@
 
 ### Added
 
+- **Workflow guard MVP**: `scripts/dsh-guard.sh` (`gate-check` · `plan-check` · `task-verify` · `next-task`)
+- `pnpm run gate-check` · `plan-check` · `task-verify` · `next-task` · `guard` npm scripts
+- `docs/workflow-guard.md` — guard usage and plan HTML metadata
 - Bundled skills **v0.2 batch-1**: `learn`, `git`, `scaffold`, `long` (+ `long/reference/`, `scaffold/catalog.md`)
 - Bundled skills **v0.2 batch-2**: `release`, `delivery`, `debug`, `test` (+ `delivery/reference/` checklists)
 - `verify-super-dsh.sh` checks 12 skills and DSH adaptation tokens
 
 ### Changed
 
+- `sprint-plan` · `run` skills — `pnpm run gate-check` as hard gate; AUTONOMOUS + `next-task` alignment
+- `templates/growth/plan.md` — full HTML metadata block + Super Cursor–compatible TASK table
+- `verify-super-dsh.sh` — guard script and npm script checks
 - `master/routes.md` — full v0.2 route table
 - `docs/mapping-from-super-cursor.md` · `docs/naming.md` · `README.md` · `quickstart.zh.md` — 12 skill inventory
 

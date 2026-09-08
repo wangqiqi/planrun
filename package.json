@@ -8,7 +8,12 @@
     "build": "pnpm -r run build",
     "clean": "pnpm -r run clean",
     "typecheck": "pnpm -r run typecheck",
-    "verify": "./scripts/verify-super-dsh.sh"
+    "verify": "./scripts/verify-super-dsh.sh",
+    "gate-check": "bash scripts/dsh-guard.sh gate-check",
+    "plan-check": "bash scripts/dsh-guard.sh plan-check",
+    "task-verify": "bash scripts/dsh-guard.sh task-verify",
+    "next-task": "bash scripts/dsh-guard.sh next-task",
+    "guard": "bash scripts/dsh-guard.sh status"
   },
   "engines": {
     "node": "^22.19.0 || >=24"

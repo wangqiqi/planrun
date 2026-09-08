@@ -46,7 +46,20 @@ pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 
 会在 Git 项目根创建 `.dsh/growth/`（plan · learn · archive）。
 
-## 4. 在会话中使用
+## 4. Workflow guard（Sprint 闸门）
+
+`sprint-plan` 写好 plan 并设 `PLAN_APPROVED` 后，**`run`** 前先：
+
+```sh
+pnpm run gate-check
+pnpm run plan-check
+pnpm run task-verify    # 任务收尾前
+pnpm run next-task      # 找下一项
+```
+
+plan 路径：`.dsh/growth/plan.md`（开发 dsh-super 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
+
+## 5. 在会话中使用
 
 使用 **standard** preset（或未来的 **super** preset）：
 
@@ -66,7 +79,7 @@ pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 | 查 bug / 测挂了 | `debug` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
 
-## 5. Dogfood（deepseek-harness）
+## 6. Dogfood（deepseek-harness）
 
 ```sh
 export DSH_SUPER_HOME=/path/to/dsh-super
@@ -77,7 +90,7 @@ cd /path/to/deepseek-harness
 
 bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 `cordis.patch.yml` 那样热加载。
 
-## 6. 与 Super Cursor 对照
+## 7. 与 Super Cursor 对照
 
 见 [mapping-from-super-cursor.md](mapping-from-super-cursor.md) 与 [naming.md](naming.md)。
 

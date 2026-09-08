@@ -106,7 +106,12 @@ dsh-super 项目模板已安装到: $GROWTH
      dsh plugin --profile web add "file:$SOURCE/packages/bundle-super"
   2. 启动 dsh web，使用 standard preset
   3. 加载 skill: master · sprint-plan · run · review
+  4. Sprint 闸门（在 dsh-super 仓或已复制 scripts 的项目）:
+     pnpm run gate-check    # PLAN_APPROVED + ACTIVE
+     pnpm run plan-check    # handoff 结构
+     pnpm run task-verify   # 当前 ACTIVE 验收
+     pnpm run next-task     # 下一待办 ID
 
-文档: $SOURCE/docs/quickstart.zh.md
+文档: $SOURCE/docs/quickstart.zh.md · $SOURCE/docs/workflow-guard.md
 
 EOF

@@ -40,9 +40,9 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 | Super Cursor | dsh-super | Status |
 |---|---|---|
-| hooks.json | @dsh-super/workflow plugin | defer v0.3 |
-| runner.sh | guard plugin + pnpm scripts | defer v0.3 |
-| plan.md HTML meta SSOT | session todos + plan mirror | defer v0.3 |
+| hooks.json | @dsh-super/workflow plugin | defer v0.3 (optional hooks) |
+| runner.sh | `scripts/dsh-guard.sh` + `pnpm run gate-check` | **keep** (guard MVP) |
+| plan.md HTML meta SSOT | `.dsh/growth/plan.md` + guard | **keep** (session todos still parallel) |
 | commands/*.md | skill description + user slash | **merge** |
 | agents/ship, review, spike | subagent preset (v0.2) | defer |
 

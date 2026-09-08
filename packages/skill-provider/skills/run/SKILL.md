@@ -16,19 +16,31 @@ Read `.dsh/growth/learn/` when present. Discipline: [docs/discipline.md](../../.
 
 ## Before coding
 
-1. Read `.dsh/growth/plan.md` — find the `ACTIVE` row.
-2. If no ACTIVE row or gate failures → load **`sprint-plan`** or fix blockers first.
-3. Run the project's verify command for the task **before** marking DONE.
+```sh
+pnpm run gate-check    # BLOCK → sprint-plan or fix plan metadata
+```
+
+1. Read `.dsh/growth/plan.md` — `<!-- ACTIVE: ... -->` or ACTIVE table row.
+2. If no ACTIVE or gate failures → load **`sprint-plan`** first.
+3. Run task verify **before** marking DONE:
+
+```sh
+pnpm run task-verify          # current ACTIVE
+pnpm run task-verify TASK-001 # explicit id
+```
+
+Guard reference: [docs/workflow-guard.md](../../../docs/workflow-guard.md)
 
 ## Per-task loop
 
 ```
-ACTIVE → implement → verify → update plan.md → git commit → next ACTIVE
+ACTIVE → implement → pnpm run task-verify → update plan.md → git commit → next ACTIVE
 ```
 
 | Step | Rule |
 |---|---|
-| Verify | Task verify must pass before ✅ |
+| Verify | `pnpm run task-verify` must pass before ✅ |
+| Next | `pnpm run next-task` after ✅ (or read `<!-- NEXT: ... -->`) |
 | Commit | **Required** after each TASK/DOC/SPIKE ✅ (exclude plan.md-only edits) |
 | Message | `type(scope): summary (TASK-001)` |
 | plan.md only | Do **not** commit (`.dsh/growth/` is usually gitignored) |
@@ -51,9 +63,14 @@ Prefer project-native scripts:
 
 Use [dsh-pre-push-checks](https://github.com/deepseek-ai/deepseek-harness/blob/main/.agents/skills/dsh-pre-push-checks/SKILL.md) when working in deepseek-harness.
 
-## Autonomous Sprint (v0.3)
+## Autonomous Sprint
 
-Super Cursor `AUTONOMOUS:true` chain moves to `@dsh-super/workflow` plugin. Until then: continue to next ACTIVE in the same session when user asked for full Sprint execution.
+When `<!-- AUTONOMOUS: true -->` in plan.md and user asked for full Sprint execution:
+
+- Continue to next `pnpm run next-task` in the **same session** after each TASK ✅ + commit
+- Only interrupt on decisions listed in plan or scope expansion (`⚠️` → **`sprint-plan`**)
+
+Cordis `@dsh-super/workflow` plugin (hooks injection) is a later release; **guard scripts are the baseline**.
 
 ## Closeout
 

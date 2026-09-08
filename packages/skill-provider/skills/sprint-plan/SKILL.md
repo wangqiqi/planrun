@@ -31,24 +31,38 @@ Sprint Goal = **capability / module / user-visible increment**. Not: tag-only, C
 
 1. **Clarify** Goal and Done-when with `ask_user_question` when ambiguous.
 2. **Decompose** into TASK rows with IDs (`TASK-001`, `SPIKE-001`, `DOC-001`).
-3. **Write** `.dsh/growth/plan.md` from [templates/growth/plan.md](../../../templates/growth/plan.md).
-4. **Mark** one row `ACTIVE` for `run`.
-5. **Hand off** — user loads **`run`** or continues in the same session.
+3. **Write** `.dsh/growth/plan.md` from [templates/growth/plan.md](../../../templates/growth/plan.md) — include HTML metadata block (`PLANNING`, `PLAN_APPROVED`, `ACTIVE`, `VERIFY`, …).
+4. **Set** `<!-- PLANNING: false -->` and `<!-- PLAN_APPROVED: YYYY-MM-DD -->` after user confirms.
+5. **Mark** `<!-- ACTIVE: TASK-xxx -->` (and one table row `⬜`/`🔧`) for **`run`**.
+6. **Hand off** — user loads **`run`** or continues in the same session.
+
+## Gate before run
+
+```sh
+pnpm run gate-check   # BLOCK → stay in sprint-plan
+pnpm run plan-check   # handoff structure
+```
+
+See [docs/workflow-guard.md](../../../docs/workflow-guard.md).
 
 ## plan.md mirror format
 
 ```markdown
-# Sprint: <title>
+<!-- PLANNING: false -->
+<!-- PLAN_APPROVED: 2026-09-08 -->
+<!-- ACTIVE: TASK-001 -->
+<!-- VERIFY: pnpm run verify -->
 
 **Goal:** …
-**Done when:** …
 
-| ID | Status | Target | Verify |
-|---|---|---|---|
-| TASK-001 | ACTIVE | … | `pnpm test` … |
+| ID | Task | Priority | Status | Acceptance | Target |
+|----|------|----------|--------|------------|--------|
+| TASK-001 | … | P0 | ⬜ | `pnpm run verify` | … |
 ```
 
-Status values: `ACTIVE` · `TODO` · `DONE` · `BLOCKED`
+**执行顺序**: `TASK-001` → `TASK-002`
+
+Status values: `⬜` · `🔧` · `✅` (or `ACTIVE`/`TODO`/`DONE` in simplified tables)
 
 ## SPIKE / DOC
 

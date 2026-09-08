@@ -82,6 +82,30 @@ while IFS= read -r skill_dir; do
   fi
 done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
 
+echo "==> Checking workflow guard"
+for f in scripts/dsh-guard.sh scripts/plan-parse.sh; do
+  if [[ ! -f "$ROOT/$f" ]]; then
+    echo "MISSING: $f"
+    FAIL=1
+  else
+    echo "OK: $f"
+  fi
+done
+for script in gate-check plan-check task-verify next-task; do
+  if ! grep -q "\"$script\"" "$ROOT/package.json"; then
+    echo "MISSING: package.json script $script"
+    FAIL=1
+  else
+    echo "OK: pnpm run $script"
+  fi
+done
+if [[ -f "$ROOT/scripts/dsh-guard.sh" ]]; then
+  if ! bash "$ROOT/scripts/dsh-guard.sh" help 2>/dev/null | grep -q gate-check; then
+    echo "FAIL: dsh-guard.sh help missing gate-check"
+    FAIL=1
+  fi
+fi
+
 if [[ "$FAIL" -ne 0 ]]; then
   exit 1
 fi
