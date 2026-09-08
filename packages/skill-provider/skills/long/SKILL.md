@@ -9,7 +9,7 @@ user-invocable: true
 
 # long
 
-**用这个**：跨多个 Sprint 的大目标 — 总规划 → 分 Sprint → 每 Sprint **`sprint-plan`** + **`run`** → 归档 → 下一 Sprint。**不是那个**：单 Sprint 连跑 → **`sprint-plan`** + **`run`** 一次；学新技术 → **`study`**（v0.2+）。
+**用这个**：跨多个 Sprint 的大目标 — 总规划 → 分 Sprint → 每 Sprint **`sprint-plan`** + **`run`** → 归档 → 下一 Sprint。**不是那个**：单 Sprint 连跑 → **`sprint-plan`** + **`run`** 一次；学新技术 → **`study`**。
 
 Details: [reference/hierarchy.md](reference/hierarchy.md) · [reference/pacing-checkpoint.md](reference/pacing-checkpoint.md)
 

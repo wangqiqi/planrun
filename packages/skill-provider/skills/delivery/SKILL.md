@@ -67,4 +67,4 @@ PDF / Office deep tools: **not bundled** in skill-provider; use project scripts 
 - silent spec or code change on conflicts without **`Decision needed`**
 - replace **task-verify** or skip **security** on high-risk diffs
 
-User manual / test report regen → **user-manual** / **test-report** (v0.2+ defer skills).
+User manual / test report regen → **`user-manual`** · **`test-report`** skills.

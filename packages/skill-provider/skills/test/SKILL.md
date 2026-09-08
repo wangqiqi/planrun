@@ -42,7 +42,7 @@ With **`debug`**: red repro → narrow with doubles → green regression lock.
 | Integration | API, DB, module boundaries |
 | E2E | critical user paths (Playwright/Cypress if project has them) |
 
-Full release **test report** → **test-report** (v0.2+ defer).
+Full release **test report** → **`test-report`** skill.
 
 ## Verify layers (L0–L3)
 
