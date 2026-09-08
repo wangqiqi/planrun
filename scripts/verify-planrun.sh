@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verify-super-dsh.sh — structural checks for the dsh-super repo
+# verify-planrun.sh — structural checks for the planrun repo
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -45,7 +45,7 @@ if [[ ! -f "$SKILLS/scaffold/catalog.md" ]]; then
 fi
 
 echo "==> Checking bundle patch"
-if ! grep -q '@dsh-super/skill-provider' "$ROOT/packages/bundle-super/cordis.patch.yml"; then
+if ! grep -q '@planrun/skill-provider' "$ROOT/packages/bundle-planrun/cordis.patch.yml"; then
   echo "MISSING: bundle references skill-provider"
   FAIL=1
 fi
@@ -110,4 +110,4 @@ if [[ "$FAIL" -ne 0 ]]; then
   exit 1
 fi
 
-echo "verify-super-dsh: OK"
+echo "verify-planrun: OK"

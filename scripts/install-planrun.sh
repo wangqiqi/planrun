@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-super-dsh.sh — seed .dsh/growth/ and print profile instructions
+# install-planrun.sh — seed .dsh/growth/ and print profile instructions
 set -euo pipefail
 
 usage() {
@@ -7,23 +7,23 @@ usage() {
 用法: $0 [目标项目路径] [选项]
 
 环境变量:
-  DSH_SUPER_HOME    dsh-super 仓库根（含 templates/growth）
+  PLANRUN_HOME    planrun 仓库根（含 templates/growth）
 
 选项:
   --here            安装到当前 Git 项目根
   --copy-plan       复制 plan.md 模板（若不存在）
-  --preset          复制 presets/super 到 ~/.dsh/.agent-presets/super
+  --preset          复制 presets/planrun 到 ~/.dsh/.agent-presets/planrun
   -h, --help        显示帮助
 
 示例:
-  export DSH_SUPER_HOME=/data/test-jw/dsh-super
+  export PLANRUN_HOME=/path/to/planrun
   $0 --here --copy-plan
 EOF
 }
 
 resolve_source_root() {
   local candidate
-  for candidate in "${DSH_SUPER_HOME:-}"; do
+  for candidate in "${PLANRUN_HOME:-}"; do
     if [[ -n "$candidate" && -d "$candidate/templates/growth" ]]; then
       echo "$candidate"
       return 0
@@ -35,7 +35,7 @@ resolve_source_root() {
     echo "$script_dir"
     return 0
   fi
-  echo "错误: 未找到 templates/growth；设置 DSH_SUPER_HOME" >&2
+  echo "错误: 未找到 templates/growth；设置 PLANRUN_HOME" >&2
   exit 1
 }
 
@@ -90,23 +90,23 @@ if [[ ! -f "$GROWTH/archive/README.md" ]]; then
 fi
 
 if [[ "$INSTALL_PRESET" == true ]]; then
-  PRESET_DEST="${DSH_HOME:-$HOME/.dsh}/.agent-presets/super"
+  PRESET_DEST="${DSH_HOME:-$HOME/.dsh}/.agent-presets/planrun"
   mkdir -p "$(dirname "$PRESET_DEST")"
   rm -rf "$PRESET_DEST"
-  cp -a "$SOURCE/presets/super" "$PRESET_DEST"
+  cp -a "$SOURCE/presets/planrun" "$PRESET_DEST"
   echo "已复制 preset → $PRESET_DEST"
 fi
 
 cat <<EOF
 
-dsh-super 项目模板已安装到: $GROWTH
+PlanRun 项目模板已安装到: $GROWTH
 
 下一步:
   1. 将 bundle 加入 DSH profile:
-     dsh plugin --profile web add "file:$SOURCE/packages/bundle-super"
+     dsh plugin --profile web add "file:$SOURCE/packages/bundle-planrun"
   2. 启动 dsh web，使用 standard preset
   3. 加载 skill: master · sprint-plan · run · review
-  4. Sprint 闸门（在 dsh-super 仓或已复制 scripts 的项目）:
+  4. Sprint 闸门（在 planrun 仓或已复制 scripts 的项目）:
      pnpm run gate-check    # PLAN_APPROVED + ACTIVE
      pnpm run plan-check    # handoff 结构
      pnpm run task-verify   # 当前 ACTIVE 验收

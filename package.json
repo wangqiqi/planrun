@@ -8,7 +8,7 @@
     "build": "pnpm -r run build",
     "clean": "pnpm -r run clean",
     "typecheck": "pnpm -r run typecheck",
-    "verify": "./scripts/verify-super-dsh.sh",
+    "verify": "./scripts/verify-planrun.sh",
     "gate-check": "bash scripts/dsh-guard.sh gate-check",
     "plan-check": "bash scripts/dsh-guard.sh plan-check",
     "task-verify": "bash scripts/dsh-guard.sh task-verify",

@@ -44,7 +44,7 @@ plan_verify() {
   if [[ -n "$v" ]]; then
     echo "$v"
   else
-    echo "./scripts/verify-super-dsh.sh"
+    echo "./scripts/verify-planrun.sh"
   fi
 }
 

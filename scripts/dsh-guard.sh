@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# dsh-guard.sh — workflow guard MVP for dsh-super (gate-check · plan-check · task-verify · next-task)
+# dsh-guard.sh — workflow guard MVP for planrun (gate-check · plan-check · task-verify · next-task)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SC_SKIP_PREFIXES="${SC_SKIP_PREFIXES:-REV- SPIKE- DOC-}"
 HEURISTICS_ENABLED="${DSH_GUARD_HEURISTICS:-true}"
-FALLBACK_VERIFY="${DSH_GUARD_FALLBACK_VERIFY:-./scripts/verify-super-dsh.sh}"
+FALLBACK_VERIFY="${DSH_GUARD_FALLBACK_VERIFY:-./scripts/verify-planrun.sh}"
 
 resolve_plan_file() {
   local candidate
@@ -137,7 +137,7 @@ plan_check() {
   local vmeta vpath
   vmeta="$(plan_verify)"
   if [[ "$vmeta" == *"dsh-guard"* && "$vmeta" == *"verify"* ]]; then
-    echo "FAIL: <!-- VERIFY --> 不得为 dsh-guard verify（无限递归）；应写 pnpm run verify 或 ./scripts/verify-super-dsh.sh"
+    echo "FAIL: <!-- VERIFY --> 不得为 dsh-guard verify（无限递归）；应写 pnpm run verify 或 ./scripts/verify-planrun.sh"
     issues=$((issues + 1))
   elif [[ "$vmeta" != *" "* && "$vmeta" == ./* ]]; then
     vpath="${vmeta#./}"
@@ -304,7 +304,7 @@ Plan 路径（优先级）:
 环境变量:
   DSH_GROWTH_PLAN          显式 plan 路径
   DSH_GUARD_HEURISTICS     true（默认）| false
-  DSH_GUARD_FALLBACK_VERIFY  描述性验收回退脚本（默认 ./scripts/verify-super-dsh.sh）
+  DSH_GUARD_FALLBACK_VERIFY  描述性验收回退脚本（默认 ./scripts/verify-planrun.sh）
 EOF
     ;;
   *)
