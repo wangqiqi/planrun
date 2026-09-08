@@ -18,7 +18,7 @@
 
 ## Bundled skills (v1.4, 27 skills)
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `week` · `disk` · `maintain` · `code-stats-viz` · `pencil-design` · `md2docx-export`
 
 ## Personas (12)
 

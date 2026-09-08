@@ -73,7 +73,7 @@ UX 分流不明时 → **ux** skill；结构问题回流 **ia**，非结构抛�
 | 转图验收 | `convert_pdf_to_images.py` · `create_validation_image.py` |
 | 边界框检查 | `check_bounding_boxes.py` |
 
-**Office 整包**（docx/pptx/xlsx 含 office/ 子树）本 Sprint **不纳入**；需深度编辑 → **master** deps 建议用户装 upstream 或 MCP。
+**Office 整包**（docx/pptx/xlsx 含 office/ 子树）本 Sprint **不纳入**；需深度编辑 → **master** deps 建议用户装 upstream 或 MCP。Markdown **导出** Word → **md2docx-export**（`pip install mddocx` · 可选 MCP）；不替代 delivery 走查。
 
 ## 禁止
 

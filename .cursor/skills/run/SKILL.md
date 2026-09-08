@@ -160,6 +160,7 @@ bash .cursor/bin/cursor-coherence.sh   # README ↔ 磁盘 skills/agents 一致
 | 写 PRD/RFC/设计 doc | **plan** §协作文档 · AskQuestion 结构化 vs 自由 |
 | E2E / Playwright / 起 dev server | **test** §E2E · `with_server.py` |
 | PDF 表单/验收 | **delivery** §PDF 工具 |
+| Markdown → docx / 导出 Word | **md2docx-export** · `mddocx` CLI 或 MCP |
 | 编辑 docx/pptx/xlsx 深度 | AskQuestion：**装 upstream** anthropics skill / 用 MCP / 跳过 |
 | 新 UI 交付走查 | **delivery** §1 反模板自检 |
 | 使用说明书 / 配图 regen | **user-manual** `/manual` |

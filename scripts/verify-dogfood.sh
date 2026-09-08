@@ -14,7 +14,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PLANRUN_HOME="${PLANRUN_HOME:-$ROOT}"
 FIXTURE="${PLANRUN_HOME}/templates/dogfood/plan-fixture.md"
 SKILLS="${PLANRUN_HOME}/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design)
+EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design md2docx-export)
 FAIL=0
 
 usage() {

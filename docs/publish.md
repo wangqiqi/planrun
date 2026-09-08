@@ -4,7 +4,7 @@ PlanRun ships three public packages under the `@planrun` scope:
 
 | Package | Role |
 |---------|------|
-| `@planrun/skill-provider` | 27 bundled skills + `config/roles.json` |
+| `@planrun/skill-provider` | 28 bundled skills + `config/roles.json` |
 | `@planrun/workflow` | Cordis plugin (growth · run-start · run-stop · persona) |
 | `@planrun/bundle` | DSH profile bundle (`dsh.bundle.patch`) |
 

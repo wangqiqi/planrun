@@ -42,6 +42,7 @@
 | **maintain** | 环境维护（关键词 / master） | 诊断与安全清理 · 委托 disk | 无配置乱删 |
 | **code-stats-viz** | 代码统计（关键词 / master） | Git 行数/语言/提交日历 → HTML 仪表板 | 磁盘占用（用 disk） |
 | **pencil-design** | 视觉设计（关键词 · 无 slash） | Pencil CLI → `.pen` + PNG | IA/上线验收（用 ia/delivery） |
+| **md2docx-export** | md→docx（关键词 · 无 slash） | `mddocx` CLI / MCP → `.docx` | 深度编辑已有 Word（用 upstream docx） |
 | **study** | 学新技术 | 最小示例 · SPIKE 归档 | 项目认知（用 learn） |
 
 Agents：**ship**（发版）· **review** · **spike**（后二者只读）

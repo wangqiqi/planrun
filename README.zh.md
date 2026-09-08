@@ -4,7 +4,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **27** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%20%3E%3D24-brightgreen)](package.json)
@@ -21,7 +21,7 @@ PlanRun 填这个缝：
 
 | 你得到 | 不是什么 |
 |---|---|
-| 27 个 bundled **skills** + **12 人格**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
+| 28 个 bundled **skills** + **12 人格**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
 | **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` 一键进 profile | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
@@ -69,7 +69,7 @@ docs/                 # mapping · naming · quickstart · workflow-guard
 
 | 组件 | 包 / 路径 | 作用 |
 |---|---|---|
-| Bundled skills | `@planrun/skill-provider` | 27 workflow skills + `config/roles.json`（12 人格） |
+| Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json`（12 人格） |
 | Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
 | Agent preset | `presets/planrun/` | 可选 `planrun` preset |
 | Growth 模板 | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
@@ -92,7 +92,7 @@ Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同�
 git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install
 pnpm run build
-pnpm run verify          # 27 skills + 12 personas + DSH 适配 token 结构检查
+pnpm run verify          # 28 skills + 12 personas + DSH 适配 token 结构检查
 ```
 
 开发时 `skill-provider` 的 peer 可指向同级 `deepseek-harness` checkout。
@@ -198,7 +198,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` 校验 **27** 个 skill 目录、**12** 人格 catalog、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
+`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
 
 ---
 

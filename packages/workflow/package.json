@@ -1,7 +1,7 @@
 {
   "name": "@planrun/workflow",
   "description": "PlanRun workflow Cordis plugin — growth-init, run-start, run-stop for DSH",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",

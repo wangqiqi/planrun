@@ -2,7 +2,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-**中文**：把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **27** workflow skills、**12** personas、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+**中文**：把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** workflow skills、**12** personas、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%20%3E%3D24-brightgreen)](package.json)
@@ -19,7 +19,7 @@ PlanRun 填这个缝：
 
 | 你得到 | 不是什么 |
 |---|---|
-| 27 bundled **skills** + **12 personas**（Cordis plugin mount） | 不是 fork `deepseek-harness` |
+| 28 bundled **skills** + **12 personas**（Cordis plugin mount） | 不是 fork `deepseek-harness` |
 | **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` 一键进 profile | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
@@ -67,7 +67,7 @@ docs/                 # mapping · naming · quickstart · workflow-guard
 
 | Piece | Package / path | Role |
 |---|---|---|
-| Bundled skills | `@planrun/skill-provider` | 27 workflow skills + `config/roles.json` (12 personas) |
+| Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json` (12 personas) |
 | Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
 | Agent preset | `presets/planrun/` | 可选 `planrun` preset |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
@@ -90,7 +90,7 @@ Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同�
 git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install
 pnpm run build
-pnpm run verify          # 27 skills + 12 personas + DSH adapter token checks
+pnpm run verify          # 28 skills + 12 personas + DSH adapter token checks
 ```
 
 开发时 `skill-provider` 的 peer 可指向同级 `deepseek-harness` checkout。
@@ -201,7 +201,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` checks **27** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills.
+`verify-planrun.sh` checks **28** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills.
 
 ---
 

@@ -59,7 +59,7 @@ Doc ↔ implementation conflicts → **`Decision needed`**: doc says · code doe
 
 Browser walkthrough (§10) and full a11y (§11) are **optional** — skip with reason in report. No default MCP required in DSH.
 
-PDF / Office deep tools: **not bundled** in skill-provider; use project scripts or upstream skills when user explicitly requests.
+PDF / Office deep tools: **not bundled** in skill-provider; use project scripts or upstream skills when user explicitly requests. Markdown **export** to Word → **md2docx-export** (`pip install mddocx` · optional MCP).
 
 ## Forbidden
 

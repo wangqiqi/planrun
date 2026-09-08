@@ -73,6 +73,7 @@ LIBRARY — 路径 + 何时手动选用
 | doc-coauthoring | 写 PRD/RFC/提案 | ✅ **plan** · **run** |
 | pdf | PDF 表单/验收 | ✅ **delivery** scripts/pdf |
 | docx · pptx · xlsx | 深度 Office 编辑 | ❌ 建议 `npx skills add` / upstream · office/ 过重 |
+| md2docx / mddocx | Markdown → DOCX | ✅ **md2docx-export** · `pip install mddocx` · 可选 MCP |
 | algorithmic-art | 生成艺术 · p5 | LIBRARY only |
 | brand-guidelines | 企业 VI · 品牌色 | LIBRARY only |
 | internal-comms | 内部周报 · FAQ · 3P | LIBRARY only |
@@ -82,7 +83,7 @@ LIBRARY — 路径 + 何时手动选用
 | skill-creator | 写/优化 skill 方法论 | ✅ **learn** |
 | claude-api · web-artifacts-builder | Claude 专用 | Out of scope |
 
-**Office 深度编辑** — AskQuestion（≤3 项）：`装 upstream anthropics skill` · `用 MCP/飞书等` · `本轮不做`
+**Office 分流** — AskQuestion（≤4 项）：`md→docx（md2docx-export）` · `装 upstream anthropics skill（深度编辑）` · `用 MCP/飞书等` · `本轮不做`
 
 ### github/spec-kit · LIBRARY
 
@@ -194,6 +195,7 @@ LIBRARY — 路径 + 何时手动选用
 | 环境维护、清理缓存、系统维护 | **maintain**（无 slash · 关键词） |
 | 代码统计、代码量、语言分布、提交热力图、code stats | **code-stats-viz**（无 slash · 关键词） |
 | 做设计、mockup、landing page 视觉、.pen、生成海报/App 屏 | **pencil-design**（无 slash · 关键词） |
+| md 转 docx、导出 Word、markdown 转 word | **md2docx-export**（无 slash · 关键词） |
 | 长程任务、Epic、多 Sprint 自治、全自动做到底 | **long** `/long` |
 | 分支收尾、merge、开 PR、打 tag | **release** · **git** |
 | PR 评论、CI 循环 | `babysit`（`more` → `git`） |
@@ -248,6 +250,7 @@ README 场景速查中无独立主菜单、经 `more` → `config` 或关键词�
 | 环境维护、清理磁盘、dev maintenance | **maintain**（无 slash · 关键词） |
 | 代码统计、代码量、语言分布、提交日历、仓库分析 | **code-stats-viz**（无 slash · 关键词） |
 | 做设计、mockup、视觉稿、.pen、海报、banner、App 屏 | **pencil-design**（无 slash · 关键词） |
+| md 转 docx、导出 Word、markdown 转 word、手册出 Word | **md2docx-export**（无 slash · 关键词） |
 | submodule、vendor、依赖升级、开源选型、许可证、MIT、GPL | **more** → `deps`（`oss-first.mdc` · `submodule.mdc`） |
 | 外网 skill、安装 skill、发现 skill、有没有能做 X 的 skill | **more** → `deps` → **security** §外部 Agent Skill；个人目录安装须用户确认 |
 | DAILY、LIBRARY、裁剪 skill、精简规则、skill 太多、全量安装 | **more** → `deps` §DAILY/LIBRARY；结论可写入 **learn** |

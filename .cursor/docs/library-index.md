@@ -14,7 +14,8 @@
 | doc-coauthoring | **plan** · **run** 三阶段 · Reader Testing | PRD · RFC · 提案 |
 | pdf（轻量 scripts） | **delivery** `scripts/pdf/` | PDF 表单验收 |
 | skill-creator | **learn** 写作纪律 | 写 skill 方法论 |
-| docx · pptx · xlsx | **未纳入**整包 | 建议用户自行安装 upstream 或 MCP |
+| docx · pptx · xlsx（深度编辑） | **未纳入**整包 | 建议用户自行安装 upstream anthropics skill 或 MCP |
+| md2docx / mddocx（md→docx） | **md2docx-export** · PyPI `mddocx` · 可选 MCP | md 转 Word · 导出 docx · markdown 转 word |
 | 创意/企业类 | **master** `routes.md` §LIBRARY | 按需 |
 
 运行时可选矩阵副本 → `.cursorGrowth/learn/`（`/learn` 吸收，非母版必读）。
@@ -100,6 +101,17 @@
 | 编辑器内 `.pen` 节点操作 | **未纳入**（Cursor Pencil MCP 插件） | 改这个组件 · 调布局 · 设计稿里改色 |
 
 升级 CLI 后同步 skill：`curl -fsSL "https://unpkg.com/@pencil.dev/cli@latest/SKILL.md" -o .cursor/skills/pencil-design/SKILL.md`
+
+## mddocx（md2docx · PyPI · MIT）
+
+上游：PyPI **`mddocx`**（仓库 md2docx）。**不** vendoring 转换引擎进母版；MCP server 随包发布（`pip install "mddocx[mcp]"`）。
+
+| 能力 | 母版落点 | 用户自然语言 |
+|------|----------|--------------|
+| Markdown → DOCX（CLI / MCP） | **md2docx-export**（无 slash · 关键词） | md 转 docx · 导出 Word · 手册出 Word |
+| 编辑已有 docx 样式/修订 | **未纳入**（anthropics docx / Office MCP） | 改 Word 段落 · 批注 · 样式 |
+
+MCP 配置示例 → **md2docx-export** `reference/mcp-config.example.json`。
 
 ## 安装外网 skill 前
 

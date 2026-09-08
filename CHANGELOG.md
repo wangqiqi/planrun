@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+## [1.6.1] - 2026-09-08
+
+### Added
+
+- **`md2docx-export`** skill — Markdown → DOCX via PyPI `mddocx` (CLI + optional MCP); routes in **master** · **run** · **delivery** · `library-index.md`
+
+### Changed
+
+- Bundled skills **27 → 28** (`verify-planrun.sh` · README · docs index)
+
 ## [1.6.0] - 2026-09-08
 
 ### Added

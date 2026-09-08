@@ -4,7 +4,7 @@ Reference: [`cursor-ai`](../cursor-ai) (Super Cursor v4.x).
 
 Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (v0.2+) · **drop**
 
-## Skills (27 bundled · v1.4)
+## Skills (28 bundled · v1.4+)
 
 | Super Cursor | PlanRun | Status |
 |---|---|---|
@@ -28,7 +28,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | test-report | test-report | **keep** (batch-4) |
 | mcp | mcp | **keep** (batch-4) |
 | study | study | **keep** (batch-4) |
-| ux, ia, week, disk, maintain, code-stats-viz, pencil-design | same ids | **keep** (batch-5 · v1.4) |
+| ux, ia, week, disk, maintain, code-stats-viz, pencil-design, md2docx-export | same ids | **keep** (batch-5+ · v1.4+) |
 
 ## Rules (48 → ~12 bullets)
 

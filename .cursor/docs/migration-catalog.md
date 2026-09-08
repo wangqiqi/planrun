@@ -21,7 +21,7 @@
 | epic / 多 Sprint 编排 | **long** | `/long` · Epic→Sprint→Task · checkpoint |
 | user docs / 操作手册 | **user-manual** | `/manual` · Manual Contract |
 | QA 报告 / verify 汇总 | **test-report** | `/report` · Report Contract |
-| UX / IA / 工具类 | **ux** · **ia** · **week** · **disk** · **maintain** · **code-stats-viz** · **pencil-design** | skill-only（无 slash） |
+| UX / IA / 工具类 | **ux** · **ia** · **week** · **disk** · **maintain** · **code-stats-viz** · **pencil-design** · **md2docx-export** | skill-only（无 slash） |
 | spike / POC | **spike** agent + `SPIKE-*` | 只读调研 |
 | command-center 等编排 | **master** routes | 无伪 class 引擎 |
 

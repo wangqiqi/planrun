@@ -33,6 +33,7 @@
 | `ux` | UX unclear — route to ia / delivery / sprint-plan | **`ux`** |
 | `ia` | Navigation, role home, workflow branches | **`ia`** |
 | `pencil` | Pencil CLI mockup / .pen design | **`pencil-design`** |
+| `md2docx` | Markdown → DOCX / export Word | **`md2docx-export`** |
 | `week` | Multi-repo CHANGELOG weekly summary | **`week`** |
 | `disk` | Disk usage snapshot and diff | **`disk`** |
 | `maintain` | Linux dev environment cleanup | **`maintain`** |
@@ -84,6 +85,6 @@
 
 Install: `install-planrun.sh --preset` · [subagents.md](../../../docs/subagents.md) · bundled `agents/*.md` in `@planrun/skill-provider`.
 
-## Bundled skills (27)
+## Bundled skills (28)
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `pencil-design` · `week` · `disk` · `maintain` · `code-stats-viz`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report` · `ux` · `ia` · `pencil-design` · `md2docx-export` · `week` · `disk` · `maintain` · `code-stats-viz`
