@@ -1,9 +1,11 @@
 # Quickstart (中文)
 
+完整安装说明（前置、三条路径、常见错误）→ **[install.md](install.md)**。
+
 ## 1. 构建
 
 ```sh
-cd /data/test-jw/planrun
+git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install
 pnpm run build
 pnpm run verify

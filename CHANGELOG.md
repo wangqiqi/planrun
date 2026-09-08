@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+- **`docs/install.md`** — platform-neutral install guide (npm · source · Super Cursor paths)
+- **`scripts/verify-docs-paths.sh`** — docs must not contain machine-specific paths
+
+### Changed
+
+- **README** · **quickstart** — who fits / prerequisites / DSH vs Cursor table; links to install.md
+- **dogfood.md** — bundled skills count 28
+
 ## [1.6.1] - 2026-09-08
 
 ### Added

@@ -27,7 +27,39 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-中文逐步指南 → [docs/quickstart.zh.md](docs/quickstart.zh.md)
+**安装（任意用户）** → [docs/install.md](docs/install.md) · 快速上手 → [docs/quickstart.zh.md](docs/quickstart.zh.md)
+
+---
+
+## 谁适合用 PlanRun
+
+| 情况 | 说明 |
+|------|------|
+| ✅ 已用 **DeepSeek Harness**，想要 plan → run → verify → release 纪律 | `@planrun/bundle` 挂载即可 |
+| ✅ 想要 **28 个 skill** + **12 人格**，不想手抄 `.cursor/` | Cordis 插件 + growth 模板 |
+| ⚠️ **只用 Cursor**、没有 DSH | 用 **Super Cursor** 装目标项目 `.cursor/` — 见 [install.md](docs/install.md) 路径 C |
+| ❌ 要独立桌面应用或完全不要 Node | 不在范围内 — 宿主是 DSH + Node 工具链 |
+
+**许可**：MIT — 任何人可安装、修改、再分发。**不需要**作者账号或某台开发机路径。
+
+### 前置条件（摘要）
+
+| 项 | 用途 |
+|----|------|
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / 本地 file 安装 bundle |
+| Node `^22.19` 或 `>=24` | build · verify · guard |
+| bash | `install-planrun.sh` · `dsh-guard.sh` |
+
+完整表与三条安装路径 → **[docs/install.md](docs/install.md)**。
+
+### PlanRun（DSH）vs Super Cursor（`.cursor/`）
+
+| | **PlanRun**（`@planrun/bundle`） | **Super Cursor**（母版 `.cursor/`） |
+|--|--------------------------------|-------------------------------------|
+| **宿主** | DeepSeek Harness profile | Cursor IDE 项目 |
+| **plan 文件** | `.dsh/growth/plan.md` | `.cursorGrowth/plan.md` |
+| **安装** | `dsh plugin add @planrun/bundle` | `install-super-cursor.sh` → 目标 `.cursor/` |
+| **本仓** | `packages/*` 发 npm | `.cursor/` skills/rules（母版开发） |
 
 ---
 

@@ -43,7 +43,7 @@ pnpm run verify:dogfood
 2. **Plan fixture** — `templates/dogfood/plan-fixture.md` (HTML meta + TASK table)
 3. **Guard loop** — `DSH_GROWTH_PLAN=<fixture>` → `gate-check` · `plan-check` · `next-task`
 4. **Bundle artifacts** — `bundle-planrun` · `skill-provider` · `workflow` `lib/` after `pnpm run build`
-5. **16 skills** — disk inventory + `master/routes.md` references
+5. **28 skills** — disk inventory + `master/routes.md` references
 6. **Install seed** — `install-planrun.sh` creates `.dsh/growth/` on a temp git root (does not modify harness)
 
 ## Guard fixture SSOT

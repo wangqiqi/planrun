@@ -264,6 +264,11 @@ else
   echo "OK: verify:dogfood"
 fi
 
+echo "==> Checking docs path neutrality"
+if ! bash "$ROOT/scripts/verify-docs-paths.sh"; then
+  FAIL=1
+fi
+
 if [[ "$FAIL" -ne 0 ]]; then
   exit 1
 fi

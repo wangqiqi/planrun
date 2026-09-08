@@ -1,9 +1,11 @@
 # Quickstart
 
+End-to-end install (paths, prerequisites, three install paths) → **[install.md](install.md)**.
+
 ## 1. Build
 
 ```sh
-cd /data/test-jw/planrun
+git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install
 pnpm run build
 pnpm run verify
