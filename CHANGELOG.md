@@ -14,7 +14,8 @@
 
 ### Changed
 
-- **VitePress i18n** — `en/` · `zh/` 镜像同路径页面；顶栏语言切换保持当前页（如 `/en/discipline` ↔ `/zh/discipline`）；移除混杂的 `root` locale
+- **VitePress 站点** — 根路径跳转至 `/zh/` 或 `/en/` 主页；排除 `_redirects/` 桩页面；Logo/首页样式优化；GitHub About 链到 `/zh/`
+- **VitePress i18n** — `en/` · `zh/` 镜像同路径页面；顶栏语言切换保持当前页
 - **README** · **quickstart** — who fits / prerequisites / DSH vs Cursor table; links to install.md
 - **dogfood.md** — bundled skills count 28
 
