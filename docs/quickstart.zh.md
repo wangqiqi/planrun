@@ -60,6 +60,10 @@ pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 | Git 提交/合并 | `git` |
 | 空仓库脚手架 | `scaffold` |
 | PR / 代码回顾 | `review` |
+| 打版 / merge / tag | `release` |
+| 上线走查 | `delivery` |
+| 写测试 / TDD | `test` |
+| 查 bug / 测挂了 | `debug` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
 
 ## 5. Dogfood（deepseek-harness）

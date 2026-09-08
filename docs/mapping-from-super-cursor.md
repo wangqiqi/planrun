@@ -4,7 +4,7 @@ Reference: [`cursor-ai`](../cursor-ai) (Super Cursor v4.x).
 
 Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (v0.2+) · **drop**
 
-## Skills (27 → v0.2 batch-1: 8)
+## Skills (27 → v0.2: 12 bundled)
 
 | Super Cursor | dsh-super | Status |
 |---|---|---|
@@ -12,13 +12,14 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | plan | sprint-plan | **rename** · **keep** |
 | run | run | **keep** |
 | review | review | **keep** |
-| long | long | **keep** (v0.2 batch-1) |
-| learn | learn | **keep** (v0.2 batch-1) |
-| scaffold | scaffold | **keep** (v0.2 batch-1) |
-| git | git | **keep** (v0.2 batch-1) |
-| release | release | defer (batch-2) |
-| delivery | delivery | defer (batch-2) |
-| debug, test | same ids | defer (batch-2) |
+| long | long | **keep** (batch-1) |
+| learn | learn | **keep** (batch-1) |
+| scaffold | scaffold | **keep** (batch-1) |
+| git | git | **keep** (batch-1) |
+| release | release | **keep** (batch-2) |
+| delivery | delivery | **keep** (batch-2) |
+| debug | debug | **keep** (batch-2) |
+| test | test | **keep** (batch-2) |
 | user-manual | user-manual | defer |
 | test-report | test-report | defer |
 | security, api, refactor, perf, mcp, study | same ids | defer |

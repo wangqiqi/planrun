@@ -18,4 +18,4 @@
 
 ## Skill IDs (kebab-case)
 
-Bundled in v0.2 batch-1: `master`, `sprint-plan`, `run`, `review`, `learn`, `git`, `scaffold`, `long`
+Bundled (v0.2): `master`, `sprint-plan`, `run`, `review`, `learn`, `git`, `scaffold`, `long`, `release`, `delivery`, `debug`, `test`

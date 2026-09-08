@@ -9,12 +9,13 @@
 ### Added
 
 - Bundled skills **v0.2 batch-1**: `learn`, `git`, `scaffold`, `long` (+ `long/reference/`, `scaffold/catalog.md`)
-- `verify-super-dsh.sh` checks 8 skills and DSH adaptation tokens
+- Bundled skills **v0.2 batch-2**: `release`, `delivery`, `debug`, `test` (+ `delivery/reference/` checklists)
+- `verify-super-dsh.sh` checks 12 skills and DSH adaptation tokens
 
 ### Changed
 
-- `master/routes.md` — routes for new skills; v0.2 placeholders removed
-- `docs/mapping-from-super-cursor.md` · `docs/naming.md` · `README.md` — skill inventory
+- `master/routes.md` — full v0.2 route table
+- `docs/mapping-from-super-cursor.md` · `docs/naming.md` · `README.md` · `quickstart.zh.md` — 12 skill inventory
 
 ## 0.1.0 — 2026-09-08
 

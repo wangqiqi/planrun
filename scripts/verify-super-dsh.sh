@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS="$ROOT/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long)
+EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test)
 FORBIDDEN_PATTERNS='\.cursorGrowth|AskQuestion|runner\.sh'
 FAIL=0
 
@@ -28,6 +28,16 @@ for ref in hierarchy pacing-checkpoint; do
   fi
 done
 
+echo "==> Checking delivery reference files"
+for ref in checklist-core checklist-optional; do
+  if [[ ! -f "$SKILLS/delivery/reference/$ref.md" ]]; then
+    echo "MISSING: delivery/reference/$ref.md"
+    FAIL=1
+  else
+    echo "OK: delivery/reference/$ref.md"
+  fi
+done
+
 echo "==> Checking scaffold catalog"
 if [[ ! -f "$SKILLS/scaffold/catalog.md" ]]; then
   echo "MISSING: scaffold/catalog.md"
@@ -45,14 +55,14 @@ if ! grep -q 'sprint-plan' "$SKILLS/master/routes.md"; then
   echo "MISSING: master/routes.md should reference sprint-plan"
   FAIL=1
 fi
-for skill in learn git scaffold long; do
+for skill in learn git scaffold long release delivery debug test; do
   if ! grep -q "\`$skill\`" "$SKILLS/master/routes.md"; then
     echo "MISSING: master/routes.md should reference $skill"
     FAIL=1
   fi
 done
 
-echo "==> Checking DSH adaptation (no Cursor-only tokens in new skills)"
+echo "==> Checking DSH adaptation (no Cursor-only tokens in bundled skills)"
 while IFS= read -r skill_dir; do
   base="$(basename "$skill_dir")"
   [[ "$base" == "master" ]] && continue
@@ -60,6 +70,15 @@ while IFS= read -r skill_dir; do
     echo "FAIL: skills/$base/SKILL.md contains forbidden Cursor-only token"
     grep -nE "$FORBIDDEN_PATTERNS" "$skill_dir/SKILL.md" || true
     FAIL=1
+  fi
+  if [[ -d "$skill_dir/reference" ]]; then
+    while IFS= read -r ref_file; do
+      if grep -qE "$FORBIDDEN_PATTERNS" "$ref_file" 2>/dev/null; then
+        echo "FAIL: $ref_file contains forbidden Cursor-only token"
+        grep -nE "$FORBIDDEN_PATTERNS" "$ref_file" || true
+        FAIL=1
+      fi
+    done < <(find "$skill_dir/reference" -name '*.md' -type f)
   fi
 done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
 

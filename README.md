@@ -8,7 +8,7 @@ Skills, a profile bundle, and optional presets — not a fork of DSH and not a C
 
 | Piece | Package / path | Role |
 |---|---|---|
-| Bundled skills | `@dsh-super/skill-provider` | Sprint loop, review, routing, learn, git, scaffold, long (`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long`) |
+| Bundled skills | `@dsh-super/skill-provider` | 12 workflow skills (plan · run · review · learn · git · scaffold · long · release · delivery · debug · test · `master`) |
 | Profile bundle | `@dsh-super/bundle-super` | `cordis.patch.yml` that mounts the skill provider |
 | Agent preset | `presets/super/` | Optional `super` preset (use with `standard` + bundle in v0.1) |
 | Growth templates | `templates/growth/` | Project-local `.dsh/growth/` seeds |
@@ -65,6 +65,10 @@ With the `standard` preset (or `super` when registered), load skills by name:
 | `git` | Branches, commits, merge; harness pre-push when applicable |
 | `scaffold` | Empty-repo templates (mother-repo `scaffold.sh`) |
 | `long` | Multi-Sprint Epic scheduling |
+| `release` | Merge, PR, tag, CHANGELOG ship exit |
+| `delivery` | Pre-ship 7-dim checklist |
+| `debug` | Reproduce-first debug loop |
+| `test` | TDD, layers, E2E patterns |
 
 User invocation: skill slash commands where the DSH client supports them.
 
@@ -94,8 +98,8 @@ scripts/             # install-super-dsh.sh, verify-super-dsh.sh
 ## Roadmap
 
 - **v0.1** — MVP skills (`master` · `sprint-plan` · `run` · `review`) + bundle + installer
-- **v0.2 batch-1** — `learn` · `git` · `scaffold` · `long` (this release)
-- **v0.2 batch-2** — `release` · `delivery` · `debug` · `test` + subagent roles
+- **v0.2 batch-1** — `learn` · `git` · `scaffold` · `long`
+- **v0.2 batch-2** — `release` · `delivery` · `debug` · `test` (current)
 - **v0.3** — `@dsh-super/workflow` plugin (gates, pre-step injection)
 
 ## License

@@ -40,8 +40,8 @@ Canonical route table: [routes.md](routes.md)
 | Continue implementation | **`run`** | Requires plan mirror ACTIVE row |
 | Learn this repo | **`learn`** | `.dsh/growth/learn/` |
 | Git / commit / merge | **`git`** | Links harness pre-push when applicable |
-| Bug / verify blocked | **`run`** or **`sprint-plan`** | Re-plan if scope drift |
-| Ship / release | `release` (v0.2+) | After Sprint done |
+| Bug / verify blocked | **`run`** / **`debug`** / **`sprint-plan`** | Re-plan if scope drift |
+| Ship / release | **`release`** | After Sprint done |
 | Code / PR review | **`review`** | Read-only checklist |
 
 Full table: [routes.md](routes.md)

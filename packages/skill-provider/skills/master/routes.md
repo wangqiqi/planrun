@@ -11,8 +11,8 @@
 | `run` | Continue implementation | **`run`** | ACTIVE, next task, 继续 |
 | `learn` | Learn this repo | **`learn`** | conventions, module-map — **not** `study` (new tech) |
 | `long` | Multi-Sprint Epic | **`long`** | Epic, 长程, resume, 多 Sprint |
-| `fix` | Bug / verify blocked | `run` / `sprint-plan` | hotfix, verify failed, stuck |
-| `more` | Review / git / ship | see below | PR, commit, release |
+| `fix` | Bug / verify blocked | **`run`** / **`debug`** / **`sprint-plan`** | hotfix, verify failed, stuck |
+| `more` | Review / ship / quality | see below | PR, release, test, delivery |
 
 ## `more` sub-routes (round 2)
 
@@ -20,12 +20,12 @@
 |---|---|---|
 | `review` | Structured PR / code review | **`review`** |
 | `git` | Branch, commit, merge | **`git`** |
-| `security` | Security audit | `security` (v0.2+) |
-| `api` | API design review | `api` (v0.2+) |
-| `delivery` | Pre-ship checklist | `delivery` (v0.2+) |
-| `test` | TDD / E2E focus | `test` (v0.2+) |
-| `debug` | Debug loop | `debug` (v0.2+) |
-| `ship` | Release | `release` (v0.2+) |
+| `release` | Merge, PR, tag, ship | **`release`** |
+| `delivery` | Pre-ship checklist | **`delivery`** |
+| `test` | TDD / E2E focus | **`test`** |
+| `debug` | Debug loop | **`debug`** |
+| `security` | Security audit | `security` (defer) |
+| `api` | API design review | `api` (defer) |
 
 ## DSH-specific notes
 
@@ -36,6 +36,6 @@
 | `AskQuestion` | **`ask_user_question`** tool |
 | `runner.sh gate-check` | Project verify scripts; `@dsh-super/workflow` plugin (v0.3) |
 
-## Bundled skills (v0.2 batch-1)
+## Bundled skills (12)
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test`
