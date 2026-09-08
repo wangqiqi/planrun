@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.6.1",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
+  "homepage": "https://znza.top/planrun/",
   "type": "module",
   "scripts": {
     "build": "pnpm -r run build",
