@@ -6,8 +6,20 @@ pnpm-debug.log
 # Build
 lib/
 dist/
+build/
 *.tsbuildinfo
 coverage/
+
+# Vite / VitePress (docs site)
+.vite/
+**/.vitepress/cache/
+**/.vitepress/dist/
+
+# TypeScript emit pollution (packages emit to lib/, not src/)
+packages/**/src/**/*.js
+packages/**/src/**/*.js.map
+packages/**/src/**/*.d.ts
+packages/**/src/**/*.d.ts.map
 
 # Runtime / project-local (do not commit)
 .cursorGrowth/

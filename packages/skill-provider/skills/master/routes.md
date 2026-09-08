@@ -48,7 +48,7 @@
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
 | `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |
 | User choices | **`ask_user_question`** tool |
-| Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../docs/workflow-guard.md) |
+| Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../docs/en/workflow-guard.md) |
 
 ## Persona · 呼叫（12 人格）
 
@@ -83,7 +83,7 @@
 | `subagent_spike` | preset **planrun** 或 **planrun-spike** | **`sprint-plan`** SPIKE |
 | `subagent_ship` | preset **planrun** 或 **planrun-ship** | **`release`** |
 
-Install: `install-planrun.sh --preset` · [subagents.md](../../../docs/subagents.md) · bundled `agents/*.md` in `@planrun/skill-provider`.
+Install: `install-planrun.sh --preset` · [subagents.md](../../../docs/en/subagents.md) · bundled `agents/*.md` in `@planrun/skill-provider`.
 
 ## Bundled skills (28)
 

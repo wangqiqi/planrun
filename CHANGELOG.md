@@ -8,6 +8,7 @@
 
 ### Added
 
+- **VitePress 文档站** — `docs/en/` · `docs/zh/` 中英文分目录；根路径语言选择；`pnpm run docs:dev` / `docs:build`；GitHub Pages（`wangqiqi.github.io/planrun`）
 - **`docs/install.md`** — platform-neutral install guide (npm · source · Super Cursor paths)
 - **`scripts/verify-docs-paths.sh`** — docs must not contain machine-specific paths
 

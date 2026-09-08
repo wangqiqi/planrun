@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：行为不变的重构、去重、死代码删除。**不是那个**：新功能 → **`run`**；scope 重排 → **`sprint-plan`**；专项只读回顾 → **`review`**.
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 ## Principles
 

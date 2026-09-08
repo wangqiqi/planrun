@@ -1,0 +1,17 @@
+:root {
+  --vp-c-brand-1: #f97316;
+  --vp-c-brand-2: #ea580c;
+  --vp-c-brand-3: #c2410c;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #f97316 30%, #fb923c);
+}
+
+.dark {
+  --vp-c-brand-1: #fb923c;
+  --vp-c-brand-2: #f97316;
+  --vp-c-brand-3: #fdba74;
+}
+
+.VPHero .VPImage {
+  filter: drop-shadow(0 12px 24px rgba(249, 115, 22, 0.25));
+}

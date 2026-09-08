@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：Sprint/Task 已绿、**`run`** 已归档后，人主导分支收尾与打版。**不是那个**：能力交付本身 → **`sprint-plan`** + **`run`**；日常 commit → **`git`** skill。
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 After code is green and `.dsh/growth/archive/` notes exist: **merge to mainline, then tag** (if shipping).
 

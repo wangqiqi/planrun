@@ -21,4 +21,4 @@ pnpm run task-verify
 pnpm run next-task
 ```
 
-See [workflow-guard.md](../../docs/workflow-guard.md).
+See [workflow-guard.md](../../docs/en/workflow-guard.md).

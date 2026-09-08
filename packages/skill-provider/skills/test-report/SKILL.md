@@ -13,7 +13,7 @@ user-invocable: true
 
 母版正文**零**业务词、零具体套件名、零仓库路径。项目命令、文档路径、锚点 → **Report Contract**（`config/test-report.yaml` 优先；无则 `.dsh/growth/learn/test-report.md`）。
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **详文**：`reference/pipeline.md` · `reference/contract-schema.md` · `reference/report-template.md` · `reference/parse-sources.md` · `reference/tiers.md` · `reference/regen-gates.md` · `reference/scaffold-bundle.md`
 

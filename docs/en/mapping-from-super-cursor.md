@@ -34,11 +34,11 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 | Super Cursor | PlanRun | Status |
 |---|---|---|
-| core.mdc, workflow.mdc, constitution.mdc | docs/discipline.md | **merge** |
+| core.mdc, workflow.mdc, constitution.mdc | docs/en/discipline.md | **merge** |
 | feedback/verify, changelog, release | run + release skills + dsh-pre-push-checks | **merge** |
 | execution/* | domain skills (v0.2) | defer |
 | tech/* (13 stacks) | per-stack preset packs (v1) | defer |
-| super-cursor-persona, cursor-standalone | docs/discipline.md §Persona + workflow inject | **merge** |
+| super-cursor-persona, cursor-standalone | docs/en/discipline.md §Persona + workflow inject | **merge** |
 | roles.json personas (12) | `@planrun/skill-provider/config/roles.json` + `.dsh/growth/session/` | **keep** (v1.4) |
 
 ## Runtime

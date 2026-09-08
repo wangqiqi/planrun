@@ -27,7 +27,7 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-**安装（任意用户）** → [docs/install.md](docs/install.md) · 快速上手 → [docs/quickstart.zh.md](docs/quickstart.zh.md)
+**安装（任意用户）** → [docs/zh/install.md](docs/zh/install.md) · 快速上手 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [wangqiqi.github.io/planrun/zh/](https://wangqiqi.github.io/planrun/zh/)
 
 ---
 
@@ -37,7 +37,7 @@ PlanRun 填这个缝：
 |------|------|
 | ✅ 已用 **DeepSeek Harness**，想要 plan → run → verify → release 纪律 | `@planrun/bundle` 挂载即可 |
 | ✅ 想要 **28 个 skill** + **12 人格**，不想手抄 `.cursor/` | Cordis 插件 + growth 模板 |
-| ⚠️ **只用 Cursor**、没有 DSH | 用 **Super Cursor** 装目标项目 `.cursor/` — 见 [install.md](docs/install.md) 路径 C |
+| ⚠️ **只用 Cursor**、没有 DSH | 用 **Super Cursor** 装目标项目 `.cursor/` — 见 [install.md](docs/zh/install.md) 路径 C |
 | ❌ 要独立桌面应用或完全不要 Node | 不在范围内 — 宿主是 DSH + Node 工具链 |
 
 **许可**：MIT — 任何人可安装、修改、再分发。**不需要**作者账号或某台开发机路径。
@@ -50,7 +50,7 @@ PlanRun 填这个缝：
 | Node `^22.19` 或 `>=24` | build · verify · guard |
 | bash | `install-planrun.sh` · `dsh-guard.sh` |
 
-完整表与三条安装路径 → **[docs/install.md](docs/install.md)**。
+完整表与三条安装路径 → **[docs/zh/install.md](docs/zh/install.md)**。
 
 ### PlanRun（DSH）vs Super Cursor（`.cursor/`）
 
@@ -96,7 +96,7 @@ packages/
 presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
 templates/growth/     # plan.md · learn/ · archive/ 种子
 scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
-docs/                 # mapping · naming · quickstart · workflow-guard
+docs/                 # en/ · zh/ — VitePress 文档站
 ```
 
 | 组件 | 包 / 路径 | 作用 |
@@ -177,7 +177,7 @@ pnpm run task-verify   # 当前 ACTIVE 验收
 pnpm run next-task     # 下一待办 TASK id
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/workflow-guard.md](docs/workflow-guard.md)。
+plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/en/workflow-guard.md](docs/en/workflow-guard.md)。
 
 ### 4 · 在会话中使用
 
@@ -215,9 +215,9 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
 | `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
-| `rules/*.mdc` | **`docs/discipline.md`** | 常驻纪律摘要 |
+| `rules/*.mdc` | **`docs/en/discipline.md`** | 常驻纪律摘要 |
 
-完整对照 → [docs/mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) · [docs/naming.md](docs/naming.md)
+完整对照 → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) · [docs/en/naming.md](docs/en/naming.md)
 
 ---
 
@@ -244,7 +244,7 @@ pnpm run typecheck
 | **v1.3** | defer skills：`mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
 | **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
-| **v1.6** | subagent 预设 · `agents/*.md` · `docs/subagents.md` | ✅ current |
+| **v1.6** | subagent 预设 · `agents/*.md` · `docs/en/subagents.md` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -254,13 +254,13 @@ pnpm run typecheck
 
 | 文档 | 内容 |
 |---|---|
-| [quickstart.md](docs/quickstart.md) / [quickstart.zh.md](docs/quickstart.zh.md) | 安装与 dogfood |
-| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
-| [naming.md](docs/naming.md) | 命名与包坐标 |
-| [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
-| [publish.md](docs/publish.md) | npm 发布与用户安装 |
-| [subagents.md](docs/subagents.md) | ship · review · spike 预设与委派 |
-| [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
+| [zh/quickstart.md](docs/zh/quickstart.md) / [en/quickstart.md](docs/en/quickstart.md) | 安装与 dogfood |
+| [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
+| [naming.md](docs/en/naming.md) | 命名与包坐标 |
+| [workflow-guard.md](docs/en/workflow-guard.md) | Sprint 闸门（dsh-guard） |
+| [publish.md](docs/en/publish.md) | npm 发布与用户安装 |
+| [subagents.md](docs/en/subagents.md) | ship · review · spike 预设与委派 |
+| [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
 
 ---
 

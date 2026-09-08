@@ -63,7 +63,7 @@ else
 fi
 
 echo "==> Checking @planrun/workflow package"
-for f in packages/workflow/package.json packages/workflow/src/index.ts docs/workflow-hooks-map.md; do
+for f in packages/workflow/package.json packages/workflow/src/index.ts docs/en/workflow-hooks-map.md; do
   if [[ ! -f "$ROOT/$f" ]]; then
     echo "MISSING: $f"
     FAIL=1
@@ -246,11 +246,11 @@ if ! grep -q '"agents"' "$ROOT/packages/skill-provider/package.json"; then
   echo "MISSING: skill-provider package.json files should include agents/"
   FAIL=1
 fi
-if [[ ! -f "$ROOT/docs/subagents.md" ]]; then
-  echo "MISSING: docs/subagents.md"
+if [[ ! -f "$ROOT/docs/en/subagents.md" ]]; then
+  echo "MISSING: docs/en/subagents.md"
   FAIL=1
 else
-  echo "OK: docs/subagents.md"
+  echo "OK: docs/en/subagents.md"
 fi
 
 echo "==> Checking verify:dogfood script"

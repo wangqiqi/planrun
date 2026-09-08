@@ -12,7 +12,7 @@ user-invocable: true
 
 **Daily loop:** `sprint-plan` breaks work down → **`run`** implements → **`release`** (v0.2) ships.
 
-Read `.dsh/growth/learn/` when present. Discipline: [docs/discipline.md](../../../docs/discipline.md)
+Read `.dsh/growth/learn/` when present. Discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **Persona**: default `dashu`; user may summon via **master** §人格·呼叫. Voice changes only — never skip verify or gate-check for tone.
 
@@ -31,7 +31,7 @@ pnpm run task-verify          # current ACTIVE
 pnpm run task-verify TASK-001 # explicit id
 ```
 
-Guard reference: [docs/workflow-guard.md](../../../docs/workflow-guard.md)
+Guard reference: [docs/en/workflow-guard.md](../../../docs/en/workflow-guard.md)
 
 ## Per-task loop
 
@@ -62,7 +62,7 @@ ACTIVE → implement → pnpm run task-verify → update plan.md → git commit 
 | Readonly SPIKE before TASK split | `subagent_spike` or preset **planrun-spike** |
 | Implement fixes from review | stay on **`run`** — subagents do not write |
 
-Install presets: `install-planrun.sh --preset` → see [subagents.md](../../../docs/subagents.md).
+Install presets: `install-planrun.sh --preset` → see [subagents.md](../../../docs/en/subagents.md).
 
 ## Verify commands
 

@@ -14,7 +14,7 @@ user-invocable: true
 **study** = 学 Rust、Playwright、新框架等通用技能。  
 **learn** = 本项目约定 → `.dsh/growth/learn/`（见 **learn** skill）。
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 ## 流程
 

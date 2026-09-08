@@ -155,6 +155,6 @@ PlanRun 项目模板已安装到: $GROWTH
      pnpm run task-verify   # 当前 ACTIVE 验收
      pnpm run next-task     # 下一待办 ID
 
-文档: $SOURCE/docs/quickstart.zh.md · $SOURCE/docs/workflow-guard.md
+文档: $SOURCE/docs/zh/quickstart.md · $SOURCE/docs/en/workflow-guard.md
 
 EOF

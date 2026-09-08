@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：慢、卡、bundle 大 — 先测量再改。**不是那个**：功能 bug → **`debug`**；新功能交付 → **`run`**.
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 ## Order (always)
 

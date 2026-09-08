@@ -25,7 +25,7 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-**Install (any user)** → [docs/install.md](docs/install.md) · Quick start → [docs/quickstart.md](docs/quickstart.md) · 中文 → [docs/quickstart.zh.md](docs/quickstart.zh.md)
+**Install (any user)** → [docs/en/install.md](docs/en/install.md) · Quick start → [docs/en/quickstart.md](docs/en/quickstart.md) · 中文 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [wangqiqi.github.io/planrun](https://wangqiqi.github.io/planrun/)
 
 ---
 
@@ -35,7 +35,7 @@ PlanRun 填这个缝：
 |-----|--------|
 | ✅ You use **DeepSeek Harness** and want plan → run → verify → release discipline | PlanRun mounts as `@planrun/bundle` |
 | ✅ You want **28 bundled skills** + **12 personas** without copying `.cursor/` by hand | Cordis plugin + growth templates |
-| ⚠️ **Cursor only**, no DSH | Use **Super Cursor** `.cursor/` install on your repo — see [install.md](docs/install.md) Path C |
+| ⚠️ **Cursor only**, no DSH | Use **Super Cursor** `.cursor/` install on your repo — see [install.md](docs/en/install.md) Path C |
 | ❌ You need a standalone desktop app or zero Node | Out of scope — host is DSH + Node toolchain |
 
 **License**: MIT — anyone may install, modify, and redistribute. **No** maintainer account or machine-specific paths required.
@@ -48,7 +48,7 @@ PlanRun 填这个缝：
 | Node `^22.19` or `>=24` | build · verify · guard scripts |
 | bash | `install-planrun.sh` · `dsh-guard.sh` |
 
-Full table and three install paths → **[docs/install.md](docs/install.md)**.
+Full table and three install paths → **[docs/en/install.md](docs/en/install.md)**.
 
 ### PlanRun (DSH) vs Super Cursor (`.cursor/`)
 
@@ -94,7 +94,7 @@ packages/
 presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
 templates/growth/     # plan.md · learn/ · archive/ 种子
 scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
-docs/                 # mapping · naming · quickstart · workflow-guard
+docs/                 # en/ · zh/ VitePress site + mapping · quickstart · workflow-guard
 ```
 
 | Piece | Package / path | Role |
@@ -151,7 +151,7 @@ ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 
 **不要**在 profile 的 `cordis.patch.yml` 里再手动 insert 同一插件 — bundle 已挂载，双挂载会 boot 失败。
 
-详见 [publish.md](docs/publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
+详见 [publish.md](docs/en/publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
 
 ### 3 · Seed project growth
 
@@ -175,7 +175,7 @@ pnpm run task-verify   # 当前 ACTIVE 验收
 pnpm run next-task     # 下一待办 TASK id
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/workflow-guard.md](docs/workflow-guard.md)。
+plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/en/workflow-guard.md](docs/en/workflow-guard.md)。
 
 ### 4 · Use in a session
 
@@ -217,9 +217,9 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
 | `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
-| `rules/*.mdc` | **`docs/discipline.md`** | 常驻纪律摘要 |
+| `rules/*.mdc` | **`docs/en/discipline.md`** | 常驻纪律摘要 |
 
-完整对照 → [docs/mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) · [docs/naming.md](docs/naming.md)
+完整对照 → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) · [docs/en/naming.md](docs/en/naming.md)
 
 ---
 
@@ -250,7 +250,7 @@ pnpm run typecheck
 | **v1.3** | defer skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
 | **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
-| **v1.6** | subagent presets · `agents/*.md` · `docs/subagents.md` | ✅ current |
+| **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -260,14 +260,15 @@ pnpm run typecheck
 
 | Doc | Content |
 |---|---|
-| [quickstart.md](docs/quickstart.md) / [quickstart.zh.md](docs/quickstart.zh.md) | 安装与 dogfood |
-| [dogfood.md](docs/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
-| [mapping-from-super-cursor.md](docs/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
-| [naming.md](docs/naming.md) | 命名与包坐标 |
-| [workflow-guard.md](docs/workflow-guard.md) | Sprint 闸门（dsh-guard） |
-| [workflow-hooks-map.md](docs/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
-| [publish.md](docs/publish.md) | npm 发布与用户安装 |
-| [subagents.md](docs/subagents.md) | ship · review · spike 预设与委派 |
+| **站点** | [wangqiqi.github.io/planrun](https://wangqiqi.github.io/planrun/)（`docs/en/` · `docs/zh/`） |
+| [en/quickstart.md](docs/en/quickstart.md) / [zh/quickstart.md](docs/zh/quickstart.md) | 安装与 dogfood |
+| [dogfood.md](docs/en/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
+| [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
+| [naming.md](docs/en/naming.md) | 命名与包坐标 |
+| [workflow-guard.md](docs/en/workflow-guard.md) | Sprint 闸门（dsh-guard） |
+| [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
+| [publish.md](docs/en/publish.md) | npm 发布与用户安装 |
+| [subagents.md](docs/en/subagents.md) | ship · review · spike 预设与委派 |
 
 ---
 

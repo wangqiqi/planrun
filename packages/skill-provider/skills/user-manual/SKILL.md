@@ -13,7 +13,7 @@ user-invocable: true
 
 母版正文**零**业务词、零演示账号、零具体仓库路径。项目命令与命名 → **Manual Contract**（`config/manual.yaml` 优先；无则 `.dsh/growth/learn/user-manual.md`）。
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **详文**：`reference/pipeline.md` · `reference/manual-contract-schema.md` · `reference/extract-sources.md` · `reference/capture-profiles.md` · `reference/regen-gates.md` · `reference/reader-test.md` · `reference/storyline-template.md` · `reference/scaffold-bundle.md`
 

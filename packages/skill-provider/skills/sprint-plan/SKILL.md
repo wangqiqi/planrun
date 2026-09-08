@@ -12,7 +12,7 @@ user-invocable: true
 
 **Not DSH plan mode.** DSH `/plan` explores one task and exits through `exit_plan_mode`. This skill owns **multi-task / Sprint** planning and the `.dsh/growth/plan.md` mirror.
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **Persona**: planning tone follows active session persona; technical gates unchanged.
 
@@ -45,7 +45,7 @@ pnpm run gate-check   # BLOCK → stay in sprint-plan
 pnpm run plan-check   # handoff structure
 ```
 
-See [docs/workflow-guard.md](../../../docs/workflow-guard.md).
+See [docs/en/workflow-guard.md](../../../docs/en/workflow-guard.md).
 
 ## plan.md mirror format
 

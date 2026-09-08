@@ -50,4 +50,4 @@ Full table: [routes.md](routes.md)
 
 ## Discipline
 
-Standing rules live in [docs/discipline.md](../../../docs/discipline.md) at the planrun repo root (or project `AGENTS.md` snippet after install).
+Standing rules live in [docs/en/discipline.md](../../../docs/en/discipline.md) at the planrun repo root (or project `AGENTS.md` snippet after install).

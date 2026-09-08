@@ -12,7 +12,7 @@ user-invocable: true
 
 Output: **severity** (Critical / High / Medium / Low) · **location** (file:line) · **issue** · **fix**
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **用这个**：合并前可勾选清单（密钥 · 鉴权 · 输入 · Prompt · 依赖）。**不是那个**：日常 commit 流程 → **`git`**；API 契约 → **`api`**；上线走查 → **`delivery`**.
 

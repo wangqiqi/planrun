@@ -91,7 +91,7 @@ npx @modelcontextprotocol/inspector
 
 | 关切 | 去向 |
 |------|------|
-| 密钥 · auth · 注入 | **security** · [docs/discipline.md](../../../docs/discipline.md) |
+| 密钥 · auth · 注入 | **security** · [docs/en/discipline.md](../../../docs/en/discipline.md) |
 | 大批量 ID / IN 查询 | 项目 data-batch 约定（见 **learn** / dev docs） |
 | 组织 MCP 治理 | 用户/团队策略；本 skill 不替代治理 |
 

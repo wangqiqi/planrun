@@ -27,10 +27,10 @@ if [[ "$FAIL" -ne 0 ]]; then
   exit 1
 fi
 
-if [[ ! -f "$DOCS/install.md" ]]; then
-  echo "MISSING: docs/install.md"
+if [[ ! -f "$DOCS/en/install.md" ]]; then
+  echo "MISSING: docs/en/install.md"
   exit 1
 fi
 
 echo "OK: docs path neutrality"
-echo "OK: docs/install.md present"
+echo "OK: docs/en/install.md present"

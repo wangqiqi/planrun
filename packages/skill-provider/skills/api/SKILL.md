@@ -11,7 +11,7 @@ user-invocable: true
 
 Contract changes must update **server + client + mocks** in the same logical change (prefer same PR).
 
-Standing discipline: [docs/discipline.md](../../../docs/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
 
 **用这个**：REST/OpenAPI 契约审查。**不是那个**：密钥/支付/webhook → **`security`**；合并前全量 → **`delivery`**.
 
