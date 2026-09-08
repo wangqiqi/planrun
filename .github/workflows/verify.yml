@@ -1,0 +1,26 @@
+name: verify
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Checkout deepseek-harness (peer types)
+        run: |
+          git clone --depth 1 https://github.com/deepseek-ai/deepseek-harness.git ../deepseek-harness || true
+      - run: pnpm install
+      - run: pnpm run verify
+      - run: pnpm run build
+        continue-on-error: true

@@ -1,0 +1,15 @@
+# Mount dsh-super bundled skills on host-backed profiles (web, headless, …).
+# Requires dsh-base (or any profile that already includes ctx.skills + tool-skill).
+
+- insert:
+    - id: super-skills
+      name: '@dsh-super/skill-provider'
+
+# Optional: register the super preset root when copied to a known path.
+# Uncomment after `install-super-dsh.sh --preset`:
+#
+# - id: agent-presets
+#   config:
+#     roots:
+#       - path: !!js require('node:path').join(require('node:os').homedir(), '.dsh', '.agent-presets')
+#         trust: user

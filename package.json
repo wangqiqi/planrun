@@ -1,0 +1,17 @@
+{
+  "name": "dsh-super",
+  "private": true,
+  "version": "0.1.0",
+  "description": "DSH-native workflow SOP collection adapted from Super Cursor",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "clean": "pnpm -r run clean",
+    "typecheck": "pnpm -r run typecheck",
+    "verify": "./scripts/verify-super-dsh.sh"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24"
+  },
+  "license": "MIT"
+}

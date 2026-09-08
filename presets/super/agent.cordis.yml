@@ -1,0 +1,19 @@
+# Super preset (v0.1)
+#
+# v0.1 uses the shipped `standard` preset for tools and plan mode.
+# Copy this directory to `$DSH_HOME/.agent-presets/super/` and set
+# `agent-presets.default: super` when a dedicated composition is ready.
+#
+# For now, install only the bundle:
+#   dsh plugin --profile web add @dsh-super/bundle-super
+# Skills appear on the `standard` preset via the global skill provider layer.
+
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    suffix: >-
+      Your working directory is {{cwd}}.
+      For multi-task Sprints load the sprint-plan skill; for single-task design use /plan (plan mode).
+      Daily execution: run skill after plan mirror is approved.
+
+# v0.2: copy remaining rows from packages/preset/agent-presets/presets/standard/agent.cordis.yml
