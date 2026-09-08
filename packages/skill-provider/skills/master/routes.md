@@ -28,6 +28,10 @@
 | `api` | API design review | **`api`** |
 | `refactor` | Safe refactor / dead code | **`refactor`** |
 | `perf` | Performance investigation | **`perf`** |
+| `mcp` | Build MCP server / tool design | **`mcp`** |
+| `study` | Learn new tech (not this repo) | **`study`** |
+| `manual` | User manual / screenshot regen | **`user-manual`** |
+| `report` | Test report / verify summary | **`test-report`** |
 
 ## DSH-specific notes
 
@@ -38,6 +42,6 @@
 | User choices | **`ask_user_question`** tool |
 | Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../docs/workflow-guard.md) |
 
-## Bundled skills (16)
+## Bundled skills (20)
 
-`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf`
+`master` · `sprint-plan` · `run` · `review` · `learn` · `git` · `scaffold` · `long` · `release` · `delivery` · `debug` · `test` · `security` · `api` · `refactor` · `perf` · `mcp` · `study` · `user-manual` · `test-report`
