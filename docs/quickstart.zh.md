@@ -13,22 +13,30 @@ pnpm run verify
 
 ## 2. 安装 bundle
 
-在已安装 `dsh` 的机器上：
+在已安装 `dsh` 的机器上（**先 `pnpm run build`**）：
 
 ```sh
-export DSH_SUPER_HOME=/data/test-jw/dsh-super
+export DSH_SUPER_HOME=/path/to/dsh-super
 dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 ```
 
-或在 `$DSH_HOME/profiles/web/cordis.patch.yml` 追加：
+验证：
 
-```yaml
-- insert:
-    - id: super-skills
-      name: '@dsh-super/skill-provider'
+```sh
+dsh --profile web --dump-config | grep super-skills
+ls "$DSH_HOME/profiles/web/node_modules/@dsh-super/skill-provider/skills/"
 ```
 
-（需保证 Node 能解析 `@dsh-super/skill-provider`，通常通过 profile 的 `node_modules` 链接 workspace 包。）
+`bundle-super` 会通过 `file:../skill-provider` 把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
+
+从 harness 仓开发时可用：
+
+```sh
+cd /path/to/deepseek-harness
+pnpm dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
+```
+
+**常见错误**：若 `bundle-super` 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
 
 ## 3. 项目内 growth 模板
 
@@ -50,7 +58,18 @@ dsh plugin --profile web add "file:$DSH_SUPER_HOME/packages/bundle-super"
 | PR / 代码回顾 | `review` |
 | 单任务方案设计 | DSH **`/plan`**（plan mode，不是 sprint-plan） |
 
-## 5. 与 Super Cursor 对照
+## 5. Dogfood（deepseek-harness）
+
+```sh
+export DSH_SUPER_HOME=/path/to/dsh-super
+cd /path/to/deepseek-harness
+"$DSH_SUPER_HOME/scripts/install-super-dsh.sh" --here --copy-plan
+# bundle 见 §2；启动 dsh web + standard preset 后加载 master / sprint-plan / run / review
+```
+
+bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 `cordis.patch.yml` 那样热加载。
+
+## 6. 与 Super Cursor 对照
 
 见 [mapping-from-super-cursor.md](mapping-from-super-cursor.md) 与 [naming.md](naming.md)。
 

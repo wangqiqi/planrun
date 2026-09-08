@@ -11,7 +11,7 @@ importers:
   packages/bundle-super:
     dependencies:
       '@dsh-super/skill-provider':
-        specifier: workspace:^
+        specifier: file:../skill-provider
         version: link:../skill-provider
     devDependencies:
       '@types/node':

@@ -25,7 +25,7 @@
     }
   },
   "dependencies": {
-    "@dsh-super/skill-provider": "workspace:^"
+    "@dsh-super/skill-provider": "file:../skill-provider"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",
