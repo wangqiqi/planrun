@@ -4,8 +4,17 @@ import type { DefaultTheme } from 'vitepress'
 // against VitePress's temporary bundle path, not this file.
 import { version } from '../../package.json'
 
+/**
+ * The one place this deployment path is written.
+ *
+ * VitePress prepends `base` to nav/sidebar links and to markdown links, but NOT
+ * to `logoLink` (a bare '/zh/' shipped a live 404 at znza.top/zh/). Anything the
+ * framework does not normalize is built from this constant instead.
+ */
+const BASE = '/planrun/'
+
 const sharedHead = [
-  ['link', { rel: 'icon', href: '/planrun/logo.svg', type: 'image/svg+xml' }],
+  ['link', { rel: 'icon', href: `${BASE}logo.svg`, type: 'image/svg+xml' }],
 ]
 
 const sharedSocial: DefaultTheme.SocialLink[] = [
@@ -91,7 +100,7 @@ export default defineConfig({
   title: 'PlanRun',
   description: 'DSH-native agent workflow SOP — plan, run, verify, release',
 
-  base: '/planrun/',
+  base: BASE,
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: true,
@@ -109,7 +118,7 @@ export default defineConfig({
       description: 'DSH-native agent workflow SOP — plan, run, verify, release',
       themeConfig: {
         ...sharedTheme,
-        logoLink: '/en/',
+        logoLink: `${BASE}en/`,
         nav: [
           { text: 'Install', link: '/en/install' },
           { text: 'Quickstart', link: '/en/quickstart' },
@@ -135,7 +144,7 @@ export default defineConfig({
       description: 'DeepSeek Harness 原生 Agent 工作流 SOP',
       themeConfig: {
         ...sharedTheme,
-        logoLink: '/zh/',
+        logoLink: `${BASE}zh/`,
         nav: [
           { text: '安装', link: '/zh/install' },
           { text: '快速开始', link: '/zh/quickstart' },

@@ -82,6 +82,35 @@ for (const locale of ['en', 'zh']) {
   }
 }
 
+// VitePress normalizes `base` for nav/sidebar/markdown links but NOT for
+// `logoLink`: a bare '/zh/' shipped a live 404 at znza.top/zh/. Anything the
+// framework leaves alone must carry the deployment path itself.
+const configPath = join(ROOT, 'docs/.vitepress/config.ts')
+if (existsSync(configPath)) {
+  const config = readFileSync(configPath, 'utf8')
+  const base = config.match(/^const BASE = '([^']+)'/m)?.[1]
+  if (base === undefined) {
+    failures.push('docs/.vitepress/config.ts: declare the deployment path once as `const BASE = ...`')
+  } else {
+    const logoLinks = [...config.matchAll(/logoLink:\s*([`'"])(.*?)\1/g)].map((match) => match[2])
+    if (logoLinks.length === 0) failures.push('docs/.vitepress/config.ts: no logoLink to check')
+    for (const value of logoLinks) {
+      checked += 1
+      if (value.startsWith('${BASE}') || value.startsWith(base)) continue
+      failures.push(`docs/.vitepress/config.ts: logoLink "${value}" must start with ${base} (VitePress does not add the base here)`)
+    }
+    // The root redirect is a static file VitePress never rewrites, so it has to
+    // carry the same base by hand.
+    const redirect = join(ROOT, 'docs/public/index.html')
+    if (existsSync(redirect)) {
+      checked += 1
+      if (!readFileSync(redirect, 'utf8').includes(`'${base}'`)) {
+        failures.push(`docs/public/index.html: root redirect must assign base '${base}' (keep it in sync with BASE)`)
+      }
+    }
+  }
+}
+
 if (failures.length > 0) {
   for (const failure of failures) console.error(`FAIL: ${failure}`)
   console.error(`verify-doc-links: ${failures.length} broken link(s) of ${checked}`)
