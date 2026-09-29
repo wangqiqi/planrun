@@ -1,2 +1,9 @@
 packages:
   - packages/*
+
+# vitepress depends on esbuild, whose postinstall links the platform binary.
+# pnpm >= 10 refuses dependency build scripts until they are listed here, and
+# fails the install (ERR_PNPM_IGNORED_BUILDS) otherwise — which then blocks every
+# `pnpm run *` through the pre-run dependency check.
+allowBuilds:
+  esbuild: true
