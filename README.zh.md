@@ -90,6 +90,7 @@ flowchart LR
 ## 仓库结构
 
 ```
+cordis.patch.yml        # GitHub 直装 bundle 层（相对行名 → file:// URL）
 packages/
   skill-provider/       # @planrun/skill-provider — Cordis 插件 + skills/
   bundle-planrun/       # @planrun/bundle — dsh.bundle.patch + agent presets
@@ -139,6 +140,14 @@ pnpm run verify          # 28 skills + 12 personas + DSH 适配 token 结构检�
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
+
+**GitHub 直装**（无需 npm registry、无需构建授权）。仓库根本身就是 bundle，且运行时入口已随源码提交，pnpm 不会执行任何构建脚本：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
+请固定 tag 或 commit，避免后续 push 改变安装内容。**本通道与 `@planrun/bundle` 只能选一个**。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。
 
 **本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
@@ -240,6 +249,8 @@ pnpm run verify
 pnpm run verify:publish   # npm pack 结构（lib/*.js 运行时模块必须齐全）
 pnpm run verify:links     # 仓库内所有 markdown 相对链接都能解析
 pnpm run verify:e2e       # 构建 → 装临时 profile → boot（须 DEEPSEEK_HARNESS_HOME）
+pnpm run verify:lib       # 提交的 packages/*/lib/*.js 与最新构建一致
+pnpm run verify:github    # github: 直装通道端到端（须 DEEPSEEK_HARNESS_HOME）
 pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
@@ -248,6 +259,8 @@ pnpm run typecheck
 `verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
 
 `verify-plugin-e2e.sh` 是唯一能证明插件**真的能加载**的检查：它打包三个包、装进一次性 profile、断言 `--dump-config` 里的 bundle 行、导入 skill catalog，并 headless boot。以下情况会失败：`failed to import`、dsh peer 范围不兼容、或 session format 拒绝的 message source kind。
+
+`verify-github-install.sh` 对另一条分发通道做同样的事：把 `github:wangqiqi/planrun`（本地提交可用 `PLANRUN_GIT_SPEC=git+file:///path#ref`）**在不授予任何构建权限的前提下**装进一次性 profile，断言提交的运行时存在、根 patch 与 preset 声明都挂上，并 headless boot。
 
 ---
 
@@ -265,7 +278,8 @@ pnpm run typecheck
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
 | **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
 | **v1.6** | subagent 预设 · `agents/*.md` · `docs/zh/subagents.md` | ✅ |
-| **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ current |
+| **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ |
+| **v1.8** | GitHub 直装通道（`github:wangqiqi/planrun`）· 自包含 `prepare` · `verify:links` · `verify:github` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 

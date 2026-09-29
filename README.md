@@ -90,6 +90,7 @@ flowchart LR
 ## What's inside
 
 ```
+cordis.patch.yml        # GitHub-install bundle layer (relative rows → file:// URLs)
 packages/
   skill-provider/       # @planrun/skill-provider — Cordis plugin + skills/
   bundle-planrun/       # @planrun/bundle — dsh.bundle.patch + agent presets
@@ -139,6 +140,14 @@ While developing, `skill-provider`'s peers can point at a sibling `deepseek-harn
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
+
+**From GitHub** (no npm registry, no build permission). The repo root is itself a bundle and its runtime entry points are committed, so pnpm runs no build script at all:
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
+Pin a tag or a commit so a later push cannot change what you install. Install this channel **or** `@planrun/bundle`, never both. `pnpm run verify:lib` fails when the committed runtime drifts from `src/`.
 
 **From this repo** (`pack-local.sh` builds first, then rewrites the `workspace:^` deps to `file:`):
 
@@ -239,6 +248,8 @@ pnpm run verify
 pnpm run verify:publish   # npm pack structure (every lib/*.js runtime module must ship)
 pnpm run verify:links     # every repo-relative markdown link resolves
 pnpm run verify:e2e       # build → install into a temp profile → boot (needs DEEPSEEK_HARNESS_HOME)
+pnpm run verify:lib       # committed packages/*/lib/*.js matches a fresh build
+pnpm run verify:github    # the github: channel end to end (needs DEEPSEEK_HARNESS_HOME)
 pnpm run verify:dogfood   # needs DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # when a plan exists
 pnpm run typecheck
@@ -251,6 +262,11 @@ packages, installs them into a throwaway profile, asserts the bundle rows in
 `--dump-config`, imports the skill catalog, and boots headless. It fails on
 `failed to import`, an incompatible dsh peer range, or a message source kind the
 session format rejects.
+
+`verify-github-install.sh` does the same for the other distribution channel: it installs
+`github:wangqiqi/planrun` (or `PLANRUN_GIT_SPEC=git+file:///path#ref` for a local commit) into a
+throwaway profile **without granting any build permission**, asserts the committed runtime is
+present, that the root patch and preset declarations composed, and boots headless.
 
 ---
 
@@ -268,7 +284,8 @@ session format rejects.
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
 | **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
 | **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ |
-| **v1.7** | DSH API alignment (`agent/created` · source kind) · packaging fixes · presets as official bundle declarations · `verify:e2e` | ✅ current |
+| **v1.7** | DSH API alignment (`agent/created` · source kind) · packaging fixes · presets as official bundle declarations · `verify:e2e` | ✅ |
+| **v1.8** | GitHub-install channel (`github:wangqiqi/planrun`) · self-contained `prepare` · `verify:links` · `verify:github` | ✅ current |
 
 Changelog → [CHANGELOG.md](CHANGELOG.md)
 

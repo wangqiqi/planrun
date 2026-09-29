@@ -51,6 +51,18 @@ bash scripts/publish-packages.sh --pack-only
 - **Monorepo**：`workspace:^` 链 sibling  
 - **发布**：`pnpm publish` 自动把 `workspace:^` 写成 semver
 
+### GitHub 直装（免 npm 发布）
+
+仓库根本身就是 DSH bundle，因此不需要先发布 npm：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
+pnpm 取源码后，DSH 直接挂载 `./cordis.patch.yml`（相对行名转成 `file://` URL）与 preset 声明。根 manifest 不声明 `prepare`，运行时（`packages/*/lib/*.js`）随源码提交，因此安装**不执行任何构建脚本**，也不需要 `allowBuilds` 授权。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。
+
+请固定 tag 或 commit。**GitHub 通道与 `@planrun/bundle` 只能选一个。** `pnpm run verify:github` 端到端跑通整条链路（`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#main` 可验证尚未 push 的本地提交）。
+
 ## 项目 growth + guard
 
 ```sh

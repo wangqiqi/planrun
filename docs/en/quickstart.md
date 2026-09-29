@@ -23,6 +23,12 @@ dsh plugin --profile web add @planrun/bundle
 
 See [publish.md](publish.md) for maintainer steps.
 
+**From GitHub** (no npm registry, no build permission — the runtime is committed):
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
 **From this repo** (`pack-local.sh` builds, then rewrites the `workspace:^` deps to `file:`):
 
 ```sh

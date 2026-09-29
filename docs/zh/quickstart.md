@@ -23,6 +23,12 @@ dsh plugin --profile web add @planrun/bundle
 
 发布与维护说明 → [publish.md](publish.md)
 
+**GitHub 直装**（无需 npm registry、无需构建授权 —— 运行时已提交进仓库）：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
 **本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
 ```sh

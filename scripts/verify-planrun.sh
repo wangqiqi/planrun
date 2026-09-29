@@ -186,6 +186,29 @@ if ! node "$ROOT/scripts/verify-doc-links.mjs"; then
   FAIL=1
 fi
 
+echo "==> Checking committed GitHub-install runtime"
+if ! bash "$ROOT/scripts/verify-lib-sync.sh"; then
+  FAIL=1
+fi
+
+echo "==> Checking tracked files are not gitignored"
+# A tracked-but-ignored file is dropped by `npm pack`/git packaging, so a
+# `github:` install silently loses it (this is how templates/growth/plan.md went
+# missing). git check-ignore hides tracked files unless --no-index is passed.
+if git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1; then
+  dropped="$(git -C "$ROOT" ls-files | git -C "$ROOT" check-ignore --stdin --no-index 2>/dev/null || true)"
+  if [[ -n "$dropped" ]]; then
+    echo "FAIL: tracked files are gitignored — installs will drop them:"
+    printf '  %s\n' $dropped
+    FAIL=1
+  else
+    echo "OK: no tracked file is gitignored"
+  fi
+else
+  echo "SKIP: not a git checkout"
+fi
+
+
 echo "==> Checking skill-name conflicts with official DSH skills/commands"
 # Official bundled skills a stock DSH install provides, plus the built-in slash
 # commands. A same-name skill would shadow — or be shadowed — non-deterministically

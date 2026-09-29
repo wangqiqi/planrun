@@ -67,9 +67,23 @@ bash scripts/publish-packages.sh --pack-only
 composed rows, imports the skill provider, and boots headless. It needs a built
 `deepseek-harness` checkout (`DEEPSEEK_HARNESS_HOME`) and skips cleanly without one.
 
-### Git install (alternative)
+### Git install (supported alternative)
 
-Not the primary path for v1.5. See [Harness publish docs](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish) for `prepare` + `allowBuilds` if needed.
+The repository root is itself a DSH bundle, so the GitHub channel needs no npm publish:
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
+pnpm fetches sources and DSH mounts `./cordis.patch.yml` (relative rows become `file://` URLs)
+plus the preset declarations. The root manifest declares no `prepare` and the runtime
+(`packages/*/lib/*.js`) is committed, so the install runs **no build script** and needs no
+`allowBuilds` permission. `pnpm run verify:lib` fails when that committed runtime drifts from
+`src/`.
+
+Pin a tag or commit. Install the git channel **or** `@planrun/bundle`, never both.
+`pnpm run verify:github` runs the whole flow end to end
+(`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#main` tests an unpushed local commit).
 
 ## Project growth + guard
 

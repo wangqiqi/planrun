@@ -9,6 +9,7 @@ English → [en/install.md](../en/install.md) · 逐步命令 → [quickstart.md
 | 你是 | 路径 |
 |------|------|
 | **DSH 用户** — 在 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 跑 Agent | **路径 A** — `@planrun/bundle`（推荐） |
+| **DSH 用户、不走 npm registry** | **路径 A′** — `dsh plugin add github:wangqiqi/planrun` |
 | **PlanRun 贡献者** — 改本仓 | **路径 B** — clone + `file:` bundle |
 | **Super Cursor 用户** — 只用 Cursor、不用 DSH | **路径 C** — 装 Super Cursor `.cursor/` |
 
@@ -45,6 +46,20 @@ dsh --profile web --dump-config | grep planrun-skills
 ```
 
 **不要**在 `cordis.patch.yml` 里再手动插入同一插件。
+
+## 路径 A′ — GitHub 直装（无需 npm registry）
+
+仓库根本身就是一个 DSH bundle：`dsh.bundle.patch` 指向 `cordis.patch.yml`（行名用相对本文件的路径，DSH 会转成 `file://` URL）以及 `packages/bundle-planrun/presets.patch.yml`（四个 agent preset）。不需要发布到 npm：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+```
+
+git 安装只取源码。运行时入口（`packages/*/lib/*.js`）已**随源码提交**，且根 manifest 不声明 `prepare`，因此 pnpm 不会执行任何构建脚本：不需要 `allowBuilds` 授权，也不需要本地工具链。
+
+`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错；`pnpm run verify:github` 端到端跑通整条通道（`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#ref` 可验证尚未 push 的本地提交）。
+
+请固定 tag（`#v1.8.0`）或 commit，避免后续 push 改变安装内容。验证方式同路径 A。**路径 A 与 A′ 只能选一个**：同一 skill provider 挂载两次会在 skill registry 冲突。
 
 ## 路径 B — 本仓开发
 
@@ -84,6 +99,7 @@ pnpm run next-task
 | 现象 | 处理 |
 |------|------|
 | `WORKSPACE_PKG_NOT_FOUND` | 先 `pnpm run build`；消费者 profile 用 npm 而非 `workspace:^` |
+| GitHub 安装失败、pnpm 提示 build script 被忽略 | 该通道不应声明 `prepare`/`prepublish`（运行时是提交进仓库的）；跑 `pnpm run verify:lib` 并把 `packages/*/lib/*.js` 提交 |
 | bundle 不可见 | `dsh plugin add` 后重启 profile |
 | `gate-check` BLOCK | `.dsh/growth/plan.md` 设 `PLAN_APPROVED` |
 

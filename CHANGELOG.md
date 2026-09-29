@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-09-29
+
+### Added
+
+- **GitHub-install channel** — the repository root is now itself a DSH bundle
+  (`dsh.bundle.patch` = `cordis.patch.yml` + `packages/bundle-planrun/presets.patch.yml`), so
+  `dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"` works without npm. The root
+  patch uses paths relative to itself, which DSH turns into `file://` URLs, so no registry
+  lookup and no `workspace:^` resolution is involved.
+- **Committed runtime for the git channel** — `packages/*/lib/*.js` are now tracked (runtime
+  entry points only; declarations and maps stay ignored) and the root declares no `prepare`, so
+  a git install runs **no build script**: no `allowBuilds` permission and no local toolchain.
+  `yaml` becomes a root dependency so the installed provider can parse skill frontmatter.
+- **`scripts/verify-lib-sync.sh`** (`pnpm run verify:lib`) — rebuilds and fails when the
+  committed runtime is stale or a runtime module is missing from git; wired into `pnpm run verify`.
+- **`scripts/verify-github-install.sh`** (`pnpm run verify:github`) — installs the git spec into
+  a throwaway profile **without granting any build permission**, asserts the committed runtime is
+  present, asserts the root patch and preset declarations composed, and boots headless.
+  `PLANRUN_GIT_SPEC=git+file:///path/to/checkout#ref` checks an unpushed local commit.
+
+### Changed
+
+- **README** · **README.zh** · **docs/{en,zh}/{install,quickstart,publish}.md** — document the
+  GitHub path (Paths A and A′ are mutually exclusive) and the committed-runtime invariant.
+- **Roadmap** — v1.8 row.
+
 ## [1.7.2] - 2026-09-29
 
 ### Fixed

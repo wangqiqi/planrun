@@ -11,6 +11,13 @@ build/
 *.tsbuildinfo
 coverage/
 
+# The GitHub-install channel (github:wangqiqi/planrun) has no build step, so the
+# three runtime entry points are committed. Only packages/*/lib/*.js ship; the
+# declarations and source maps stay ignored build output.
+!packages/*/lib/
+packages/*/lib/types/
+packages/*/lib/*.map
+
 # Vite / VitePress (docs site)
 .vite/
 **/.vitepress/cache/
@@ -25,8 +32,8 @@ packages/**/src/**/*.d.ts.map
 # Runtime / project-local (do not commit)
 .cursorGrowth/
 .dsh/growth/
-plan.md
-.cursor/rules/local
+/plan.md
+.cursor/rules/local/
 
 # Secrets & local env
 .env
@@ -36,6 +43,7 @@ plan.md
 # Logs & temp
 *.log
 tmp/
+.tmp-*/
 .cache/
 
 # OS & editors

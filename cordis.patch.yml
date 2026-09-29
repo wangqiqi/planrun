@@ -1,0 +1,15 @@
+# GitHub-install bundle layer — `dsh plugin add github:wangqiqi/planrun`.
+#
+# Row names are relative paths. DSH resolves them beside this patch file into
+# file:// URLs, so the git channel needs neither an npm registry lookup nor the
+# monorepo's `workspace:^` protocol. `prepare` (scripts/build-for-git.mjs)
+# builds the `lib/` these rows point at inside the checkout.
+#
+# Install this channel OR `@planrun/bundle`, never both: two mounts of the same
+# skill provider collide in the skill registry.
+
+- insert:
+    - id: planrun-git-skills
+      name: './packages/skill-provider/lib/index.js'
+    - id: planrun-git-workflow
+      name: './packages/workflow/lib/index.js'

@@ -1,10 +1,18 @@
 {
   "name": "planrun",
   "private": true,
-  "version": "1.7.2",
+  "version": "1.8.0",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "homepage": "https://znza.top/planrun/",
   "type": "module",
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml",
+        "./packages/bundle-planrun/presets.patch.yml"
+      ]
+    }
+  },
   "scripts": {
     "build": "pnpm -r run build",
     "clean": "pnpm -r run clean",
@@ -17,6 +25,8 @@
     "verify:links": "node scripts/verify-doc-links.mjs",
     "verify:dogfood": "./scripts/verify-dogfood.sh",
     "verify:e2e": "bash scripts/verify-plugin-e2e.sh",
+    "verify:github": "bash scripts/verify-github-install.sh",
+    "verify:lib": "bash scripts/verify-lib-sync.sh",
     "pack:local": "bash scripts/pack-local.sh",
     "publish:packages": "bash scripts/publish-packages.sh",
     "gate-check": "bash scripts/dsh-guard.sh gate-check",
@@ -27,6 +37,9 @@
   },
   "engines": {
     "node": "^22.19.0 || >=24"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "vitepress": "^1.6.4"

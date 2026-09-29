@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      yaml:
+        specifier: ^2.8.1
+        version: 2.9.0
     devDependencies:
       vitepress:
         specifier: ^1.6.4
