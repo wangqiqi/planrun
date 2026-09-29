@@ -4,7 +4,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+把 [Super Cursor](https://github.com/wangqiqi/cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![文档](https://img.shields.io/badge/文档-znza.top%2Fplanrun-orange)](https://znza.top/planrun/zh/)
@@ -238,13 +238,14 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 pnpm run build
 pnpm run verify
 pnpm run verify:publish   # npm pack 结构（lib/*.js 运行时模块必须齐全）
+pnpm run verify:links     # 仓库内所有 markdown 相对链接都能解析
 pnpm run verify:e2e       # 构建 → 装临时 profile → boot（须 DEEPSEEK_HARNESS_HOME）
 pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。
+`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
 
 `verify-plugin-e2e.sh` 是唯一能证明插件**真的能加载**的检查：它打包三个包、装进一次性 profile、断言 `--dump-config` 里的 bundle 行、导入 skill catalog，并 headless boot。以下情况会失败：`failed to import`、dsh peer 范围不兼容、或 session format 拒绝的 message source kind。
 

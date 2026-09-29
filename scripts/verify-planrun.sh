@@ -6,6 +6,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS="$ROOT/packages/skill-provider/skills"
 EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design md2docx-export)
 FORBIDDEN_PATTERNS='\.cursorGrowth|AskQuestion|runner\.sh'
+RETIRED_PATTERNS='install-planrun\.sh --preset|\.agent-presets|agent/session-start'
 FAIL=0
 
 echo "==> Checking bundled skills (${#EXPECTED[@]})"
@@ -163,6 +164,27 @@ while IFS= read -r skill_dir; do
     done < <(find "$skill_dir/reference" -name '*.md' -type f)
   fi
 done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
+
+echo "==> Checking retired surfaces (preset install path · session-start event)"
+# These tokens were valid before v1.7 and are wrong now; scan every bundled
+# markdown file, including master/routes.md, which the Cursor-token loop skips.
+retired=0
+while IFS= read -r skill_md; do
+  if grep -qE "$RETIRED_PATTERNS" "$skill_md" 2>/dev/null; then
+    echo "FAIL: $skill_md references a retired surface"
+    grep -nE "$RETIRED_PATTERNS" "$skill_md" || true
+    FAIL=1
+    retired=1
+  fi
+done < <(find "$SKILLS" -name '*.md' -type f)
+if [[ "$retired" -eq 0 ]]; then
+  echo "OK: no retired install/event tokens in bundled skills"
+fi
+
+echo "==> Checking markdown links"
+if ! node "$ROOT/scripts/verify-doc-links.mjs"; then
+  FAIL=1
+fi
 
 echo "==> Checking skill-name conflicts with official DSH skills/commands"
 # Official bundled skills a stock DSH install provides, plus the built-in slash

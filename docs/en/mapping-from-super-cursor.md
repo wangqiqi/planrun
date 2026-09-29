@@ -1,6 +1,6 @@
 # Mapping from Super Cursor
 
-Reference: [`cursor-ai`](../cursor-ai) (Super Cursor v4.x).
+Reference: [`cursor-ai`](https://github.com/wangqiqi/cursor-ai) (Super Cursor v4.x).
 
 Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (v0.2+) · **drop**
 

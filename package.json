@@ -1,7 +1,7 @@
 {
   "name": "planrun",
   "private": true,
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "homepage": "https://znza.top/planrun/",
   "type": "module",
@@ -14,6 +14,7 @@
     "docs:preview": "vitepress preview docs",
     "verify": "./scripts/verify-planrun.sh",
     "verify:publish": "./scripts/verify-publish.sh",
+    "verify:links": "node scripts/verify-doc-links.mjs",
     "verify:dogfood": "./scripts/verify-dogfood.sh",
     "verify:e2e": "bash scripts/verify-plugin-e2e.sh",
     "pack:local": "bash scripts/pack-local.sh",

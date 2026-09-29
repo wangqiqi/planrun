@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-09-29
+
+### Fixed
+
+- **Bundled skills still pointed at the removed preset install path** — `master/routes.md`,
+  `run/SKILL.md` and `review/SKILL.md` told users to run `install-planrun.sh --preset`, which
+  v1.7 removed. They now state that the presets ship with `@planrun/bundle`.
+- **Bundled skills had broken relative doc links** — the move to `docs/{en,zh}/` left 22 links
+  one directory level short (two in `skills/*/reference/`), so every `docs/…` and
+  `templates/…` reference inside a skill 404'd. All re-anchored to the file's real depth.
+- **`cordis.patch.yml` kept an obsolete preset-root comment** — it still described registering
+  `$DSH_HOME/.agent-presets` through a `roots:` config that no longer exists; replaced with the
+  `presets.patch.yml` note.
+- **Super Cursor links were machine-local** — `README.md`, `README.zh.md` and
+  `docs/en/mapping-from-super-cursor.md` linked `../cursor-ai`, a sibling checkout that only
+  exists on the author's machine. Now the GitHub URL.
+- **`.cursor/skills/scaffold/catalog.md` shipped merge-conflict markers** — resolved to the true
+  state: 7 stacks plus the optional `apply-bundle user-manual` · `test-report` bundles.
+
+### Added
+
+- **`scripts/verify-doc-links.mjs`** (`pnpm run verify:links`) — every repo-relative markdown
+  link must resolve and must not escape the repository
+- **Retired-surface guard** in `verify-planrun.sh` — fails when a bundled skill references
+  `install-planrun.sh --preset`, `.agent-presets` or `agent/session-start`; it scans every
+  bundled markdown file, including `master/routes.md`, which the Cursor-token loop skips
+
 ## [1.7.1] - 2026-09-29
 
 ### Changed

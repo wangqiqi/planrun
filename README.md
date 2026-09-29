@@ -4,7 +4,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-Port the [Super Cursor](../cursor-ai) agent workflow SOP into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** workflow skills, **12** personas, one profile bundle, and project-local `.dsh/growth/` templates. Not a DSH fork, and not a Cursor plugin.
+Port the [Super Cursor](https://github.com/wangqiqi/cursor-ai) agent workflow SOP into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** workflow skills, **12** personas, one profile bundle, and project-local `.dsh/growth/` templates. Not a DSH fork, and not a Cursor plugin.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![Docs](https://img.shields.io/badge/docs-znza.top%2Fplanrun-orange)](https://znza.top/planrun/en/)
@@ -237,13 +237,14 @@ Full mapping → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-sup
 pnpm run build
 pnpm run verify
 pnpm run verify:publish   # npm pack structure (every lib/*.js runtime module must ship)
+pnpm run verify:links     # every repo-relative markdown link resolves
 pnpm run verify:e2e       # build → install into a temp profile → boot (needs DEEPSEEK_HARNESS_HOME)
 pnpm run verify:dogfood   # needs DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # when a plan exists
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` checks **28** skill directories, the **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills. It also fails on a bundled skill name that collides with an official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` · `goal` · `feedback`), on a stale `presets.patch.yml`, and on retired DSH APIs (`agent/session-start`, `kind: 'plugin'`).
+`verify-planrun.sh` checks **28** skill directories, the **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills. It also fails on a bundled skill name that collides with an official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` · `goal` · `feedback`), on a stale `presets.patch.yml`, and on retired DSH APIs (`agent/session-start`, `kind: 'plugin'`). It also fails when a bundled skill still points at a retired surface (`install-planrun.sh --preset` · `.agent-presets`) or when any repo-relative markdown link is dead, so a docs move cannot leave a dangling path behind.
 
 `verify-plugin-e2e.sh` is the only check that proves the plugin *loads*: it packs the
 packages, installs them into a throwaway profile, asserts the bundle rows in

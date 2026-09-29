@@ -56,7 +56,7 @@ Severity (Blocker / High / Medium / Low) · `file:line` · finding · suggestion
 
 ## Delegation
 
-When the **planrun** preset is installed (`install-planrun.sh --preset`) and the session uses preset **planrun** (or a copy with the same delegation rows):
+When the **planrun** preset is available (declared by `@planrun/bundle`, so it appears after installing the bundle) and the session uses preset **planrun** (or a copy with the same delegation rows):
 
 | Tool | Use |
 |------|-----|

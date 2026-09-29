@@ -12,7 +12,7 @@ user-invocable: true
 
 **Not DSH plan mode.** DSH `/plan` explores one task and exits through `exit_plan_mode`. This skill owns **multi-task / Sprint** planning and the `.dsh/growth/plan.md` mirror.
 
-Standing discipline: [docs/en/discipline.md](../../../docs/en/discipline.md)
+Standing discipline: [docs/en/discipline.md](../../../../docs/en/discipline.md)
 
 **Persona**: planning tone follows active session persona; technical gates unchanged.
 
@@ -33,7 +33,7 @@ Sprint Goal = **capability / module / user-visible increment**. Not: tag-only, C
 
 1. **Clarify** Goal and Done-when with `ask_user_question` when ambiguous.
 2. **Decompose** into TASK rows with IDs (`TASK-001`, `SPIKE-001`, `DOC-001`).
-3. **Write** `.dsh/growth/plan.md` from [templates/growth/plan.md](../../../templates/growth/plan.md) — include HTML metadata block (`PLANNING`, `PLAN_APPROVED`, `ACTIVE`, `VERIFY`, …).
+3. **Write** `.dsh/growth/plan.md` from [templates/growth/plan.md](../../../../templates/growth/plan.md) — include HTML metadata block (`PLANNING`, `PLAN_APPROVED`, `ACTIVE`, `VERIFY`, …).
 4. **Set** `<!-- PLANNING: false -->` and `<!-- PLAN_APPROVED: YYYY-MM-DD -->` after user confirms.
 5. **Mark** `<!-- ACTIVE: TASK-xxx -->` (and one table row `⬜`/`🔧`) for **`run`**.
 6. **Hand off** — user loads **`run`** or continues in the same session.
@@ -45,7 +45,7 @@ pnpm run gate-check   # BLOCK → stay in sprint-plan
 pnpm run plan-check   # handoff structure
 ```
 
-See [docs/en/workflow-guard.md](../../../docs/en/workflow-guard.md).
+See [docs/en/workflow-guard.md](../../../../docs/en/workflow-guard.md).
 
 ## plan.md mirror format
 

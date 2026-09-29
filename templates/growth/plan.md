@@ -33,4 +33,4 @@
 - Set `<!-- PLANNING: false -->` and `<!-- PLAN_APPROVED: YYYY-MM-DD -->` before **`run`**.
 - Only one `ACTIVE` row / `<!-- ACTIVE: ... -->` at a time.
 - SPIKE-* = read-only research; DOC-* = docs only.
-- Guard: `pnpm run gate-check` · `plan-check` · `task-verify` · `next-task` (see `docs/workflow-guard.md`).
+- Guard: `pnpm run gate-check` · `plan-check` · `task-verify` · `next-task` (see https://znza.top/planrun/en/workflow-guard).

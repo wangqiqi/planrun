@@ -1,17 +1,11 @@
 # Mount PlanRun bundled skills on host-backed profiles (web, headless, …).
 # Requires dsh-base (or any profile that already includes ctx.skills + tool-skill).
+# The four planrun agent presets ride the sibling `presets.patch.yml` layer,
+# declared as `@deepseek-ai/dsh-agent-preset` rows; there is no preset-root
+# directory to register.
 
 - insert:
     - id: planrun-skills
       name: '@planrun/skill-provider'
     - id: planrun-workflow
       name: '@planrun/workflow'
-
-# Optional: register the planrun preset root when copied to a known path.
-# Uncomment after `install-planrun.sh --preset`:
-#
-# - id: agent-presets
-#   config:
-#     roots:
-#       - path: !!js require('node:path').join(require('node:os').homedir(), '.dsh', '.agent-presets')
-#         trust: user
