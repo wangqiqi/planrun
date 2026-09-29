@@ -57,6 +57,31 @@ for (const file of markdownFiles(ROOT)) {
   }
 }
 
+// Home hero actions are frontmatter, so VitePress resolves them against `base`
+// only: a bare `link: install` becomes /planrun/install (404) instead of
+// /planrun/zh/install. Require locale-absolute links that resolve to a page.
+for (const locale of ['en', 'zh']) {
+  const file = join(ROOT, 'docs', locale, 'index.md')
+  if (!existsSync(file)) continue
+  const shown = `docs/${locale}/index.md`
+  let inActions = false
+  for (const line of readFileSync(file, 'utf8').split('\n')) {
+    if (/^\s*actions:\s*$/.test(line)) { inActions = true; continue }
+    if (inActions && /^\S/.test(line)) inActions = false
+    if (!inActions) continue
+    const value = line.match(/^\s*link:\s*(\S+)\s*$/)?.[1]
+    if (value === undefined || /^https?:/.test(value)) continue
+    if (!value.startsWith(`/${locale}/`)) {
+      failures.push(`${shown}: hero link "${value}" must start with /${locale}/ (VitePress adds only the base)`)
+      continue
+    }
+    checked += 1
+    if (!existsSync(join(ROOT, 'docs', `${value}.md`))) {
+      failures.push(`${shown}: hero link "${value}" has no docs${value}.md`)
+    }
+  }
+}
+
 if (failures.length > 0) {
   for (const failure of failures) console.error(`FAIL: ${failure}`)
   console.error(`verify-doc-links: ${failures.length} broken link(s) of ${checked}`)

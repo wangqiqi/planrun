@@ -11,10 +11,10 @@ hero:
   actions:
     - theme: brand
       text: Install
-      link: install
+      link: /en/install
     - theme: alt
       text: Quickstart
-      link: quickstart
+      link: /en/quickstart
     - theme: alt
       text: GitHub
       link: https://github.com/wangqiqi/planrun

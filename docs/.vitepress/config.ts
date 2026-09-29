@@ -1,5 +1,8 @@
 import { defineConfig } from 'vitepress'
 import type { DefaultTheme } from 'vitepress'
+// Bundled at build time by esbuild — a runtime readFileSync would resolve
+// against VitePress's temporary bundle path, not this file.
+import { version } from '../../package.json'
 
 const sharedHead = [
   ['link', { rel: 'icon', href: '/planrun/logo.svg', type: 'image/svg+xml' }],
@@ -10,7 +13,7 @@ const sharedSocial: DefaultTheme.SocialLink[] = [
 ]
 
 const versionNav: DefaultTheme.NavItemWithChildren = {
-  text: 'v1.6.1',
+  text: `v${version}`,
   items: [
     { text: 'CHANGELOG', link: 'https://github.com/wangqiqi/planrun/blob/main/CHANGELOG.md' },
     { text: 'npm @planrun/bundle', link: 'https://www.npmjs.com/package/@planrun/bundle' },
