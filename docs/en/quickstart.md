@@ -23,11 +23,12 @@ dsh plugin --profile web add @planrun/bundle
 
 See [publish.md](publish.md) for maintainer steps.
 
-**From this repo** (run `pnpm run build` first):
+**From this repo** (`pack-local.sh` builds, then rewrites the `workspace:^` deps to `file:`):
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
 ## 3. Project growth templates

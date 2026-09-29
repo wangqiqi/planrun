@@ -1,7 +1,7 @@
 {
   "name": "@planrun/skill-provider",
   "description": "PlanRun bundled skills for DeepSeek Harness",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -14,7 +14,7 @@
     "./config/roles.json": "./config/roles.json"
   },
   "files": [
-    "lib/index.js",
+    "lib/*.js",
     "lib/types/**/*.d.ts",
     "skills",
     "agents",

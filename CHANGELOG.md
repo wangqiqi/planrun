@@ -2,20 +2,63 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-09-29
+
 ### Fixed
 
+- **Published packages shipped only `lib/index.js`** — `files` omitted the runtime siblings
+  (`load-bundled-skills.js`, `growth.js`, `persona.js`, …), so every install failed at plugin
+  import with `ERR_MODULE_NOT_FOUND`. `verify-publish.sh` now asserts every emitted
+  `lib/*.js` is in the tarball.
+- **`@planrun/workflow` was disabled by DSH** — peer ranges `>=1.0.0` cannot match the
+  0.1.x preview runtime; DSH refuses the row regardless of `peerDependenciesMeta.optional`.
+  Ranges are now `>=0.1.0-0` (agent) and `>=0.0.1-0` (llm).
+- **`agent/session-start` no longer exists** — DSH renamed it to `agent/created` on
+  2026-09-09, so persona/run-start injection silently never ran. Also dropped the unused
+  `inject = ['sessionProjections']`.
+- **Message source `kind: 'plugin'` is rejected by session format v4** — the injected
+  context now declares the producer kind `planrun-workflow`.
+- **Local install path was broken** — the raw package directory carries `workspace:^` deps,
+  which `file:`/git installs never rewrite. New `scripts/pack-local.sh` stages prebuilt
+  copies into `dist-local/` with `file:` deps; README · quickstart · install · dogfood
+  updated.
+- **Agent presets used a directory format DSH no longer reads** — `presets/<id>/`
+  (`preset.yml` + `agent.cordis.yml`) copied to `$DSH_HOME/.agent-presets/` was dead. The
+  four presets are now official `@deepseek-ai/dsh-agent-preset` declarations in
+  `packages/bundle-planrun/presets.patch.yml`, shipped by the bundle's `dsh.bundle.patch`
+  list. `install-planrun.sh --preset` removed.
+- **PlanRun skill rank tied with DSH's bundled rank** — both were 600, so a future
+  same-name skill would resolve by provider registration order. PlanRun now ranks at 650:
+  official bundled skills win deterministically, while project (100/200) and user (400/500)
+  skills still override PlanRun.
+- **Stale compiler output committed under `packages/skill-provider/src/`** (`.js` · `.d.ts` ·
+  `.map`, one importing `./dsh-skill-shim.ts`) removed and gitignored; `verify` fails if it
+  reappears.
 - **CI / docs deploy** — enable GitHub Pages (`build_type: workflow`); `configure-pages@v5` · Node 24 · artifact v4
 
 ### Added
 
 - **VitePress 文档站** — `docs/en/` · `docs/zh/` 中英文分目录；根路径语言选择；`pnpm run docs:dev` / `docs:build`；GitHub Pages（`wangqiqi.github.io/planrun`）
-- **`docs/install.md`** — platform-neutral install guide (npm · source · Super Cursor paths)
+- **`scripts/verify-plugin-e2e.sh`** (`pnpm run verify:e2e`) — build → stage → install into a
+  throwaway profile → compose config → import skill catalog → boot headless → boot again with
+  the `planrun` agent preset selected to prove the declaration mounts
+- **`scripts/pack-local.sh`** (`pnpm run pack:local`) — local install staging
+- **`scripts/gen-presets.mjs`** — generates `presets.patch.yml` from `presets/<id>/`;
+  `--check` mode keeps it in sync under `pnpm run verify`
+- **Skill-conflict guard** in `verify-planrun.sh` — fails when a bundled skill name matches an
+  official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` ·
+  `goal` · `feedback`), or when frontmatter `name` drifts from its directory
+- **`docs/en/install.md`** · **`docs/zh/install.md`** — platform-neutral install guide (npm · source · Super Cursor paths)
 - **`scripts/verify-docs-paths.sh`** — docs must not contain machine-specific paths
 
 ### Changed
 
 - **VitePress 站点** — 根路径跳转至 `/zh/` 或 `/en/` 主页；排除 `_redirects/` 桩页面；Logo/首页样式优化；GitHub About 链到 `/zh/`
 - **VitePress i18n** — `en/` · `zh/` 镜像同路径页面；顶栏语言切换保持当前页
+- **Docs 目录重构** — `docs/{en,zh}/` 双语分目录；旧路径由 `docs/_redirects/` 承接
+- **README** · **README.zh** · **subagents.md** · **quickstart** · **install.md** ·
+  **publish.md** · **mapping-from-super-cursor.md** — preset install is now "install the
+  bundle", not "copy a directory"; bundle manifest documented as an ordered `patch` list
 - **README** · **quickstart** — who fits / prerequisites / DSH vs Cursor table; links to install.md
 - **dogfood.md** — bundled skills count 28
 

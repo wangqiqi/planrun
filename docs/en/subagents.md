@@ -4,12 +4,19 @@ PlanRun ports Super Cursor **ship** · **review** · **spike** agents as DSH **a
 
 ## Install presets
 
+The four presets ship **inside the bundle** as `@deepseek-ai/dsh-agent-preset`
+declarations (`packages/bundle-planrun/presets.patch.yml`), so installing the
+bundle is all it takes:
+
 ```sh
-export PLANRUN_HOME=/path/to/planrun
-"$PLANRUN_HOME/scripts/install-planrun.sh" --preset
+dsh plugin --profile web add @planrun/bundle
+
+# repo dev:
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
-Copies four directories into `~/.dsh/.agent-presets/`:
+Restart `dsh web`; the preset picker lists:
 
 | Preset id | Purpose |
 |-----------|---------|
@@ -18,7 +25,16 @@ Copies four directories into `~/.dsh/.agent-presets/`:
 | `planrun-spike` | Dedicated readonly SPIKE session |
 | `planrun-ship` | Dedicated release / tag session |
 
-Restart `dsh web` after install so the preset picker picks up new rows.
+> DSH no longer reads `$DSH_HOME/.agent-presets/<id>/` directories
+> (`preset.yml` + `agent.cordis.yml`). Agent presets are bundle-patch
+> declarations now, so the old `install-planrun.sh --preset` path is gone.
+> Presets appear on surfaces that mount `@deepseek-ai/dsh-agent-preset-registry`
+> — the Web bundle does; the headless bundle does not, where the declaration
+> rows stay pending and print a harmless "did not activate" warning.
+
+Editing a preset: change `presets/<id>/{preset.yml,plugins.yml}`, run
+`node scripts/gen-presets.mjs`, and reinstall the bundle. `pnpm run verify`
+fails when the generated patch is stale.
 
 ## Recommended session setup
 
@@ -93,5 +109,4 @@ node_modules/@planrun/skill-provider/agents/
 
 ## Out of scope (v1.6)
 
-- Auto-mounting `~/.dsh/.agent-presets` in `@planrun/bundle` cordis.patch (manual `--preset` only)
 - Codex / Claude Code product subagent rows (remain `disabled` in upstream standard preset)

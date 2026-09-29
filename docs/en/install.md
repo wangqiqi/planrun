@@ -26,7 +26,7 @@ PlanRun **skills in npm** target **DSH**. The `.cursor/` tree in this repo is th
 
 **Not required**: a specific Linux user, this maintainer's machine paths, or Cursor IDE.
 
-**Optional later**: `@planrun/workflow` hooks, `planrun` agent presets (`install-planrun.sh --preset`), external tools (e.g. `mddocx` for **md2docx-export** skill).
+**Optional later**: `@planrun/workflow` hooks (included in the bundle), external tools (e.g. `mddocx` for **md2docx-export** skill). The four `planrun*` agent presets ship inside the bundle as `@deepseek-ai/dsh-agent-preset` declarations — no separate install step.
 
 ## Path A — npm user (recommended)
 
@@ -71,8 +71,14 @@ Install bundle from source:
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
+
+End-to-end check (needs a built `deepseek-harness` checkout): `pnpm run verify:e2e`
+stages the packages, installs them into a throwaway profile, and boots it. Do not
+`add` the raw `packages/bundle-planrun` directory — its `workspace:^` deps fail
+with `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`.
 
 Optional structural dogfood (requires harness checkout):
 

@@ -23,11 +23,12 @@ dsh plugin --profile web add @planrun/bundle
 
 发布与维护说明 → [publish.md](publish.md)
 
-**本仓开发**（先 `pnpm run build`）：
+**本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
 验证：
@@ -43,10 +44,10 @@ ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 
 ```sh
 cd /path/to/deepseek-harness
-pnpm dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+pnpm dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
-**常见错误**：若 bundle 仍用 `workspace:^` 声明 skill-provider，`dsh plugin add` 在 profile 目录会报 `WORKSPACE_PKG_NOT_FOUND`。
+**常见错误**：直接 `add "file:$PLANRUN_HOME/packages/bundle-planrun"` 会报 `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND` —— 源码目录用的是 `workspace:^` 依赖。先跑 `scripts/pack-local.sh`，它会把依赖改写成 `file:` 并输出到 `dist-local/`。
 
 ## 3. 项目内 growth 模板
 
@@ -95,9 +96,14 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 
 ### Subagent 预设（v1.6）
 
+四个 `planrun*` preset 现在**随 `@planrun/bundle` 一起安装**（`packages/bundle-planrun/presets.patch.yml` 里的官方 `@deepseek-ai/dsh-agent-preset` 声明）：
+
 ```sh
-./scripts/install-planrun.sh --preset   # 复制 planrun* → ~/.dsh/.agent-presets/
+dsh plugin --profile web add @planrun/bundle
+# 装完重启 dsh web → preset 选择器出现 planrun / planrun-review / planrun-spike / planrun-ship
 ```
+
+旧的 `install-planrun.sh --preset`（复制到 `~/.dsh/.agent-presets/`）已删除 —— DSH 不再读取该目录。
 
 详见 [subagents.md](subagents.md)。日常仍可用 **standard** preset + bundle skills；需要 `subagent_review` / `subagent_spike` / `subagent_ship` 时切换到 **planrun** preset 或专用子 preset。
 

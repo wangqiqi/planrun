@@ -6,9 +6,14 @@ PlanRun ships three public packages under the `@planrun` scope:
 |---------|------|
 | `@planrun/skill-provider` | 28 bundled skills + `config/roles.json` |
 | `@planrun/workflow` | Cordis plugin (growth · run-start · run-stop · persona) |
-| `@planrun/bundle` | DSH profile bundle (`dsh.bundle.patch`) |
+| `@planrun/bundle` | DSH profile bundle (`dsh.bundle.patch` = `cordis.patch.yml` + `presets.patch.yml`) |
 
 Directory `packages/bundle-planrun/` maps to npm name **`@planrun/bundle`**.
+
+`presets.patch.yml` is generated from `presets/<id>/{preset.yml,plugins.yml}` by
+`node scripts/gen-presets.mjs`; `pnpm run verify` fails when it is stale. Both patch
+files must ship — `verify:publish` reads `dsh.bundle.patch` and asserts each declared
+file is in the tarball.
 
 ## User install (one line)
 
@@ -50,6 +55,17 @@ bash scripts/publish-packages.sh --pack-only
 
 - **Local monorepo**: `bundle` uses `workspace:^` for skill-provider and workflow; pnpm links siblings.
 - **npm consumers**: `pnpm publish` rewrites `workspace:^` to semver ranges automatically.
+- **Local install without publishing**: run `scripts/pack-local.sh`, which stages prebuilt
+  copies into `dist-local/` and rewrites the bundle's deps to `file:../skill-provider` /
+  `file:../workflow`. Installing the raw `packages/bundle-planrun` directory fails with
+  `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`, because `workspace:^` only resolves inside the
+  workspace (the `file:`/git path never runs pnpm's rewrite).
+
+### End-to-end check
+
+`pnpm run verify:e2e` builds, stages, installs into a throwaway DSH profile, asserts the
+composed rows, imports the skill provider, and boots headless. It needs a built
+`deepseek-harness` checkout (`DEEPSEEK_HARNESS_HOME`) and skips cleanly without one.
 
 ### Git install (alternative)
 

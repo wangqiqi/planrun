@@ -37,7 +37,7 @@
 | runner.sh | `dsh-guard.sh` + `pnpm run gate-check` | **keep** |
 | plan HTML meta | `.dsh/growth/plan.md` + guard | **keep** |
 | commands/*.md | skill 描述 + 用户 slash | **merge** |
-| agents ship/review/spike | subagent presets + `agents/*.md` | **keep**（v1.6） |
+| agents ship/review/spike | subagent presets（`presets.patch.yml` 声明）+ `agents/*.md` | **keep**（v1.6） |
 
 ## 安装
 

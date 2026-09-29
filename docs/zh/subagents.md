@@ -4,12 +4,17 @@
 
 ## 安装预设
 
+四个 preset **随 bundle 一起安装**（`packages/bundle-planrun/presets.patch.yml` 里的官方 `@deepseek-ai/dsh-agent-preset` 声明）：
+
 ```sh
-export PLANRUN_HOME=/path/to/planrun
-"$PLANRUN_HOME/scripts/install-planrun.sh" --preset
+dsh plugin --profile web add @planrun/bundle
+
+# 本仓开发：
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
-复制到 `~/.dsh/.agent-presets/`：
+重启 `dsh web`，preset 选择器出现：
 
 | Preset | 用途 |
 |--------|------|
@@ -18,7 +23,10 @@ export PLANRUN_HOME=/path/to/planrun
 | `planrun-spike` | 只读 SPIKE 会话 |
 | `planrun-ship` | release / tag 会话 |
 
-安装后重启 `dsh web`。
+> DSH 已不再读取 `$DSH_HOME/.agent-presets/<id>/` 目录（`preset.yml` + `agent.cordis.yml`）；agent preset 现在是 bundle patch 里的声明，因此 `install-planrun.sh --preset` 已删除。
+> preset 只在挂载了 `@deepseek-ai/dsh-agent-preset-registry` 的表面生效——Web bundle 有，headless bundle 没有（在那里声明行保持 pending，打印一行无害的 "did not activate" 警告）。
+
+修改 preset：改 `presets/<id>/{preset.yml,plugins.yml}` → 运行 `node scripts/gen-presets.mjs` → 重装 bundle。`pnpm run verify` 会在生成的 patch 过期时报错。
 
 ## 推荐组合
 
@@ -87,4 +95,4 @@ node_modules/@planrun/skill-provider/agents/
 
 ## v1.6 未做
 
-- 在 `@planrun/bundle` cordis.patch 自动挂载 `~/.dsh/.agent-presets`（仍须 `--preset` 手动复制）
+- Codex / Claude Code 产品专用 subagent 行（上游 standard preset 里仍 `disabled`）

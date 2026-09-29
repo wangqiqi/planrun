@@ -2,7 +2,11 @@
 
 export interface UserMessage {
   readonly content: ReadonlyArray<{ readonly type: 'text'; readonly text: string }>
-  readonly source: { readonly kind: 'plugin'; readonly plugin: string }
+  /**
+   * Producer-owned source kind. Session format v4 rejects the retired
+   * catch-all `kind: 'plugin'` wrapper, so this must name the producer.
+   */
+  readonly source: { readonly kind: string }
 }
 
 export interface Agent {
@@ -12,7 +16,7 @@ export interface Agent {
 }
 
 export interface Context {
-  on(event: 'agent/session-start', handler: (payload: { agent: Agent }) => void): void
+  on(event: 'agent/created', handler: (payload: { agent: Agent }) => void): void
   on(
     event: 'agent/pre-step',
     handler: (payload: { agent: Agent }, next: () => Promise<unknown>) => Promise<unknown>,

@@ -1,3 +1,4 @@
+id: planrun-ship
 name: PlanRun ship
 description: Release subagent session — CHANGELOG, verify, tag per release skill.
 order: 53

@@ -37,16 +37,20 @@ pnpm run verify:dogfood
 1. Harness 布局（`package.json` 或 `AGENTS.md`）  
 2. Plan fixture — `templates/dogfood/plan-fixture.md`  
 3. Guard 循环 — `gate-check` · `plan-check` · `next-task`  
-4. Bundle 产物 — skill-provider · workflow · bundle `lib/`  
+4. Bundle 产物 — skill-provider · workflow · bundle `lib/`，以及 `cordis.patch.yml` 和生成的 `presets.patch.yml`  
 5. **28 skills** 磁盘清单 + `master/routes.md`  
 6. `install-planrun.sh` 在临时 git 根种子 `.dsh/growth/`
 
 ## 交互 dogfood（手动）
 
 ```sh
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+export PLANRUN_HOME=/path/to/planrun
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 # 重启 dsh web · planrun preset · 加载 master / sprint-plan / run
 ```
+
+自动化版本：`pnpm run verify:e2e`（需已构建的 `deepseek-harness`）。
 
 ## 相关
 

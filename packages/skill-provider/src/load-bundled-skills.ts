@@ -9,7 +9,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import {
-  BUNDLED_SKILL_RANK,
+  PLANRUN_SKILL_RANK,
   isSkillName,
   type SkillCandidate,
   type SkillDefinition,
@@ -86,7 +86,7 @@ function loadSkillDirectory(dirName: string): BundledSkillRecord | undefined {
     provider: PROVIDER_NAME,
     source: 'bundled',
     resourceBase: { kind: 'directory', path: resourceBasePath },
-    rank: BUNDLED_SKILL_RANK,
+    rank: PLANRUN_SKILL_RANK,
     locator: skillMd,
     path: skillMd,
   }

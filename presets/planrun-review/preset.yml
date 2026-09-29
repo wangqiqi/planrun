@@ -1,3 +1,4 @@
+id: planrun-review
 name: PlanRun review
 description: Readonly PR/code review session — load review skill; no file writes.
 order: 51

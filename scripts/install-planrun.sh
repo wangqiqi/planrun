@@ -13,8 +13,11 @@ usage() {
   --here            安装到当前 Git 项目根
   --copy-plan       复制 plan.md 模板（若不存在）
   --no-guard        不复制 scripts/dsh-guard.sh 到目标项目
-  --preset          复制 presets/planrun* 到 ~/.dsh/.agent-presets/
   -h, --help        显示帮助
+
+注意: agent presets 不再复制到 ~/.dsh/.agent-presets（DSH 已不读取该目录）。
+      四个 planrun preset 现在由 @planrun/bundle 的 presets.patch.yml 作为
+      @deepseek-ai/dsh-agent-preset 声明随 bundle 一起安装。
 
 示例:
   export PLANRUN_HOME=/path/to/planrun
@@ -53,7 +56,6 @@ find_git_root() {
 }
 
 COPY_PLAN=false
-INSTALL_PRESET=false
 INSTALL_GUARD=true
 TARGET=""
 
@@ -62,7 +64,6 @@ while [[ $# -gt 0 ]]; do
     --here) TARGET="$(pwd)"; shift ;;
     --copy-plan) COPY_PLAN=true; shift ;;
     --no-guard) INSTALL_GUARD=false; shift ;;
-    --preset) INSTALL_PRESET=true; shift ;;
     -h|--help) usage; exit 0 ;;
     -*) echo "未知选项: $1" >&2; exit 1 ;;
     *) TARGET="$1"; shift ;;
@@ -119,25 +120,6 @@ if [[ "$INSTALL_GUARD" == true ]]; then
   node "$SOURCE/scripts/merge-guard-package-json.mjs" "$TARGET" || true
 fi
 
-if [[ "$INSTALL_PRESET" == true ]]; then
-  PRESET_ROOT="${DSH_HOME:-$HOME/.dsh}/.agent-presets"
-  mkdir -p "$PRESET_ROOT"
-  copied=0
-  for dir in "$SOURCE/presets"/planrun*; do
-    [[ -d "$dir" ]] || continue
-    name="$(basename "$dir")"
-    dest="$PRESET_ROOT/$name"
-    rm -rf "$dest"
-    cp -a "$dir" "$dest"
-    echo "已复制 preset → $dest"
-    copied=$((copied + 1))
-  done
-  if [[ "$copied" -eq 0 ]]; then
-    echo "错误: 未找到 presets/planrun* 目录" >&2
-    exit 1
-  fi
-fi
-
 cat <<EOF
 
 PlanRun 项目模板已安装到: $GROWTH
@@ -145,8 +127,10 @@ PlanRun 项目模板已安装到: $GROWTH
 下一步:
   1. 将 bundle 加入 DSH profile:
      dsh plugin --profile web add @planrun/bundle
-     # 开发: dsh plugin --profile web add "file:$SOURCE/packages/bundle-planrun"
-  2. 启动 dsh web，使用 standard preset
+     # 开发: "$SOURCE/scripts/pack-local.sh"
+     #       dsh plugin --profile web add "file:$SOURCE/dist-local/bundle-planrun"
+  2. 启动 dsh web；默认用 standard preset，需要命名委派工具时切到 planrun preset
+     （四个 planrun preset 随 bundle 声明，重启 dsh web 即可在选择器看到）
   3. 加载 skill: master · sprint-plan · run · review
   4. 呼叫人格: 「呼叫老周」「切换御姐」→ master §人格·呼叫；默认 dashu
   5. Sprint 闸门（项目 scripts/ 已种子 guard 时）:

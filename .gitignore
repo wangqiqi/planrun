@@ -6,6 +6,7 @@ pnpm-debug.log
 # Build
 lib/
 dist/
+dist-local/
 build/
 *.tsbuildinfo
 coverage/

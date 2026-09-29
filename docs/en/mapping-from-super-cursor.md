@@ -49,7 +49,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | runner.sh | `scripts/dsh-guard.sh` + `pnpm run gate-check` | **keep** (guard MVP) |
 | plan.md HTML meta SSOT | `.dsh/growth/plan.md` + guard | **keep** (session todos still parallel) |
 | commands/*.md | skill description + user slash | **merge** |
-| agents/ship, review, spike | subagent presets + `agents/*.md` | **keep** (v1.6) |
+| agents/ship, review, spike | subagent presets (`presets.patch.yml` declarations) + `agents/*.md` | **keep** (v1.6) |
 
 ## Install
 

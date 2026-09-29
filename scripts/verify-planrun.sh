@@ -119,7 +119,28 @@ if ! grep -q 'session/persona.json' "$ROOT/scripts/install-planrun.sh"; then
   FAIL=1
 fi
 if ! grep -q 'Persona' "$ROOT/packages/workflow/src/index.ts"; then
-  echo "MISSING: workflow session-start persona inject"
+  echo "MISSING: workflow agent/created persona inject"
+  FAIL=1
+fi
+if node - "$ROOT/packages/workflow/src/index.ts" "$ROOT/packages/workflow/src/dsh-shim.ts" <<'NODE'
+const fs = require('node:fs')
+let bad = false
+for (const file of process.argv.slice(1).filter((arg) => arg !== '-')) {
+  // Strip comments so prose about the retired names does not count as usage.
+  const source = fs.readFileSync(file, 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '')
+  if (/agent\/session-start|kind:\s*['"]plugin['"]/.test(source)) {
+    console.error(`  ${file}`)
+    bad = true
+  }
+}
+process.exit(bad ? 1 : 0)
+NODE
+then
+  echo "OK: workflow uses agent/created + producer-owned message source"
+else
+  echo "FAIL: workflow still uses a retired DSH API (agent/session-start or kind:'plugin')"
   FAIL=1
 fi
 
@@ -142,6 +163,48 @@ while IFS= read -r skill_dir; do
     done < <(find "$skill_dir/reference" -name '*.md' -type f)
   fi
 done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
+
+echo "==> Checking skill-name conflicts with official DSH skills/commands"
+# Official bundled skills a stock DSH install provides, plus the built-in slash
+# commands. A same-name skill would shadow — or be shadowed — non-deterministically
+# at equal rank, and a same-name command collides in the command palette.
+OFFICIAL_SKILLS="dsh-badge office-docx office-pptx office-xlsx cordis-composition-reference cordis-plugin-development editing-cordis-compositions"
+OFFICIAL_COMMANDS="plan compact goal feedback"
+skill_conflict=0
+while IFS= read -r skill_dir; do
+  base="$(basename "$skill_dir")"
+  skill_name="$(sed -n '1,8p' "$skill_dir/SKILL.md" | grep -m1 '^name:' | sed 's/^name:[[:space:]]*//')"
+  [[ -z "$skill_name" ]] && skill_name="$base"
+  for official in $OFFICIAL_SKILLS $OFFICIAL_COMMANDS; do
+    if [[ "$skill_name" == "$official" ]]; then
+      echo "FAIL: skills/$base (name: $skill_name) collides with official DSH name '$official'"
+      skill_conflict=1
+      FAIL=1
+    fi
+  done
+  if [[ "$skill_name" != "$base" ]]; then
+    echo "FAIL: skills/$base frontmatter name '$skill_name' differs from its directory"
+    FAIL=1
+  fi
+done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
+if [[ "$skill_conflict" -eq 0 ]]; then
+  echo "OK: no skill/command name collisions with official DSH"
+fi
+if grep -q 'PLANRUN_SKILL_RANK = 650' "$ROOT/packages/skill-provider/src/dsh-skill-shim.ts"; then
+  echo "OK: PlanRun skill rank 650 (above DSH bundled 600)"
+else
+  echo "FAIL: PlanRun skill rank must stay above DSH's bundled rank (600)"
+  FAIL=1
+fi
+stray_files="$(find "$ROOT/packages" -path '*/node_modules' -prune -o -path '*/src/*' \
+  \( -name '*.js' -o -name '*.d.ts' -o -name '*.map' \) -print)"
+if [[ -n "$stray_files" ]]; then
+  echo "FAIL: stray compiler output beside TypeScript sources (packages/*/src)"
+  printf '%s\n' "$stray_files" | sed 's#^#  #'
+  FAIL=1
+else
+  echo "OK: no stray build artifacts under packages/*/src"
+fi
 
 echo "==> Checking workflow guard"
 for f in scripts/dsh-guard.sh scripts/plan-parse.sh; do
@@ -218,21 +281,57 @@ rm -rf "$INSTALL_TMP"
 
 echo "==> Checking subagent presets"
 for preset in planrun planrun-review planrun-spike planrun-ship; do
-  if [[ ! -f "$ROOT/presets/$preset/agent.cordis.yml" ]] || [[ ! -f "$ROOT/presets/$preset/preset.yml" ]]; then
-    echo "MISSING: presets/$preset (agent.cordis.yml + preset.yml)"
+  if [[ ! -f "$ROOT/presets/$preset/plugins.yml" ]] || [[ ! -f "$ROOT/presets/$preset/preset.yml" ]]; then
+    echo "MISSING: presets/$preset (plugins.yml + preset.yml)"
+    FAIL=1
+  elif ! grep -q "^id: $preset$" "$ROOT/presets/$preset/preset.yml"; then
+    echo "MISSING: presets/$preset/preset.yml id: $preset"
     FAIL=1
   else
     echo "OK: presets/$preset"
   fi
 done
-if ! grep -q 'tool-subagent-review' "$ROOT/presets/planrun/agent.cordis.yml"; then
+if ! grep -q 'tool-subagent-review' "$ROOT/presets/planrun/plugins.yml"; then
   echo "MISSING: planrun preset delegation tool-subagent-review"
   FAIL=1
-elif ! grep -q 'toolFilter' "$ROOT/presets/planrun/agent.cordis.yml"; then
+elif ! grep -q 'toolFilter' "$ROOT/presets/planrun/plugins.yml"; then
   echo "MISSING: planrun preset toolFilter for readonly subagents"
   FAIL=1
 else
   echo "OK: planrun delegation + toolFilter"
+fi
+if ! node "$ROOT/scripts/gen-presets.mjs" --check; then
+  FAIL=1
+fi
+PRESET_PATCH="$ROOT/packages/bundle-planrun/presets.patch.yml"
+if [[ ! -f "$PRESET_PATCH" ]]; then
+  echo "MISSING: packages/bundle-planrun/presets.patch.yml"
+  FAIL=1
+else
+  for preset in planrun planrun-review planrun-spike planrun-ship; do
+    if ! grep -q "id: preset-$preset$" "$PRESET_PATCH"; then
+      echo "MISSING: presets.patch.yml declaration preset-$preset"
+      FAIL=1
+    fi
+  done
+  if ! grep -q "@deepseek-ai/dsh-agent-preset" "$PRESET_PATCH"; then
+    echo "MISSING: presets.patch.yml must declare @deepseek-ai/dsh-agent-preset"
+    FAIL=1
+  else
+    echo "OK: presets.patch.yml declarations"
+  fi
+  if ! node -e "
+    const p = require('$ROOT/packages/bundle-planrun/package.json')
+    const patch = p.dsh?.bundle?.patch
+    const list = Array.isArray(patch) ? patch : [patch]
+    if (!list.includes('./presets.patch.yml')) process.exit(1)
+    if (!(p.files ?? []).includes('presets.patch.yml')) process.exit(1)
+  "; then
+    echo "FAIL: bundle manifest must declare and ship ./presets.patch.yml"
+    FAIL=1
+  else
+    echo "OK: bundle manifest ships presets.patch.yml"
+  fi
 fi
 for agent in ship review spike; do
   if [[ ! -f "$ROOT/packages/skill-provider/agents/$agent.md" ]]; then

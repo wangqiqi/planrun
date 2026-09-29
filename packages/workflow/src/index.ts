@@ -12,7 +12,9 @@ import { buildRunStopSteer } from './run-stop.js'
 import { loadPlanSnapshot, resolvePlanPath } from './plan-parser.js'
 import { buildPersonaStartContext } from './persona.js'
 
-const PLUGIN_SOURCE = { kind: 'plugin' as const, plugin: 'planrun-workflow' }
+// Session format v4 refuses the retired catch-all `kind: 'plugin'` wrapper and
+// requires a producer-owned kind; see assertV4MessageSources in dsh itself.
+const PLUGIN_SOURCE = { kind: 'planrun-workflow' } as const
 
 export interface Config {
   /** When false, register no listeners (guard scripts remain baseline). */
@@ -24,8 +26,6 @@ export interface Config {
 }
 
 export const name = 'planrun-workflow'
-
-export const inject = ['sessionProjections']
 
 const loopCounts = new WeakMap<Agent, number>()
 
@@ -55,7 +55,9 @@ export function apply(ctx: Context, config: Config = {}): void {
   if (config.enabled === false) return
   const planrunHome = resolvePlanrunHome(config.planrunHome)
 
-  ctx.on('agent/session-start', ({ agent }) => {
+  // DSH renamed this lifecycle hook from `agent/session-start` to
+  // `agent/created` on 2026-09-09; the old name is never emitted.
+  ctx.on('agent/created', ({ agent }) => {
     loopCounts.set(agent, 0)
     const cwd = projectCwd(agent)
     ensureGrowth(cwd, planrunHome)

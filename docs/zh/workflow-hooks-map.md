@@ -5,8 +5,10 @@ Super Cursor `hooks.json` → DSH Cordis 扩展点（**`@planrun/workflow`**）�
 | Super Cursor | DSH 事件 | 处理 | 行为 |
 |--------------|----------|------|------|
 | `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | 幂等种子 `.dsh/growth/` |
-| `sessionStart` → `run-start.sh` | `agent/session-start` | `buildRunStartContext()` + Persona | 注入 plan 闸门 / ACTIVE / Persona hint |
+| `sessionStart` → `run-start.sh` | `agent/created` | `buildRunStartContext()` + Persona | 注入 plan 闸门 / ACTIVE / Persona hint |
 | `stop` → `run-stop.sh` | `agent/turn-stopping` | `buildRunStopSteer()` | `AUTONOMOUS:true` 时 steer 下一 TASK |
+
+> DSH 已于 2026-09-09 把该 hook 从 `agent/session-start` 改名为 `agent/created`（commit `9b7a8ccc9f`）。旧事件名永远不会触发，监听它只会静默失效——请保持本表与 `packages/workflow/src/index.ts` 一致。
 
 ## plan 路径（同 dsh-guard）
 

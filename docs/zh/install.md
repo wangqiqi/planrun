@@ -52,8 +52,13 @@ dsh --profile web --dump-config | grep planrun-skills
 git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
 pnpm install && pnpm run build && pnpm run verify
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
+
+**不要**直接 `add "file:$PLANRUN_HOME/packages/bundle-planrun"`：源码目录的 `workspace:^` 依赖会报 `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`。
+
+端到端校验（需已构建的 `deepseek-harness`）：`pnpm run verify:e2e` —— 会 stage 三个包、装进一次性 profile 并 boot。
 
 结构 dogfood：`pnpm run verify:dogfood`（需 `DEEPSEEK_HARNESS_HOME`）— 见 [dogfood.md](dogfood.md)。
 

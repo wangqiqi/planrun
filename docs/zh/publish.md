@@ -6,9 +6,11 @@
 |----|------|
 | `@planrun/skill-provider` | 28 bundled skills + `roles.json` |
 | `@planrun/workflow` | Cordis plugin（growth · run-start · run-stop · persona） |
-| `@planrun/bundle` | DSH profile bundle |
+| `@planrun/bundle` | DSH profile bundle（`dsh.bundle.patch` = `cordis.patch.yml` + `presets.patch.yml`） |
 
 目录 `packages/bundle-planrun/` 对应 npm 名 **`@planrun/bundle`**。
+
+`presets.patch.yml` 由 `node scripts/gen-presets.mjs` 从 `presets/<id>/{preset.yml,plugins.yml}` 生成；`pnpm run verify` 在它过期时报错。两个 patch 文件都必须发布——`verify:publish` 会读 `dsh.bundle.patch` 并断言每个声明的文件都在 tarball 里。
 
 ## 用户安装
 

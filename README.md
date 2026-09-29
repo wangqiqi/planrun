@@ -89,28 +89,30 @@ flowchart LR
 
 ```
 packages/
-  skill-provider/     # @planrun/skill-provider — Cordis plugin + skills/
-  bundle-planrun/       # @planrun/bundle — dsh.bundle.patch
+  skill-provider/       # @planrun/skill-provider — Cordis plugin + skills/
+  bundle-planrun/       # @planrun/bundle — dsh.bundle.patch + agent presets
   workflow/             # @planrun/workflow — session hooks (growth · run-start · run-stop)
-presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
-templates/growth/     # plan.md · learn/ · archive/ 种子
-scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
-docs/                 # en/ · zh/ VitePress site + mapping · quickstart · workflow-guard
+presets/                # preset 源：<id>/{preset.yml,plugins.yml}
+templates/growth/       # plan.md · learn/ · archive/ 种子
+scripts/                # install-planrun.sh · gen-presets.mjs · dsh-guard.sh · verify-*
+docs/                   # en/ · zh/ VitePress site + mapping · quickstart · workflow-guard
 ```
 
 | Piece | Package / path | Role |
 |---|---|---|
 | Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json` (12 personas) |
-| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
-| Agent preset | `presets/planrun/` | 可选 `planrun` preset |
+| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow**；`presets.patch.yml` 声明 4 个 agent preset |
+| Agent presets | `presets/` → `presets.patch.yml` | 官方 `@deepseek-ai/dsh-agent-preset` 声明（由 `scripts/gen-presets.mjs` 生成） |
 | Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
 | Installer | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
 | Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
 
-Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同模式）：
+Bundle 声明（`patch` 是**有序列表**，与官方 `dsh-web-app` 同模式）：
 
 ```json
-"dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+"dsh": {
+  "bundle": { "patch": ["./cordis.patch.yml", "./presets.patch.yml"] }
+}
 ```
 
 ---
@@ -136,12 +138,15 @@ pnpm run verify          # 28 skills + 12 personas + DSH adapter token checks
 dsh plugin --profile web add @planrun/bundle
 ```
 
-**本仓开发**（先 `pnpm run build`）：
+**本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
+
+**不要**直接 `add "file:$PLANRUN_HOME/packages/bundle-planrun"`：monorepo 的 `workspace:^` 依赖会报 `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`。
 
 验证：
 
@@ -180,7 +185,8 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/pl
 
 ### 4 · Use in a session
 
-用 **standard** preset（或 `install-planrun.sh --preset` 后的 **planrun**），按场景加载 skill：
+用 **standard** preset（或 bundle 自带的 **planrun** / **planrun-review** / **planrun-spike** / **planrun-ship**），按场景加载 skill。
+四个 preset 由 `@planrun/bundle` 的 `presets.patch.yml` 声明，装完 bundle 重启 `dsh web` 即在 preset 选择器可见（无需再手动复制目录）：
 
 | Skill | 何时加载 |
 |---|---|
@@ -229,12 +235,20 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 ```sh
 pnpm run build
 pnpm run verify
+pnpm run verify:publish   # npm pack 结构（lib/*.js 运行时模块必须齐全）
+pnpm run verify:e2e       # 构建→装临时 profile→boot（须 DEEPSEEK_HARNESS_HOME）
 pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` checks **28** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills.
+`verify-planrun.sh` checks **28** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills. It also fails on a bundled skill name that collides with an official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` · `goal` · `feedback`), on a stale `presets.patch.yml`, and on retired DSH APIs (`agent/session-start`, `kind: 'plugin'`).
+
+`verify-plugin-e2e.sh` is the only check that proves the plugin *loads*: it packs the
+packages, installs them into a throwaway profile, asserts the bundle rows in
+`--dump-config`, imports the skill catalog, and boots headless. It fails on
+`failed to import`, an incompatible dsh peer range, or a message source kind the
+session format rejects.
 
 ---
 
@@ -251,7 +265,8 @@ pnpm run typecheck
 | **v1.3** | defer skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
 | **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
-| **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ current |
+| **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ |
+| **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 

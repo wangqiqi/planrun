@@ -91,28 +91,30 @@ flowchart LR
 
 ```
 packages/
-  skill-provider/     # @planrun/skill-provider — Cordis 插件 + skills/
-  bundle-planrun/       # @planrun/bundle — dsh.bundle.patch
+  skill-provider/       # @planrun/skill-provider — Cordis 插件 + skills/
+  bundle-planrun/       # @planrun/bundle — dsh.bundle.patch + agent presets
   workflow/             # @planrun/workflow — session hooks（growth · run-start · run-stop）
-presets/planrun/        # 可选 agent preset（v0.1 配合 standard 使用）
-templates/growth/     # plan.md · learn/ · archive/ 种子
-scripts/              # install-planrun.sh · dsh-guard.sh · verify-planrun.sh
-docs/                 # en/ · zh/ — VitePress 文档站
+presets/                # preset 源：<id>/{preset.yml,plugins.yml}
+templates/growth/       # plan.md · learn/ · archive/ 种子
+scripts/                # install-planrun.sh · gen-presets.mjs · dsh-guard.sh · verify-*
+docs/                   # en/ · zh/ — VitePress 文档站
 ```
 
 | 组件 | 包 / 路径 | 作用 |
 |---|---|---|
 | Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json`（12 人格） |
-| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow** |
-| Agent preset | `presets/planrun/` | 可选 `planrun` preset |
+| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow**；`presets.patch.yml` 声明 4 个 agent preset |
+| Agent presets | `presets/` → `presets.patch.yml` | 官方 `@deepseek-ai/dsh-agent-preset` 声明（由 `scripts/gen-presets.mjs` 生成） |
 | Growth 模板 | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
 | 安装脚本 | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
 | Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
 
-Bundle 声明（与 [turtle-ui](https://github.com/turtle1999/turtle-ui) 等同模式）：
+Bundle 声明（`patch` 是**有序列表**，与官方 `dsh-web-app` 同模式）：
 
 ```json
-"dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+"dsh": {
+  "bundle": { "patch": ["./cordis.patch.yml", "./presets.patch.yml"] }
+}
 ```
 
 ---
@@ -138,12 +140,15 @@ pnpm run verify          # 28 skills + 12 personas + DSH 适配 token 结构检�
 dsh plugin --profile web add @planrun/bundle
 ```
 
-**本仓开发**（先 `pnpm run build`）：
+**本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
+
+**不要**直接 `add "file:$PLANRUN_HOME/packages/bundle-planrun"`：monorepo 的 `workspace:^` 依赖会报 `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`。
 
 验证：
 
@@ -182,7 +187,8 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/pl
 
 ### 4 · 在会话中使用
 
-用 **standard** preset（或 `install-planrun.sh --preset` 后的 **planrun**），按场景加载 skill：
+用 **standard** preset（或 bundle 自带的 **planrun** / **planrun-review** / **planrun-spike** / **planrun-ship**），按场景加载 skill。
+四个 preset 由 `@planrun/bundle` 的 `presets.patch.yml` 声明，装完 bundle 重启 `dsh web` 即在 preset 选择器可见（无需再手动复制目录）：
 
 | Skill | 何时加载 |
 |---|---|
@@ -245,7 +251,8 @@ pnpm run typecheck
 | **v1.3** | defer skills：`mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
 | **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
-| **v1.6** | subagent 预设 · `agents/*.md` · `docs/en/subagents.md` | ✅ current |
+| **v1.6** | subagent 预设 · `agents/*.md` · `docs/en/subagents.md` | ✅ |
+| **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 

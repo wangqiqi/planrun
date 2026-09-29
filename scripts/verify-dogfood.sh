@@ -144,6 +144,15 @@ check_bundle_artifacts() {
   else
     echo "OK: cordis.patch.yml"
   fi
+  if ! grep -q "@deepseek-ai/dsh-agent-preset" "${PLANRUN_HOME}/packages/bundle-planrun/presets.patch.yml"; then
+    echo "MISSING: presets.patch.yml agent-preset declarations"
+    FAIL=1
+  elif ! grep -q 'id: preset-planrun$' "${PLANRUN_HOME}/packages/bundle-planrun/presets.patch.yml"; then
+    echo "MISSING: presets.patch.yml planrun declaration"
+    FAIL=1
+  else
+    echo "OK: presets.patch.yml"
+  fi
 }
 
 check_skill_inventory() {

@@ -42,7 +42,7 @@ pnpm run verify:dogfood
 1. **Harness layout** — root `package.json` or `AGENTS.md`
 2. **Plan fixture** — `templates/dogfood/plan-fixture.md` (HTML meta + TASK table)
 3. **Guard loop** — `DSH_GROWTH_PLAN=<fixture>` → `gate-check` · `plan-check` · `next-task`
-4. **Bundle artifacts** — `bundle-planrun` · `skill-provider` · `workflow` `lib/` after `pnpm run build`
+4. **Bundle artifacts** — `bundle-planrun` · `skill-provider` · `workflow` `lib/` after `pnpm run build`, plus `cordis.patch.yml` and the generated `presets.patch.yml`
 5. **28 skills** — disk inventory + `master/routes.md` references
 6. **Install seed** — `install-planrun.sh` creates `.dsh/growth/` on a temp git root (does not modify harness)
 
@@ -56,9 +56,13 @@ When `dsh` CLI is available:
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
-dsh plugin --profile web add "file:$PLANRUN_HOME/packages/bundle-planrun"
+"$PLANRUN_HOME/scripts/pack-local.sh"
+dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 # restart dsh web · use planrun preset · load master / sprint-plan / run
 ```
+
+Automated version of this boot: `pnpm run verify:e2e` (requires a built
+`deepseek-harness` checkout).
 
 See [quickstart.md](quickstart.md) for full install steps.
 

@@ -5,6 +5,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FAIL=0
 
+# npm writes pack logs under its cache (default ~/.npm); keep it in a scratch
+# dir so the check runs in sandboxes and CI homes that deny $HOME writes.
+NPM_CACHE="$(mktemp -d "${TMPDIR:-/tmp}/planrun-npm-cache.XXXXXX")"
+trap 'rm -rf "$NPM_CACHE"' EXIT
+export npm_config_cache="$NPM_CACHE"
+
 check_pkg() {
   local dir="$1"
   local pkg_json="$ROOT/$dir/package.json"
@@ -42,6 +48,17 @@ check_pkg() {
     echo "FAIL: tarball missing lib/index.js"
     ok=false
   fi
+  # Every emitted top-level runtime module must ship: lib/index.js imports its
+  # siblings (e.g. ./load-bundled-skills.js), so a tarball with only index.js
+  # installs but fails to import at plugin load time.
+  local file module
+  for file in "$ROOT/$dir"/lib/*.js; do
+    module="lib/$(basename "$file")"
+    if ! grep -q "^package/$module$" <<< "$listing"; then
+      echo "FAIL: tarball missing runtime module $module"
+      ok=false
+    fi
+  done
   if [[ "$name" == "@planrun/skill-provider" ]]; then
     if ! grep -q 'package/skills/master/SKILL.md' <<< "$listing"; then
       echo "FAIL: tarball missing bundled skills"
@@ -51,12 +68,20 @@ check_pkg() {
       echo "FAIL: tarball missing config/roles.json"
       ok=false
     fi
-  fi
-  if [[ "$name" == "@planrun/bundle" ]]; then
-    if ! grep -q 'package/cordis.patch.yml' <<< "$listing"; then
-      echo "FAIL: tarball missing cordis.patch.yml"
+    if ! grep -q 'package/agents/ship.md' <<< "$listing"; then
+      echo "FAIL: tarball missing agents/*.md"
       ok=false
     fi
+  fi
+  if [[ "$name" == "@planrun/bundle" ]]; then
+    local patch
+    while IFS= read -r patch; do
+      [[ -z "$patch" ]] && continue
+      if ! grep -q "^package/${patch#./}$" <<< "$listing"; then
+        echo "FAIL: tarball missing declared bundle patch $patch"
+        ok=false
+      fi
+    done < <(node -e "const p=require('$pkg_json');const v=p.dsh&&p.dsh.bundle&&p.dsh.bundle.patch;const list=Array.isArray(v)?v:(v===undefined?[]:[v]);for(const e of list)console.log(e)")
     if grep -q 'file:\.\.' "$pkg_json"; then
       echo "FAIL: bundle still uses file:../ dependencies"
       ok=false

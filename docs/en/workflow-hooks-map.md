@@ -5,7 +5,12 @@ Super Cursor `hooks.json` → DSH Cordis extension points via **`@planrun/workfl
 | Super Cursor | DSH event (`@planrun/workflow`) | Handler | Behavior |
 |---|---|---|---|
 | `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | Idempotent `.dsh/growth/` seed from `templates/growth` |
-| `sessionStart` → `run-start.sh` | `agent/session-start` | `buildRunStartContext()` + `buildPersonaStartContext()` | Inject plan gate / ACTIVE / AUTONOMOUS + **Persona hint** |
+| `sessionStart` → `run-start.sh` | `agent/created` | `buildRunStartContext()` + `buildPersonaStartContext()` | Inject plan gate / ACTIVE / AUTONOMOUS + **Persona hint** |
+
+> DSH renamed this hook from `agent/session-start` to `agent/created` on 2026-09-09
+> (commit `9b7a8ccc9f`). The old event name is never emitted, so a listener on it
+> stays silent instead of failing — keep this table in sync with
+> `packages/workflow/src/index.ts`.
 | `stop` → `run-stop.sh` | `agent/turn-stopping` | `buildRunStopSteer()` | `agent.steer()` next TASK when `AUTONOMOUS:true` |
 
 ## Plan file resolution (same as `dsh-guard.sh`)
