@@ -2,6 +2,37 @@
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-09-29
+
+### Fixed
+
+- **PlanRun's autonomous chain fought DSH plan mode** — with `AUTONOMOUS: true` the workflow
+  plugin injected "load `run`: gate-check → implement → commit" at `agent/created`, and steered
+  the same at `agent/turn-stopping`, while plan mode's policy is "explore and plan, do not
+  implement". PlanRun now reads `ctx.planMode` through `ctx.get` (optional lookup, so profiles
+  without `@deepseek-ai/dsh-plan-mode` still mount the plugin) and stands down whenever plan mode
+  is active or a `/plan` selection is still pending: `agent/created` injects a "paused for DSH
+  plan mode" block instead of the chain, and `agent/turn-stopping` never steers. Leaving plan mode
+  resumes the chain — no configuration needed.
+
+### Added
+
+- **`packages/workflow/tests/workflow.test.mjs`** — five cases for the stand-down (active ·
+  pending selection · service absent · lookup failure) plus existing steer chaining; `pnpm run
+  verify` now runs them via `pnpm --filter @planrun/workflow run test`
+- **Command-surface guard widened** — the bundled-skill name check covers the whole `/` palette
+  (`file` · `goal` · `plan` · `feedback` · `compact` · `permission` · `model` · `export`) so a
+  future skill cannot silently be shadowed by a host command
+
+### Changed
+
+- **docs/{en,zh}/naming.md** — new "DSH `/plan` vs PlanRun `sprint-plan`" section: different
+  scopes, different artifacts, and a shared `/name` resolving to the host command first
+- **docs/{en,zh}/workflow-hooks-map.md** — the rename note had split the hooks table in two (a
+  blockquote between table rows); moved below the table and documented the plan-mode stand-down
+- **README** · **README.zh** — state that `/plan` and `sprint-plan` are different scopes rather
+  than alternatives, and that the autonomous chain stands down under plan mode
+
 ## [1.8.0] - 2026-09-29
 
 ### Added

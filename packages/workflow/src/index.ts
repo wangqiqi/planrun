@@ -27,10 +27,58 @@ export interface Config {
 
 export const name = 'planrun-workflow'
 
+/** DSH's plan-mode exit tool (`@deepseek-ai/dsh-plan-mode`). */
+const EXIT_PLAN_MODE = 'exit_plan_mode'
+
 const loopCounts = new WeakMap<Agent, number>()
+
+/** The slice of DSH's `ctx.planMode` service this plugin reads. */
+interface PlanModeService {
+  get(agent: Agent): { active: boolean; pending?: boolean }
+}
 
 function projectCwd(agent: Agent): string {
   return agent.session.header.cwd
+}
+
+/**
+ * Whether DSH plan mode owns this agent's turn.
+ *
+ * Plan mode's policy is "explore and plan, do not implement". PlanRun's
+ * autonomous chain says the opposite ("continue ACTIVE, commit"), so both the
+ * run-start injection and the turn-stopping steer must stand down while plan
+ * mode is in force — otherwise the two policies fight inside one turn.
+ *
+ * Looked up through `ctx.get` instead of `inject`: a profile without
+ * `@deepseek-ai/dsh-plan-mode` must still mount the workflow plugin. A pending
+ * `/plan on` counts as active so the turn it applies to is not steered.
+ */
+function planModeActive(ctx: Context, agent: Agent): boolean {
+  const planMode = ctx.get('planMode') as PlanModeService | undefined
+  if (planMode === undefined) return false
+  try {
+    const state = planMode.get(agent)
+    return state.active || state.pending === true
+  } catch {
+    return false
+  }
+}
+
+/** What PlanRun injects at `agent/created`, given the current mode. */
+function startBlocks(ctx: Context, agent: Agent, planrunHome: string | undefined, config: Config): string[] {
+  const cwd = projectCwd(agent)
+  const persona = buildPersonaStartContext(cwd, planrunHome)
+  if (planModeActive(ctx, agent)) {
+    return [
+      persona,
+      '## PlanRun · paused for DSH plan mode\n'
+      + '- Plan mode owns this turn: plan only, do not implement\n'
+      + '- PlanRun will not push the autonomous Sprint chain until plan mode ends\n'
+      + `- Finish the plan, exit plan mode (\`${EXIT_PLAN_MODE}\` or \`/plan off\`), then load \`run\``,
+    ].filter(Boolean) as string[]
+  }
+  const planPath = resolvePlanPath(cwd, config.planPath)
+  return [persona, buildRunStartContext(loadPlanSnapshot(planPath))].filter(Boolean) as string[]
 }
 
 function steerContext(agent: Agent, text: string): void {
@@ -59,13 +107,8 @@ export function apply(ctx: Context, config: Config = {}): void {
   // `agent/created` on 2026-09-09; the old name is never emitted.
   ctx.on('agent/created', ({ agent }) => {
     loopCounts.set(agent, 0)
-    const cwd = projectCwd(agent)
-    ensureGrowth(cwd, planrunHome)
-    const planPath = resolvePlanPath(cwd, config.planPath)
-    const blocks = [
-      buildPersonaStartContext(cwd, planrunHome),
-      buildRunStartContext(loadPlanSnapshot(planPath)),
-    ].filter(Boolean) as string[]
+    ensureGrowth(projectCwd(agent), planrunHome)
+    const blocks = startBlocks(ctx, agent, planrunHome, config)
     if (blocks.length) injectContext(agent, blocks.join('\n\n'))
   })
 
@@ -75,6 +118,8 @@ export function apply(ctx: Context, config: Config = {}): void {
   })
 
   ctx.on('agent/turn-stopping', async ({ agent }) => {
+    // Plan mode plans; the autonomous chain implements. Never both.
+    if (planModeActive(ctx, agent)) return
     const planPath = resolvePlanPath(projectCwd(agent), config.planPath)
     const loops = (loopCounts.get(agent) ?? 0) + 1
     loopCounts.set(agent, loops)

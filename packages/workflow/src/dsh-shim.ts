@@ -22,6 +22,11 @@ export interface Context {
     handler: (payload: { agent: Agent }, next: () => Promise<unknown>) => Promise<unknown>,
   ): void
   on(event: 'agent/turn-stopping', handler: (payload: { agent: Agent }) => void | Promise<void>): void
+  /**
+   * Optional service lookup — undefined when the composed profile does not
+   * mount the provider. Used for DSH plan mode, which a minimal profile omits.
+   */
+  get(name: string): unknown
 }
 
 export function createUserMessage(input: {

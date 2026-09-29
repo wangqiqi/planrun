@@ -222,7 +222,7 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGro
 | `user-manual` | 可发布使用说明书 · 配图 regen |
 | `test-report` | 可发布测试报告 · verify 汇总 |
 
-单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。
+单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。两者不是二选一：`/plan` 在会话内设计单任务，`sprint-plan` 通过 `.dsh/growth/plan.md` 跑多任务 Sprint。plan mode 生效期间，PlanRun 的自主链会**主动让位**（不注入 run-start、不在回合末 steer），避免两套策略互相打架——退出 plan mode 后自动恢复。
 
 Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 那样热加载。
 
@@ -232,7 +232,7 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 
 | Super Cursor | PlanRun | 说明 |
 |---|---|---|
-| `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
+| `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突；skill 与宿主命令共用 `/` 面板，同名时优先解析为宿主命令 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
 | `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
 | `rules/*.mdc` | **`docs/zh/discipline.md`** | 常驻纪律摘要 |

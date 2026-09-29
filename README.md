@@ -221,7 +221,7 @@ Use the **standard** preset (or the bundle's own **planrun** / **planrun-review*
 | `user-manual` | Publishable user manual · figure regen |
 | `test-report` | Publishable test report · verify summary |
 
-Single-task design → DSH's built-in **`/plan`** plan mode (not `sprint-plan`).
+Single-task design → DSH's built-in **`/plan`** plan mode (not `sprint-plan`). They are not alternatives: `/plan` designs one task in-session, `sprint-plan` runs a multi-task Sprint through `.dsh/growth/plan.md`. While plan mode is active, PlanRun's autonomous chain **stands down** (no run-start injection, no turn-stop steer) so the two policies never fight — leave plan mode and the chain resumes.
 
 After a bundle change, **restart** the profile (`dsh web`); it does not hot-reload like a profile-level patch.
 
@@ -231,7 +231,7 @@ After a bundle change, **restart** the profile (`dsh web`); it does not hot-relo
 
 | Super Cursor | PlanRun | Notes |
 |---|---|---|
-| `plan` skill | **`sprint-plan`** | Avoids the clash with DSH `/plan` plan mode |
+| `plan` skill | **`sprint-plan`** | Avoids the clash with DSH `/plan` plan mode; skills share the `/` palette and a shared name resolves to the host command first |
 | `.cursorGrowth/` | **`.dsh/growth/`** | Project-local, usually gitignored |
 | `AskQuestion` | **`ask_user_question`** | DSH interaction tool |
 | `rules/*.mdc` | **`docs/en/discipline.md`** | Standing discipline summary |

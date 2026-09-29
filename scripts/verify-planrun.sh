@@ -191,6 +191,14 @@ if ! bash "$ROOT/scripts/verify-lib-sync.sh"; then
   FAIL=1
 fi
 
+echo "==> Checking workflow plugin tests (plan-mode stand-down · steer chaining)"
+if ! (cd "$ROOT" && pnpm --filter @planrun/workflow run test) >/dev/null 2>&1; then
+  echo "FAIL: workflow tests failed — run: pnpm --filter @planrun/workflow run test"
+  FAIL=1
+else
+  echo "OK: workflow plugin tests"
+fi
+
 echo "==> Checking tracked files are not gitignored"
 # A tracked-but-ignored file is dropped by `npm pack`/git packaging, so a
 # `github:` install silently loses it (this is how templates/growth/plan.md went
@@ -214,7 +222,7 @@ echo "==> Checking skill-name conflicts with official DSH skills/commands"
 # commands. A same-name skill would shadow — or be shadowed — non-deterministically
 # at equal rank, and a same-name command collides in the command palette.
 OFFICIAL_SKILLS="dsh-badge office-docx office-pptx office-xlsx cordis-composition-reference cordis-plugin-development editing-cordis-compositions"
-OFFICIAL_COMMANDS="plan compact goal feedback"
+OFFICIAL_COMMANDS="file goal plan feedback compact permission model export"
 skill_conflict=0
 while IFS= read -r skill_dir; do
   base="$(basename "$skill_dir")"
