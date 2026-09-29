@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **README.md · README.zh.md** — split by language: `README.md` is English-only, `README.zh.md` is Chinese-only, each linking only to its own `docs/<locale>/` pages; both now share the same section order, 20-row skill table, checks list, roadmap and docs index
+
 ## [1.7.0] - 2026-09-29
 
 ### Fixed

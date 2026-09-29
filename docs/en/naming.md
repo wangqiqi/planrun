@@ -14,7 +14,7 @@
 ## Package scope
 
 - `@planrun/skill-provider` — bundled skills Cordis plugin
-- `@planrun/bundle` — profile bundle patch（目录 `packages/bundle-planrun/`）
+- `@planrun/bundle` — profile bundle patch (directory `packages/bundle-planrun/`)
 
 ## Bundled skills (28)
 

@@ -28,7 +28,7 @@ PlanRun 填这个缝：
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
-**安装（任意用户）** → [docs/zh/install.md](docs/zh/install.md) · 快速上手 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [znza.top/planrun/zh/](https://znza.top/planrun/zh/)
+**安装（任意用户）** → [docs/zh/install.md](docs/zh/install.md) · 快速上手 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [znza.top/planrun/zh](https://znza.top/planrun/zh/)
 
 ---
 
@@ -47,7 +47,7 @@ PlanRun 填这个缝：
 
 | 项 | 用途 |
 |----|------|
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / 本地 file 安装 bundle |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / 本地 `file:` 安装 bundle |
 | Node `^22.19` 或 `>=24` | build · verify · guard |
 | bash | `install-planrun.sh` · `dsh-guard.sh` |
 
@@ -159,7 +159,7 @@ ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 
 **不要**在 profile 的 `cordis.patch.yml` 里再手动 insert 同一插件 — bundle 已挂载，双挂载会 boot 失败。
 
-详见 [publish.md](publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
+详见 [publish.md](docs/zh/publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
 
 ### 3 · 初始化项目 growth
 
@@ -183,7 +183,7 @@ pnpm run task-verify   # 当前 ACTIVE 验收
 pnpm run next-task     # 下一待办 TASK id
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/en/workflow-guard.md](docs/en/workflow-guard.md)。
+plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGrowth/plan.md`）。详见 [docs/zh/workflow-guard.md](docs/zh/workflow-guard.md)。
 
 ### 4 · 在会话中使用
 
@@ -208,6 +208,10 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/pl
 | `api` | REST/OpenAPI 设计审查 |
 | `refactor` | 安全重构 · 死代码删除 |
 | `perf` | 性能排查（测量优先） |
+| `mcp` | MCP 服务器设计与 Eval |
+| `study` | 学新技术/语言（≠ `learn` 本仓约定） |
+| `user-manual` | 可发布使用说明书 · 配图 regen |
+| `test-report` | 可发布测试报告 · verify 汇总 |
 
 单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。
 
@@ -222,9 +226,9 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
 | `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
 | `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
-| `rules/*.mdc` | **`docs/en/discipline.md`** | 常驻纪律摘要 |
+| `rules/*.mdc` | **`docs/zh/discipline.md`** | 常驻纪律摘要 |
 
-完整对照 → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) · [docs/en/naming.md](docs/en/naming.md)
+完整对照 → [docs/zh/mapping-from-super-cursor.md](docs/zh/mapping-from-super-cursor.md) · [docs/zh/naming.md](docs/zh/naming.md)
 
 ---
 
@@ -233,11 +237,16 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 ```sh
 pnpm run build
 pnpm run verify
+pnpm run verify:publish   # npm pack 结构（lib/*.js 运行时模块必须齐全）
+pnpm run verify:e2e       # 构建 → 装临时 profile → boot（须 DEEPSEEK_HARNESS_HOME）
+pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、long/delivery reference、guard 脚本与 npm scripts，以及 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不得出现在 bundled skills 中。
+`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。
+
+`verify-plugin-e2e.sh` 是唯一能证明插件**真的能加载**的检查：它打包三个包、装进一次性 profile、断言 `--dump-config` 里的 bundle 行、导入 skill catalog，并 headless boot。以下情况会失败：`failed to import`、dsh peer 范围不兼容、或 session format 拒绝的 message source kind。
 
 ---
 
@@ -248,10 +257,13 @@ pnpm run typecheck
 | **v0.1** | MVP：`master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
+| **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ |
+| **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ |
+| **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ |
 | **v1.3** | defer skills：`mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
 | **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
-| **v1.6** | subagent 预设 · `agents/*.md` · `docs/en/subagents.md` | ✅ |
+| **v1.6** | subagent 预设 · `agents/*.md` · `docs/zh/subagents.md` | ✅ |
 | **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
@@ -262,13 +274,15 @@ pnpm run typecheck
 
 | 文档 | 内容 |
 |---|---|
-| [zh/quickstart.md](docs/zh/quickstart.md) / [en/quickstart.md](docs/en/quickstart.md) | 安装与 dogfood |
-| [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
-| [naming.md](docs/en/naming.md) | 命名与包坐标 |
-| [workflow-guard.md](docs/en/workflow-guard.md) | Sprint 闸门（dsh-guard） |
-| [publish.md](docs/en/publish.md) | npm 发布与用户安装 |
-| [subagents.md](docs/en/subagents.md) | ship · review · spike 预设与委派 |
-| [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
+| **站点** | [znza.top/planrun/zh](https://znza.top/planrun/zh/)（`docs/en/` · `docs/zh/`） |
+| [quickstart.md](docs/zh/quickstart.md) | 安装与 dogfood |
+| [dogfood.md](docs/zh/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
+| [mapping-from-super-cursor.md](docs/zh/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
+| [naming.md](docs/zh/naming.md) | 命名与包坐标 |
+| [workflow-guard.md](docs/zh/workflow-guard.md) | Sprint 闸门（dsh-guard） |
+| [workflow-hooks-map.md](docs/zh/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
+| [publish.md](docs/zh/publish.md) | npm 发布与用户安装 |
+| [subagents.md](docs/zh/subagents.md) | ship · review · spike 预设与委派 |
 
 ---
 

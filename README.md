@@ -1,11 +1,13 @@
 # PlanRun
 
+**English** | [中文](README.zh.md)
+
 > **Plan once · Run with gates · Ship with receipts.**
 
-**中文**：把 [Super Cursor](../cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** workflow skills、**12** personas、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+Port the [Super Cursor](../cursor-ai) agent workflow SOP into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** workflow skills, **12** personas, one profile bundle, and project-local `.dsh/growth/` templates. Not a DSH fork, and not a Cursor plugin.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
-[![Docs](https://img.shields.io/badge/docs-znza.top%2Fplanrun-orange)](https://znza.top/planrun/)
+[![Docs](https://img.shields.io/badge/docs-znza.top%2Fplanrun-orange)](https://znza.top/planrun/en/)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%20%3E%3D24-brightgreen)](package.json)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-181717?logo=github)](https://github.com/topics/dsh-plugin)
 [![Harness](https://img.shields.io/badge/DeepSeek%20Harness-v0.1%20preview-orange)](https://github.com/deepseek-ai/deepseek-harness)
@@ -14,19 +16,19 @@
 
 ## Why PlanRun
 
-Cursor 里用 `/plan` · `/run` · `/release` 跑 Sprint 的人，换到 DSH 后往往缺同一套**可审计、可验证**的流程约束。
+People who ran sprints in Cursor with `/plan` · `/run` · `/release` usually miss the same **auditable, verifiable** process constraints after moving to DSH.
 
-PlanRun 填这个缝：
+PlanRun fills that gap:
 
-| 你得到 | 不是什么 |
+| You get | It is not |
 |---|---|
-| 28 bundled **skills** + **12 personas**（Cordis plugin mount） | 不是 fork `deepseek-harness` |
-| **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` 一键进 profile | 不是 Cursor rules 复制粘贴 |
-| **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
+| 28 bundled **skills** + **12 personas** (Cordis plugin mount) | A fork of `deepseek-harness` |
+| **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` installs it into a profile | Copy-pasted Cursor rules |
+| **`.dsh/growth/`** — a project-local plan · learn · archive mirror | A replacement for DSH's built-in `/plan` plan mode |
 
-日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
+The daily rule: **approve one sprint-plan · run it in one go · stop only for decisions · tick ✅ only after verify**
 
-**Install (any user)** → [docs/en/install.md](docs/en/install.md) · Quick start → [docs/en/quickstart.md](docs/en/quickstart.md) · 中文 → [docs/zh/quickstart.md](docs/zh/quickstart.md) · **站点** → [znza.top/planrun](https://znza.top/planrun/)
+**Install (any user)** → [docs/en/install.md](docs/en/install.md) · Quick start → [docs/en/quickstart.md](docs/en/quickstart.md) · **Site** → [znza.top/planrun/en](https://znza.top/planrun/en/)
 
 ---
 
@@ -35,9 +37,9 @@ PlanRun 填这个缝：
 | Fit | Reason |
 |-----|--------|
 | ✅ You use **DeepSeek Harness** and want plan → run → verify → release discipline | PlanRun mounts as `@planrun/bundle` |
-| ✅ You want **28 bundled skills** + **12 personas** without copying `.cursor/` by hand | Cordis plugin + growth templates |
-| ⚠️ **Cursor only**, no DSH | Use **Super Cursor** `.cursor/` install on your repo — see [install.md](docs/en/install.md) Path C |
-| ❌ You need a standalone desktop app or zero Node | Out of scope — host is DSH + Node toolchain |
+| ✅ You want **28 bundled skills** + **12 personas** without hand-copying `.cursor/` | Cordis plugin + growth templates |
+| ⚠️ **Cursor only**, no DSH | Use the **Super Cursor** `.cursor/` install in your repo — see [install.md](docs/en/install.md) Path C |
+| ❌ You need a standalone desktop app or zero Node | Out of scope — the host is DSH + a Node toolchain |
 
 **License**: MIT — anyone may install, modify, and redistribute. **No** maintainer account or machine-specific paths required.
 
@@ -45,7 +47,7 @@ PlanRun 填这个缝：
 
 | Item | Required for |
 |------|----------------|
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / file bundle install |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / local `file:` bundle install |
 | Node `^22.19` or `>=24` | build · verify · guard scripts |
 | bash | `install-planrun.sh` · `dsh-guard.sh` |
 
@@ -66,22 +68,22 @@ Full table and three install paths → **[docs/en/install.md](docs/en/install.md
 
 ```mermaid
 flowchart LR
-  A[master<br/>迷路路由] --> B[sprint-plan<br/>多任务规划]
-  B --> C[run<br/>ACTIVE 实现]
+  A[master<br/>routing] --> B[sprint-plan<br/>multi-task planning]
+  B --> C[run<br/>implement ACTIVE]
   C --> D{Done?}
-  D -->|否| C
-  D -->|是| E[release · delivery<br/>打版走查]
+  D -->|no| C
+  D -->|yes| E[release · delivery<br/>ship check]
   C -.-> F[review · debug · test]
   B -.-> G[long · scaffold · learn · git]
 ```
 
-| 阶段 | Skills | 一句话 |
+| Stage | Skills | In one line |
 |---|---|---|
-| **路由** | `master` | 不知道下一步加载谁 |
-| **规划** | `sprint-plan` · `long` | 多任务 Sprint / Epic（≠ DSH `/plan` 单任务设计） |
-| **执行** | `run` · `debug` · `test` | 按 `.dsh/growth/plan.md` ACTIVE 行实现 + verify |
-| **沉淀** | `learn` · `git` · `scaffold` | 项目约定 · 分支提交 · 空仓脚手架 |
-| **交付** | `review` · `delivery` · `release` | PR 回顾 · 7 维走查 · merge / tag / CHANGELOG |
+| **Routing** | `master` | You do not know which skill to load next |
+| **Planning** | `sprint-plan` · `long` | Multi-task sprint / epic (≠ DSH `/plan` single-task design) |
+| **Execution** | `run` · `debug` · `test` | Implement the ACTIVE row of `.dsh/growth/plan.md` + verify |
+| **Retention** | `learn` · `git` · `scaffold` | Project conventions · branches and commits · empty-repo scaffold |
+| **Delivery** | `review` · `delivery` · `release` | PR review · 7-dimension ship check · merge / tag / CHANGELOG |
 
 ---
 
@@ -92,8 +94,8 @@ packages/
   skill-provider/       # @planrun/skill-provider — Cordis plugin + skills/
   bundle-planrun/       # @planrun/bundle — dsh.bundle.patch + agent presets
   workflow/             # @planrun/workflow — session hooks (growth · run-start · run-stop)
-presets/                # preset 源：<id>/{preset.yml,plugins.yml}
-templates/growth/       # plan.md · learn/ · archive/ 种子
+presets/                # preset sources: <id>/{preset.yml,plugins.yml}
+templates/growth/       # plan.md · learn/ · archive/ seeds
 scripts/                # install-planrun.sh · gen-presets.mjs · dsh-guard.sh · verify-*
 docs/                   # en/ · zh/ VitePress site + mapping · quickstart · workflow-guard
 ```
@@ -101,13 +103,13 @@ docs/                   # en/ · zh/ VitePress site + mapping · quickstart · w
 | Piece | Package / path | Role |
 |---|---|---|
 | Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json` (12 personas) |
-| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow**；`presets.patch.yml` 声明 4 个 agent preset |
-| Agent presets | `presets/` → `presets.patch.yml` | 官方 `@deepseek-ai/dsh-agent-preset` 声明（由 `scripts/gen-presets.mjs` 生成） |
-| Growth templates | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
-| Installer | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
+| Profile bundle | `@planrun/bundle` | `cordis.patch.yml` mounts the skill provider + **workflow**; `presets.patch.yml` declares 4 agent presets |
+| Agent presets | `presets/` → `presets.patch.yml` | Official `@deepseek-ai/dsh-agent-preset` declarations (generated by `scripts/gen-presets.mjs`) |
+| Growth templates | `templates/growth/` | Project-local `.dsh/growth/` seeds |
+| Installer | `scripts/install-planrun.sh` | Copies growth templates + prints profile instructions |
 | Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
 
-Bundle 声明（`patch` 是**有序列表**，与官方 `dsh-web-app` 同模式）：
+Bundle manifest (`patch` is an **ordered list**, the same shape the official `dsh-web-app` uses):
 
 ```json
 "dsh": {
@@ -119,7 +121,7 @@ Bundle 声明（`patch` 是**有序列表**，与官方 `dsh-web-app` 同模式�
 
 ## Quick start
 
-### 1 · Build（本仓开发）
+### 1 · Build (repo development)
 
 ```sh
 git clone https://github.com/wangqiqi/planrun.git planrun && cd planrun
@@ -128,17 +130,17 @@ pnpm run build
 pnpm run verify          # 28 skills + 12 personas + DSH adapter token checks
 ```
 
-开发时 `skill-provider` 的 peer 可指向同级 `deepseek-harness` checkout。
+While developing, `skill-provider`'s peers can point at a sibling `deepseek-harness` checkout.
 
-### 2 · Install bundle（DSH profile）
+### 2 · Install the bundle (DSH profile)
 
-**已发布（推荐）**：
+**Published (recommended)**:
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
 
-**本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
+**From this repo** (`pack-local.sh` builds first, then rewrites the `workspace:^` deps to `file:`):
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
@@ -146,74 +148,73 @@ export PLANRUN_HOME=/path/to/planrun
 dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ```
 
-**不要**直接 `add "file:$PLANRUN_HOME/packages/bundle-planrun"`：monorepo 的 `workspace:^` 依赖会报 `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`。
+**Do not** `add "file:$PLANRUN_HOME/packages/bundle-planrun"` directly: the monorepo's `workspace:^` deps fail with `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`.
 
-验证：
+Verify:
 
 ```sh
 dsh --profile web --dump-config | grep planrun-skills
 ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 ```
 
-**不要**在 profile 的 `cordis.patch.yml` 里再手动 insert 同一插件 — bundle 已挂载，双挂载会 boot 失败。
+**Do not** insert the same plugin again in the profile's `cordis.patch.yml` — the bundle already mounts it, and a double mount breaks boot.
 
-详见 [publish.md](docs/en/publish.md) · [Harness publish 文档](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)。
+See [publish.md](docs/en/publish.md) · [Harness publish docs](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish).
 
 ### 3 · Seed project growth
 
-在目标 Git 仓库根：
+At the target Git repository root:
 
 ```sh
 export PLANRUN_HOME=/path/to/planrun
 "$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
 ```
 
-创建 `.dsh/growth/`（plan · learn · archive），通常 gitignore。
+Creates `.dsh/growth/` (plan · learn · archive); usually gitignored.
 
-### 3b · Workflow guard（Sprint 闸门）
+### 3b · Workflow guard (sprint gate)
 
-`sprint-plan` 批准 Sprint 后，**`run`** 前：
+After `sprint-plan` approves a sprint, before **`run`**:
 
 ```sh
 pnpm run gate-check    # PLAN_APPROVED + ACTIVE
-pnpm run plan-check    # handoff 结构
-pnpm run task-verify   # 当前 ACTIVE 验收
-pnpm run next-task     # 下一待办 TASK id
+pnpm run plan-check    # handoff structure
+pnpm run task-verify   # acceptance for the current ACTIVE task
+pnpm run next-task     # next pending TASK id
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发本仓时自动读 `.cursorGrowth/plan.md`）。详见 [docs/en/workflow-guard.md](docs/en/workflow-guard.md)。
+Plan path: `.dsh/growth/plan.md` (while developing this repo it falls back to `.cursorGrowth/plan.md`). See [docs/en/workflow-guard.md](docs/en/workflow-guard.md).
 
 ### 4 · Use in a session
 
-用 **standard** preset（或 bundle 自带的 **planrun** / **planrun-review** / **planrun-spike** / **planrun-ship**），按场景加载 skill。
-四个 preset 由 `@planrun/bundle` 的 `presets.patch.yml` 声明，装完 bundle 重启 `dsh web` 即在 preset 选择器可见（无需再手动复制目录）：
+Use the **standard** preset (or the bundle's own **planrun** / **planrun-review** / **planrun-spike** / **planrun-ship**) and load skills by situation. The four presets are declared by `@planrun/bundle`'s `presets.patch.yml`; restart `dsh web` after installing the bundle and they appear in the preset picker (no manual directory copy):
 
-| Skill | 何时加载 |
+| Skill | When to load |
 |---|---|
-| `master` | 迷路 / 新会话 |
-| `sprint-plan` | 多任务 Sprint 规划 |
-| `run` | 执行 plan.md ACTIVE 行 |
-| `review` | PR / 代码结构化回顾 |
-| `learn` | 沉淀项目约定 → `.dsh/growth/learn/` |
-| `git` | 分支 · 提交 · 合并 |
-| `scaffold` | 空仓库脚手架 |
-| `long` | 跨 Sprint Epic |
+| `master` | Lost / new session |
+| `sprint-plan` | Multi-task sprint planning |
+| `run` | Execute the ACTIVE row of plan.md |
+| `review` | PR / structured code review |
+| `learn` | Capture project conventions → `.dsh/growth/learn/` |
+| `git` | Branch · commit · merge |
+| `scaffold` | Empty-repository scaffold |
+| `long` | Cross-sprint epic |
 | `release` | merge · PR · tag · CHANGELOG |
-| `delivery` | 上线前 7 维走查 |
-| `debug` | 复现优先调试循环 |
-| `test` | TDD · 分层测试 |
-| `security` | 合并前安全审查 |
-| `api` | REST/OpenAPI 设计审查 |
-| `refactor` | 安全重构 · 死代码删除 |
-| `perf` | 性能排查（测量优先） |
-| `mcp` | MCP 服务器设计与 Eval |
-| `study` | 学新技术/语言（≠ `learn` 本仓约定） |
-| `user-manual` | 可发布使用说明书 · 配图 regen |
-| `test-report` | 可发布测试报告 · verify 汇总 |
+| `delivery` | 7-dimension pre-release check |
+| `debug` | Reproduction-first debugging loop |
+| `test` | TDD · layered testing |
+| `security` | Pre-merge security review |
+| `api` | REST/OpenAPI design review |
+| `refactor` | Safe refactor · dead-code removal |
+| `perf` | Performance investigation (measure first) |
+| `mcp` | MCP server design and eval |
+| `study` | Learning a new technology/language (≠ `learn`, which is repo conventions) |
+| `user-manual` | Publishable user manual · figure regen |
+| `test-report` | Publishable test report · verify summary |
 
-单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。
+Single-task design → DSH's built-in **`/plan`** plan mode (not `sprint-plan`).
 
-Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 那样热加载。
+After a bundle change, **restart** the profile (`dsh web`); it does not hot-reload like a profile-level patch.
 
 ---
 
@@ -221,12 +222,12 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 
 | Super Cursor | PlanRun | Notes |
 |---|---|---|
-| `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突 |
-| `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
-| `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
-| `rules/*.mdc` | **`docs/en/discipline.md`** | 常驻纪律摘要 |
+| `plan` skill | **`sprint-plan`** | Avoids the clash with DSH `/plan` plan mode |
+| `.cursorGrowth/` | **`.dsh/growth/`** | Project-local, usually gitignored |
+| `AskQuestion` | **`ask_user_question`** | DSH interaction tool |
+| `rules/*.mdc` | **`docs/en/discipline.md`** | Standing discipline summary |
 
-完整对照 → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) · [docs/en/naming.md](docs/en/naming.md)
+Full mapping → [docs/en/mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) · [docs/en/naming.md](docs/en/naming.md)
 
 ---
 
@@ -235,14 +236,14 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 ```sh
 pnpm run build
 pnpm run verify
-pnpm run verify:publish   # npm pack 结构（lib/*.js 运行时模块必须齐全）
-pnpm run verify:e2e       # 构建→装临时 profile→boot（须 DEEPSEEK_HARNESS_HOME）
-pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
-pnpm run gate-check    # 有 plan 时
+pnpm run verify:publish   # npm pack structure (every lib/*.js runtime module must ship)
+pnpm run verify:e2e       # build → install into a temp profile → boot (needs DEEPSEEK_HARNESS_HOME)
+pnpm run verify:dogfood   # needs DEEPSEEK_HARNESS_HOME
+pnpm run gate-check    # when a plan exists
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` checks **28** skill directories, **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills. It also fails on a bundled skill name that collides with an official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` · `goal` · `feedback`), on a stale `presets.patch.yml`, and on retired DSH APIs (`agent/session-start`, `kind: 'plugin'`).
+`verify-planrun.sh` checks **28** skill directories, the **12** persona catalog, **4** subagent presets, bundled `agents/*.md`, long/delivery references, guard scripts and npm scripts, and ensures Super Cursor legacy tokens (`.cursorGrowth` · `AskQuestion` · `runner.sh`) do not appear in bundled skills. It also fails on a bundled skill name that collides with an official DSH skill (`dsh-badge` · `office-*` · `cordis-*`) or command (`plan` · `compact` · `goal` · `feedback`), on a stale `presets.patch.yml`, and on retired DSH APIs (`agent/session-start`, `kind: 'plugin'`).
 
 `verify-plugin-e2e.sh` is the only check that proves the plugin *loads*: it packs the
 packages, installs them into a throwaway profile, asserts the bundle rows in
@@ -256,19 +257,19 @@ session format rejects.
 
 | Version | Scope | Status |
 |---|---|---|
-| **v0.1** | MVP：`master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
+| **v0.1** | MVP: `master` · `sprint-plan` · `run` · `review` + bundle + installer | ✅ |
 | **v0.2 batch-1** | `learn` · `git` · `scaffold` · `long` | ✅ |
 | **v0.2 batch-2** | `release` · `delivery` · `debug` · `test` | ✅ |
-| **v1.0** | PlanRun 品牌更名 · `@planrun/*` · guard MVP · 16 skills | ✅ |
+| **v1.0** | PlanRun rebrand · `@planrun/*` · guard MVP · 16 skills | ✅ |
 | **v1.1** | `@planrun/workflow` — optional hooks injection | ✅ |
-| **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ |
-| **v1.3** | defer skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
+| **v1.2** | Harness structural dogfood (`verify:dogfood`) | ✅ |
+| **v1.3** | Deferred skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
 | **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
 | **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ |
-| **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ current |
+| **v1.7** | DSH API alignment (`agent/created` · source kind) · packaging fixes · presets as official bundle declarations · `verify:e2e` | ✅ current |
 
-变更记录 → [CHANGELOG.md](CHANGELOG.md)
+Changelog → [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
@@ -276,18 +277,18 @@ session format rejects.
 
 | Doc | Content |
 |---|---|
-| **站点** | [znza.top/planrun](https://znza.top/planrun/)（`docs/en/` · `docs/zh/`） |
-| [en/quickstart.md](docs/en/quickstart.md) / [zh/quickstart.md](docs/zh/quickstart.md) | 安装与 dogfood |
-| [dogfood.md](docs/en/dogfood.md) | Harness 结构 dogfood（`verify:dogfood`） |
-| [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun 映射 |
-| [naming.md](docs/en/naming.md) | 命名与包坐标 |
-| [workflow-guard.md](docs/en/workflow-guard.md) | Sprint 闸门（dsh-guard） |
-| [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
-| [publish.md](docs/en/publish.md) | npm 发布与用户安装 |
-| [subagents.md](docs/en/subagents.md) | ship · review · spike 预设与委派 |
+| **Site** | [znza.top/planrun/en](https://znza.top/planrun/en/) (`docs/en/` · `docs/zh/`) |
+| [quickstart.md](docs/en/quickstart.md) | Install and dogfood |
+| [dogfood.md](docs/en/dogfood.md) | Harness structural dogfood (`verify:dogfood`) |
+| [mapping-from-super-cursor.md](docs/en/mapping-from-super-cursor.md) | Super Cursor → PlanRun mapping |
+| [naming.md](docs/en/naming.md) | Naming and package coordinates |
+| [workflow-guard.md](docs/en/workflow-guard.md) | Sprint gate (dsh-guard) |
+| [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH touchpoint mapping |
+| [publish.md](docs/en/publish.md) | npm publishing and user install |
+| [subagents.md](docs/en/subagents.md) | ship · review · spike presets and delegation |
 
 ---
 
 ## License
 
-MIT（见 `package.json` → `license`）。
+MIT (see `package.json` → `license`).
