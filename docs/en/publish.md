@@ -67,6 +67,11 @@ bash scripts/publish-packages.sh --pack-only
 composed rows, imports the skill provider, and boots headless. It needs a built
 `deepseek-harness` checkout (`DEEPSEEK_HARNESS_HOME`) and skips cleanly without one.
 
+`pnpm run verify:npm` covers the artifact users actually get: it installs
+`@planrun/bundle@<repo version>` from the registry into a throwaway profile and boots it. Run it
+after publishing (`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.1` for any other
+version).
+
 ### Git install (supported alternative)
 
 The repository root is itself a DSH bundle, so the GitHub channel needs no npm publish:

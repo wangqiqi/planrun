@@ -20,6 +20,8 @@ dsh plugin --profile web add @planrun/bundle
 
 bundle 变更后**重启** profile（`dsh web`）。
 
+发版后可用 `pnpm run verify:npm` 端到端验证 registry 上的产物（装进一次性 profile 并 boot）；指定版本：`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.1`。
+
 ## 维护者发布
 
 ### 前置
@@ -64,7 +66,6 @@ pnpm 取源码后，DSH 直接挂载 `./cordis.patch.yml`（相对行名转成 `
 请固定 tag 或 commit。**GitHub 通道与 `@planrun/bundle` 只能选一个。** `pnpm run verify:github` 端到端跑通整条链路（`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#main` 可验证尚未 push 的本地提交）。
 
 ## 项目 growth + guard
-
 ```sh
 ./scripts/install-planrun.sh --here --copy-plan
 ```

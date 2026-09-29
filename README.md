@@ -250,6 +250,7 @@ pnpm run verify:links     # every repo-relative markdown link resolves
 pnpm run verify:e2e       # build → install into a temp profile → boot (needs DEEPSEEK_HARNESS_HOME)
 pnpm run verify:lib       # committed packages/*/lib/*.js matches a fresh build
 pnpm run verify:github    # the github: channel end to end (needs DEEPSEEK_HARNESS_HOME)
+pnpm run verify:npm       # the published registry bundle end to end (after a release)
 pnpm run verify:dogfood   # needs DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # when a plan exists
 pnpm run typecheck

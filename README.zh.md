@@ -251,6 +251,7 @@ pnpm run verify:links     # 仓库内所有 markdown 相对链接都能解析
 pnpm run verify:e2e       # 构建 → 装临时 profile → boot（须 DEEPSEEK_HARNESS_HOME）
 pnpm run verify:lib       # 提交的 packages/*/lib/*.js 与最新构建一致
 pnpm run verify:github    # github: 直装通道端到端（须 DEEPSEEK_HARNESS_HOME）
+pnpm run verify:npm       # registry 上已发布的 bundle 端到端（发版后跑）
 pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck

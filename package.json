@@ -33,7 +33,8 @@
     "plan-check": "bash scripts/dsh-guard.sh plan-check",
     "task-verify": "bash scripts/dsh-guard.sh task-verify",
     "next-task": "bash scripts/dsh-guard.sh next-task",
-    "guard": "bash scripts/dsh-guard.sh status"
+    "guard": "bash scripts/dsh-guard.sh status",
+    "verify:npm": "bash scripts/verify-npm-install.sh"
   },
   "engines": {
     "node": "^22.19.0 || >=24"
