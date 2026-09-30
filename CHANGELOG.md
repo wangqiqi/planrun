@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **Injected context made the stored session unloadable** — `createUserMessage` in
+  `packages/workflow/src/dsh-shim.ts` returned `{ content, source }` only, so every message
+  PlanRun injected (the persona hint at `agent/created`, and the plan-mode / run-start blocks)
+  was persisted as a `user/message` event with no `id` and no `role`. DSH validates a
+  `user/message` event's data as an *identified* message (`assertMessageEventShape` in
+  `@deepseek-ai/dsh-session`), so the whole session failed to load with
+  `lacks an identified message` — the user could no longer open that conversation at all.
+  The shim now mirrors DSH's own factory (`createUserMessage` in `@deepseek-ai/dsh-llm`,
+  which fills in `role: 'user'` and mints an `id`): it spreads the input and adds
+  `role: 'user'` plus `id: globalThis.crypto.randomUUID()`. The `UserMessage` interface
+  declares both fields, so a future regression fails to compile rather than silently
+  producing unloadable sessions.
+
 ## [1.8.1] - 2026-09-29
 
 ### Fixed

@@ -8,6 +8,7 @@ import { apply } from '../lib/index.js'
 import { loadPlanSnapshot, nextTaskId } from '../lib/plan-parser.js'
 import { buildRunStopSteer } from '../lib/run-stop.js'
 import { buildPersonaStartContext, resolvePersonaByQuery } from '../lib/persona.js'
+import { createUserMessage } from '../lib/dsh-shim.js'
 
 test('resolvePlanrunHome finds repo templates', () => {
   const repoRoot = join(import.meta.dirname, '../../..')
@@ -189,4 +190,28 @@ test('plan mode lookup failure degrades to "not in plan mode"', async () => {
   await handlers.get('agent/turn-stopping')({ agent })
   assert.equal(steered.length, 1)
   rmSync(dir, { recursive: true, force: true })
+})
+
+test('createUserMessage produces a message the DSH session validator accepts', () => {
+  const message = createUserMessage({
+    content: [{ type: 'text', text: '## PlanRun · Persona hint' }],
+    source: { kind: 'planrun-workflow' },
+  })
+  // This is exactly what DSH's `assertMessageEventShape`
+  // (core/session/src/index.ts) demands of a `user/message` event's data.
+  // Miss either field and the host rejects the whole stored session on load with
+  // "lacks an identified message" — the session becomes unopenable.
+  assert.equal(message.role, 'user')
+  assert.equal(typeof message.id, 'string')
+  assert.ok(message.id.length > 0, 'id must be a non-empty string')
+  assert.deepEqual(message.content, [{ type: 'text', text: '## PlanRun · Persona hint' }])
+  assert.deepEqual(message.source, { kind: 'planrun-workflow' })
+})
+
+test('createUserMessage mints a distinct id per message', () => {
+  const build = () => createUserMessage({
+    content: [{ type: 'text', text: 'x' }],
+    source: { kind: 'planrun-workflow' },
+  })
+  assert.notEqual(build().id, build().id)
 })
