@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.8.2] - 2026-09-30
+
 ### Fixed
 
 - **Injected context made the stored session unloadable** — `createUserMessage` in
