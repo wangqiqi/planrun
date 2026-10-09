@@ -29,7 +29,7 @@ if [[ -z "$HARNESS" || ! -f "$DSH_BIN" ]]; then
   exit 0
 fi
 
-VERSION="$(node -p "require('$ROOT/packages/bundle-planrun/package.json').version")"
+VERSION="$(node -p "require(process.argv[process.argv.length - 1]).version" "$ROOT/packages/bundle-planrun/package.json")"
 SPEC="${1:-${PLANRUN_NPM_SPEC:-@planrun/bundle@$VERSION}}"
 
 if [[ -n "${PLANRUN_NPM_WORK:-}" ]]; then

@@ -19,6 +19,25 @@ for name in "${EXPECTED[@]}"; do
   fi
 done
 
+# The model can only auto-load a skill whose frontmatter does not disable model
+# invocation. All 28 shipped with `disable-model-invocation: true`, so the
+# documented "load skills by situation" flow only worked when a user typed the
+# skill name; the rest stay user-invocable on purpose.
+MODEL_INVOCABLE=(master sprint-plan run review debug test delivery release)
+echo "==> Checking skill invocation policy (${#MODEL_INVOCABLE[@]} model-invocable)"
+for name in "${MODEL_INVOCABLE[@]}"; do
+  skill_md="$SKILLS/$name/SKILL.md"
+  if [[ ! -f "$skill_md" ]]; then
+    echo "MISSING: skills/$name/SKILL.md"
+    FAIL=1
+  elif grep -qE '^disable-model-invocation:[[:space:]]*true[[:space:]]*$' "$skill_md"; then
+    echo "FAIL: $name is user-only — the model can never load it"
+    FAIL=1
+  else
+    echo "OK: $name is model-invocable"
+  fi
+done
+
 echo "==> Checking long reference files"
 for ref in hierarchy pacing-checkpoint; do
   if [[ ! -f "$SKILLS/long/reference/$ref.md" ]]; then
@@ -95,8 +114,11 @@ if [[ ! -f "$ROLES" ]]; then
   echo "MISSING: packages/skill-provider/config/roles.json"
   FAIL=1
 else
-  persona_count="$(python3 -c "import json; d=json.load(open('$ROLES')); print(len(d.get('personas',[])))")"
-  default_id="$(python3 -c "import json; print(json.load(open('$ROLES')).get('default',''))")"
+  # `python3` is not a documented prerequisite and on Windows resolves to the
+  # Microsoft Store stub, which aborted this whole script under `set -e` at the
+  # persona check (exit 49) so every later check silently never ran.
+  persona_count="$(node -p "require(process.argv[process.argv.length - 1]).personas.length" "$ROLES")"
+  default_id="$(node -p "require(process.argv[process.argv.length - 1]).default ?? ''" "$ROLES")"
   if [[ "$persona_count" != "12" ]]; then
     echo "FAIL: expected 12 personas, got $persona_count"
     FAIL=1
@@ -268,6 +290,16 @@ for f in scripts/dsh-guard.sh scripts/plan-parse.sh; do
     echo "OK: $f"
   fi
 done
+# templates/growth/scripts/* is what lands in a user project; it used to be an
+# unmanaged byte-copy, so a guard fix could silently fail to reach an install.
+for f in dsh-guard.sh plan-parse.sh; do
+  if ! cmp -s "$ROOT/scripts/$f" "$ROOT/templates/growth/scripts/$f"; then
+    echo "FAIL: templates/growth/scripts/$f drifted from scripts/$f — copy it over"
+    FAIL=1
+  else
+    echo "OK: template guard copy in sync ($f)"
+  fi
+done
 for script in gate-check plan-check task-verify next-task; do
   if ! grep -q "\"$script\"" "$ROOT/package.json"; then
     echo "MISSING: package.json script $script"
@@ -281,6 +313,12 @@ if [[ -f "$ROOT/scripts/dsh-guard.sh" ]]; then
     echo "FAIL: dsh-guard.sh help missing gate-check"
     FAIL=1
   fi
+fi
+
+echo "==> Checking guard fixtures (gate regression matrix)"
+if ! bash "$ROOT/scripts/guard-fixtures.sh" all; then
+  echo "FAIL: guard fixture matrix failed"
+  FAIL=1
 fi
 
 echo "==> Checking publish readiness"
@@ -374,12 +412,12 @@ else
     echo "OK: presets.patch.yml declarations"
   fi
   if ! node -e "
-    const p = require('$ROOT/packages/bundle-planrun/package.json')
+    const p = require(process.argv[process.argv.length - 1])
     const patch = p.dsh?.bundle?.patch
     const list = Array.isArray(patch) ? patch : [patch]
     if (!list.includes('./presets.patch.yml')) process.exit(1)
     if (!(p.files ?? []).includes('presets.patch.yml')) process.exit(1)
-  "; then
+  " "$ROOT/packages/bundle-planrun/package.json"; then
     echo "FAIL: bundle manifest must declare and ship ./presets.patch.yml"
     FAIL=1
   else

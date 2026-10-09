@@ -1,0 +1,21 @@
+# Line endings.
+#
+# core.autocrlf=true (the Windows default) checked these files out as CRLF while
+# the committed blobs are LF. That broke two things:
+#   * `scripts/*.sh` executed through their shebang read "bash\r";
+#   * `node scripts/gen-presets.mjs --check` compares generated text byte-for-byte
+#     and reported presets.patch.yml as stale although nothing had drifted.
+# Keep source and generated artifacts LF in the worktree so a Windows checkout
+# behaves like CI.
+* text=auto
+*.sh text eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Committed runtime for the `github:` install channel — never reflow.
+packages/*/lib/*.js text eol=lf

@@ -81,7 +81,9 @@ if (CHECK) {
     console.error('FAIL: packages/bundle-planrun/presets.patch.yml is missing — run node scripts/gen-presets.mjs')
     process.exit(1)
   }
-  if (current !== output) {
+  // A CRLF worktree (core.autocrlf=true) made this byte compare report a false
+  // "stale" on every Windows checkout even though the content was identical.
+  if (current.replace(/\r\n/g, '\n') !== output) {
     console.error('FAIL: packages/bundle-planrun/presets.patch.yml is stale — run node scripts/gen-presets.mjs')
     process.exit(1)
   }

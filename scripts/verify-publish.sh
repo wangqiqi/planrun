@@ -15,11 +15,13 @@ check_pkg() {
   local dir="$1"
   local pkg_json="$ROOT/$dir/package.json"
   local name version
-  name="$(node -p "require('$pkg_json').name")"
-  version="$(node -p "require('$pkg_json').version")"
+  # Paths go in as argv: an MSYS-style `/e/repo/...` embedded in the script text
+  # is resolved by Node against the current drive root (MODULE_NOT_FOUND).
+  name="$(node -p "require(process.argv[process.argv.length - 1]).name" "$pkg_json")"
+  version="$(node -p "require(process.argv[process.argv.length - 1]).version" "$pkg_json")"
   echo "==> $name@$version"
 
-  if ! node -e "const p=require('$pkg_json'); if(!p.publishConfig?.access) process.exit(1)"; then
+  if ! node -e "const p=require(process.argv[process.argv.length - 1]); if(!p.publishConfig?.access) process.exit(1)" "$pkg_json"; then
     echo "FAIL: missing publishConfig.access"
     FAIL=1
   fi
@@ -33,7 +35,13 @@ check_pkg() {
   fi
 
   rm -f "$ROOT/$dir"/*.tgz
-  (cd "$ROOT/$dir" && npm pack >/dev/null 2>&1)
+  # Unguarded, this aborted the script under `set -e` and made the FAIL branch
+  # below unreachable.
+  if ! (cd "$ROOT/$dir" && npm pack >/dev/null 2>&1); then
+    echo "FAIL: npm pack failed"
+    FAIL=1
+    return
+  fi
   local tgz
   tgz="$(ls -1 "$ROOT/$dir"/*.tgz 2>/dev/null | head -1)"
   if [[ -z "$tgz" || ! -f "$tgz" ]]; then
@@ -81,11 +89,24 @@ check_pkg() {
         echo "FAIL: tarball missing declared bundle patch $patch"
         ok=false
       fi
-    done < <(node -e "const p=require('$pkg_json');const v=p.dsh&&p.dsh.bundle&&p.dsh.bundle.patch;const list=Array.isArray(v)?v:(v===undefined?[]:[v]);for(const e of list)console.log(e)")
+    done < <(node -e "const p=require(process.argv[process.argv.length - 1]);const v=p.dsh&&p.dsh.bundle&&p.dsh.bundle.patch;const list=Array.isArray(v)?v:(v===undefined?[]:[v]);for(const e of list)console.log(e)" "$pkg_json")
     if grep -q 'file:\.\.' "$pkg_json"; then
       echo "FAIL: bundle still uses file:../ dependencies"
       ok=false
     fi
+  fi
+  # The manifest inside the tarball is what a consumer resolves. `pnpm publish`
+  # rewrites `workspace:^` to semver, but nothing verified that, so a publish
+  # through another path could ship an unresolvable protocol.
+  local packed_manifest
+  if packed_manifest="$(tar -xzOf "$tgz" package/package.json 2>/dev/null)" && [[ -n "$packed_manifest" ]]; then
+    if grep -q '"workspace:' <<< "$packed_manifest"; then
+      echo "FAIL: published manifest still contains a workspace: range"
+      ok=false
+    fi
+  else
+    echo "FAIL: cannot read package/package.json out of the tarball"
+    ok=false
   fi
   rm -f "$tgz"
   if [[ "$ok" != true ]]; then
