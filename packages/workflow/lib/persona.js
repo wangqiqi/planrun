@@ -61,7 +61,14 @@ export function resolveSessionDir(cwd) {
     return dsh;
 }
 export function resolveSessionPersonaPath(cwd) {
-    return join(resolveSessionDir(cwd), 'persona.json');
+    const direct = join(resolveSessionDir(cwd), 'persona.json');
+    if (existsSync(direct))
+        return direct;
+    // aliases.json has always walked up from the project root; persona.json did
+    // not, so a session started in a subdirectory silently lost the active persona.
+    const walked = walkUpForFile(cwd, '.dsh/growth/session/persona.json')
+        ?? walkUpForFile(cwd, '.cursorGrowth/session/persona.json');
+    return walked ?? direct;
 }
 export function resolveAliasesPath(cwd) {
     const candidates = [

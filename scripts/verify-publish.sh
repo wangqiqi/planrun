@@ -68,13 +68,13 @@ check_pkg() {
   # siblings (e.g. ./load-bundled-skills.js), so a tarball with only index.js
   # installs but fails to import at plugin load time.
   local file module
-  for file in "$ROOT/$dir"/lib/*.js; do
-    module="lib/$(basename "$file")"
+  while IFS= read -r file; do
+    module="lib/${file#"$ROOT/$dir"/lib/}"
     if ! grep -q "^package/$module$" <<< "$listing"; then
       echo "FAIL: tarball missing runtime module $module"
       ok=false
     fi
-  done
+  done < <(find "$ROOT/$dir/lib" -type f -name '*.js' | sort)
   if [[ "$name" == "@planrun/skill-provider" ]]; then
     if ! grep -q 'package/skills/master/SKILL.md' <<< "$listing"; then
       echo "FAIL: tarball missing bundled skills"

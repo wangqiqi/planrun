@@ -92,7 +92,17 @@ function loadSkillDirectory(dirName) {
 /** Load every valid skill bundle under `skills/`. */
 export function loadBundledSkills() {
     const records = [];
-    for (const entry of readdirSync(SKILLS_ROOT)) {
+    let entries;
+    try {
+        entries = readdirSync(SKILLS_ROOT);
+    }
+    catch {
+        // A packaging mistake that drops `skills/` used to throw during the plugin's
+        // import, which takes the whole DSH boot down instead of degrading to an
+        // empty catalog the user can see.
+        return records;
+    }
+    for (const entry of entries) {
         const path = join(SKILLS_ROOT, entry);
         if (!statSync(path).isDirectory())
             continue;
@@ -107,11 +117,17 @@ export function loadBundledSkills() {
 export function bundledSkillMap(records) {
     return new Map(records.map((record) => [record.candidate.name, record]));
 }
+/** Bodies are immutable on disk, so parse each file at most once. */
+const bodyCache = new Map();
 /** Read the current markdown body for one bundled skill. */
 export function readSkillBody(record) {
+    const cached = bodyCache.get(record.bodyPath);
+    if (cached !== undefined)
+        return cached;
     const raw = readFileSync(record.bodyPath, 'utf8');
-    const parsed = parseFrontmatter(raw);
-    return parsed?.body ?? raw;
+    const body = parseFrontmatter(raw)?.body ?? raw;
+    bodyCache.set(record.bodyPath, body);
+    return body;
 }
 /** Materialize a full skill definition from a bundled record. */
 export function toDefinition(record) {

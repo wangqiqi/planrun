@@ -11,10 +11,13 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Nested bash calls must not depend on `bash` being on PATH: on Windows the
+# launcher may have resolved a Git bash that is not exported to this shell.
+BASH_BIN="${BASH:-$(command -v bash 2>/dev/null || command -v sh)}"
 PLANRUN_HOME="${PLANRUN_HOME:-$ROOT}"
 FIXTURE="${PLANRUN_HOME}/templates/dogfood/plan-fixture.md"
 SKILLS="${PLANRUN_HOME}/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design md2docx-export)
+read -r -a EXPECTED <<<"$(node "$ROOT/scripts/skills-manifest.mjs")"
 FAIL=0
 
 usage() {
@@ -90,16 +93,16 @@ check_guard_loop() {
     return
   fi
   export DSH_GROWTH_PLAN="$FIXTURE"
-  if ! bash "$ROOT/scripts/dsh-guard.sh" gate-check; then
+  if ! "$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" gate-check; then
     echo "FAIL: gate-check on fixture"
     FAIL=1
   fi
-  if ! bash "$ROOT/scripts/dsh-guard.sh" plan-check; then
+  if ! "$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" plan-check; then
     echo "FAIL: plan-check on fixture"
     FAIL=1
   fi
   local next
-  next="$(bash "$ROOT/scripts/dsh-guard.sh" next-task)"
+  next="$("$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" next-task)"
   if [[ -z "$next" || "$next" == "(none)" ]]; then
     echo "FAIL: next-task returned empty on fixture"
     FAIL=1
@@ -186,7 +189,7 @@ check_install_seed() {
   local tmp
   tmp="$(mktemp -d)"
   mkdir -p "$tmp/.git"
-  if ! PLANRUN_HOME="$PLANRUN_HOME" bash "$ROOT/scripts/install-planrun.sh" "$tmp" --copy-plan >/dev/null; then
+  if ! PLANRUN_HOME="$PLANRUN_HOME" "$BASH_BIN" "$ROOT/scripts/install-planrun.sh" "$tmp" --copy-plan >/dev/null; then
     echo "FAIL: install-planrun.sh"
     rm -rf "$tmp"
     FAIL=1

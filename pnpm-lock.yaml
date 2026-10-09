@@ -35,7 +35,7 @@ importers:
   packages/skill-provider:
     dependencies:
       '@deepseek-ai/cordis':
-        specifier: '>=1.0.0'
+        specifier: ^4.0.0
         version: 4.0.2
       yaml:
         specifier: ^2.8.1
@@ -51,7 +51,7 @@ importers:
   packages/workflow:
     dependencies:
       '@deepseek-ai/cordis':
-        specifier: '>=1.0.0'
+        specifier: ^4.0.0
         version: 4.0.2
       '@deepseek-ai/dsh-agent':
         specifier: '>=0.1.0-0'

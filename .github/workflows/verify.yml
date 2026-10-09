@@ -1,5 +1,9 @@
 name: verify
 
+# Three operating systems, because "runs on my machine" is exactly the failure
+# this repo keeps hitting: bash discovery, CRLF/`core.autocrlf`, `python3`, GNU vs
+# BSD tar, and path handling all differ per platform. `pnpm run verify` itself now
+# goes through scripts/run-bash.mjs, which locates a working POSIX shell on each.
 on:
   push:
     branches: [main, master]
@@ -7,20 +11,60 @@ on:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    name: verify (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      # pnpm 11: pnpm-workspace.yaml uses `allowBuilds`, which pnpm 9 ignores and
+      # would run every dependency build script (or fail the install).
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 11
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: pnpm
-      - name: Checkout deepseek-harness (peer types)
+      - name: Checkout deepseek-harness (peer types, optional)
+        shell: bash
         run: |
-          git clone --depth 1 https://github.com/deepseek-ai/deepseek-harness.git ../deepseek-harness || true
-      - run: pnpm install
-      - run: pnpm run verify
-      - run: pnpm run build
-        continue-on-error: true
+          git clone --depth 1 https://github.com/deepseek-ai/deepseek-harness.git ../deepseek-harness \
+            || echo "::warning::deepseek-harness clone failed — peer types resolve from the registry instead"
+      - run: pnpm install --frozen-lockfile
+      # Blocks on purpose: this is the gate. It covers the bundled skill catalog,
+      # the persona catalog, the guard regression fixtures, the committed
+      # `github:` runtime, and the workflow plugin tests.
+      - name: verify
+        run: pnpm run verify
+      - name: verify:links
+        run: pnpm run verify:links
+      - name: typecheck
+        run: pnpm run typecheck
+      - name: build
+        run: pnpm run build
+
+  # Structural dogfood against a real harness checkout. Non-blocking until it has
+  # run green in CI at least once (it needs the harness layout, not just the repo).
+  dogfood:
+    name: dogfood (harness structural)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Checkout deepseek-harness
+        run: git clone --depth 1 https://github.com/deepseek-ai/deepseek-harness.git ../deepseek-harness
+      - name: verify:dogfood
+        env:
+          DEEPSEEK_HARNESS_HOME: ${{ github.workspace }}/../deepseek-harness
+        run: pnpm run verify:dogfood

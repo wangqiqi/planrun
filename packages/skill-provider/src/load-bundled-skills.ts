@@ -96,7 +96,16 @@ function loadSkillDirectory(dirName: string): BundledSkillRecord | undefined {
 /** Load every valid skill bundle under `skills/`. */
 export function loadBundledSkills(): readonly BundledSkillRecord[] {
   const records: BundledSkillRecord[] = []
-  for (const entry of readdirSync(SKILLS_ROOT)) {
+  let entries: string[]
+  try {
+    entries = readdirSync(SKILLS_ROOT)
+  } catch {
+    // A packaging mistake that drops `skills/` used to throw during the plugin's
+    // import, which takes the whole DSH boot down instead of degrading to an
+    // empty catalog the user can see.
+    return records
+  }
+  for (const entry of entries) {
     const path = join(SKILLS_ROOT, entry)
     if (!statSync(path).isDirectory()) continue
     const record = loadSkillDirectory(entry)
@@ -111,11 +120,17 @@ export function bundledSkillMap(records: readonly BundledSkillRecord[]): Map<str
   return new Map(records.map((record) => [record.candidate.name, record]))
 }
 
+/** Bodies are immutable on disk, so parse each file at most once. */
+const bodyCache = new Map<string, string>()
+
 /** Read the current markdown body for one bundled skill. */
 export function readSkillBody(record: BundledSkillRecord): string {
+  const cached = bodyCache.get(record.bodyPath)
+  if (cached !== undefined) return cached
   const raw = readFileSync(record.bodyPath, 'utf8')
-  const parsed = parseFrontmatter(raw)
-  return parsed?.body ?? raw
+  const body = parseFrontmatter(raw)?.body ?? raw
+  bodyCache.set(record.bodyPath, body)
+  return body
 }
 
 /** Materialize a full skill definition from a bundled record. */

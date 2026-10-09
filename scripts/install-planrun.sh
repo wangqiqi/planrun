@@ -11,7 +11,7 @@ usage() {
 
 选项:
   --here            安装到当前 Git 项目根
-  --copy-plan       复制 plan.md 模板（若不存在）
+  --copy-plan       复制/覆盖 plan.md 模板（默认仅在不存在时写入）
   --no-guard        不复制 scripts/dsh-guard.sh 到目标项目
   -h, --help        显示帮助
 
@@ -79,11 +79,10 @@ TARGET="$(find_git_root "$(cd "$TARGET" && pwd)")"
 GROWTH="$TARGET/.dsh/growth"
 mkdir -p "$GROWTH/learn" "$GROWTH/archive"
 
-if [[ ! -f "$GROWTH/plan.md" ]] || [[ "$COPY_PLAN" == true ]]; then
-  if [[ ! -f "$GROWTH/plan.md" ]]; then
-    cp "$SOURCE/templates/growth/plan.md" "$GROWTH/plan.md"
-    echo "已写入 $GROWTH/plan.md"
-  fi
+if [[ ! -f "$GROWTH/plan.md" || "$COPY_PLAN" == true ]]; then
+  # The old nesting (`|| COPY_PLAN` outside, `! -f` inside) made the flag a no-op.
+  cp "$SOURCE/templates/growth/plan.md" "$GROWTH/plan.md"
+  echo "已写入 $GROWTH/plan.md"
 fi
 
 if [[ ! -f "$GROWTH/learn/README.md" ]]; then
@@ -117,7 +116,19 @@ if [[ "$INSTALL_GUARD" == true ]]; then
       echo "SKIP: $dest 已存在（未覆盖）"
     fi
   done
-  node "$SOURCE/scripts/merge-guard-package-json.mjs" "$TARGET" || true
+  # The launcher makes the merged npm scripts work on Windows too, where a bare
+  # `bash` may be missing or resolve to a Store shim that always fails.
+  if [[ ! -f "$TARGET_SCRIPTS/run-bash.mjs" ]]; then
+    cp "$SOURCE/scripts/run-bash.mjs" "$TARGET_SCRIPTS/run-bash.mjs"
+    echo "已写入 $TARGET_SCRIPTS/run-bash.mjs"
+  fi
+  if command -v node >/dev/null 2>&1; then
+    if ! node "$SOURCE/scripts/merge-guard-package-json.mjs" "$TARGET"; then
+      echo "WARN: guard scripts 未合并进 package.json（见上方错误）" >&2
+    fi
+  else
+    echo "WARN: 未找到 node，跳过 package.json 合并；可手动添加 node scripts/run-bash.mjs scripts/dsh-guard.sh <cmd>" >&2
+  fi
 fi
 
 cat <<EOF

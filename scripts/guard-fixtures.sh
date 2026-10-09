@@ -17,6 +17,7 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 GUARD="$ROOT/scripts/dsh-guard.sh"
+BASH_BIN="${BASH:-$(command -v bash 2>/dev/null || command -v sh)}"
 MODE="${1:-all}"
 
 TMP="$(mktemp -d)"
@@ -36,7 +37,7 @@ run_guard() {
     DSH_GUARD_HEURISTICS="${FIX_HEURISTICS:-true}" \
     DSH_GUARD_FALLBACK_VERIFY="${FIX_FALLBACK:-}" \
     DSH_GUARD_EXEC="${FIX_EXEC:-true}" \
-    bash "$GUARD" "$@" 2>&1)"
+    "$BASH_BIN" "$GUARD" "$@" 2>&1)"
   RC=$?
 }
 
@@ -275,7 +276,7 @@ case_parity() {
 **执行顺序**: `TASK-001` → `SPIKE-001` → `TASK-002`
 EOF
 
-  shell_next="$(DSH_GROWTH_PLAN="$plan" bash "$GUARD" next-task)"
+  shell_next="$(DSH_GROWTH_PLAN="$plan" "$BASH_BIN" "$GUARD" next-task)"
   ts_next="$(node_parity "$plan" next TASK-001)"
   if [[ "$shell_next" == "TASK-002" ]]; then
     pass "顺序链跳过 SPIKE- 行（next = TASK-002）"
@@ -288,7 +289,7 @@ EOF
     fail "shell 与 TS 的 next-task 不一致：shell=$shell_next ts=$ts_next"
   fi
 
-  shell_pending="$(DSH_GROWTH_PLAN="$plan" bash "$GUARD" pending)"
+  shell_pending="$(DSH_GROWTH_PLAN="$plan" "$BASH_BIN" "$GUARD" pending)"
   ts_pending="$(node_parity "$plan" pending)"
   if [[ "$shell_pending" == "$ts_pending" ]]; then
     pass "shell 与 TS 的待办计数一致（$shell_pending）"
@@ -334,7 +335,7 @@ EOF
 |----|------|----------|--------|------------|--------|
 | TASK-001 | a | P0 | DONE | bash -c "exit 0" | x |
 EOF
-  zero_out="$(DSH_GROWTH_PLAN="$zero_plan" bash "$GUARD" pending)"
+  zero_out="$(DSH_GROWTH_PLAN="$zero_plan" "$BASH_BIN" "$GUARD" pending)"
   if [[ "$zero_out" == "0" ]]; then
     pass "待办为 0 时只输出一个 0"
   else

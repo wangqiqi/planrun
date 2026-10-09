@@ -3,6 +3,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Nested bash calls must not depend on `bash` being on PATH: on Windows the
+# launcher may have resolved a Git bash that is not exported to this shell.
+BASH_BIN="${BASH:-$(command -v bash 2>/dev/null || command -v sh)}"
 SC_SKIP_PREFIXES="${SC_SKIP_PREFIXES:-REV- SPIKE- DOC-}"
 HEURISTICS_ENABLED="${DSH_GUARD_HEURISTICS:-true}"
 FALLBACK_VERIFY="${DSH_GUARD_FALLBACK_VERIFY:-}"
@@ -211,7 +214,7 @@ run_fallback_verify() {
   if [[ -f "$ROOT/$script" ]]; then
     echo "==> heuristics fallback: $FALLBACK_VERIFY"
     cd "$ROOT"
-    bash "$script"
+    "$BASH_BIN" "$script"
     return $?
   fi
   local verify_cmd

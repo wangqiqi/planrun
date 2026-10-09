@@ -3,10 +3,17 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Nested bash calls must not depend on `bash` being on PATH: on Windows the
+# launcher may have resolved a Git bash that is not exported to this shell.
+BASH_BIN="${BASH:-$(command -v bash 2>/dev/null || command -v sh)}"
 SKILLS="$ROOT/packages/skill-provider/skills"
-EXPECTED=(master sprint-plan run review learn git scaffold long release delivery debug test security api refactor perf mcp study user-manual test-report ux ia week disk maintain code-stats-viz pencil-design md2docx-export)
+# The catalog lives in scripts/skills-manifest.mjs. The same 28-name list used to
+# be written out here and in verify-dogfood.sh, with the count hardcoded a third
+# time in verify-plugin-e2e.sh, so adding a skill meant editing three files.
+read -r -a EXPECTED <<<"$(node "$ROOT/scripts/skills-manifest.mjs")"
+read -r -a MODEL_INVOCABLE <<<"$(node "$ROOT/scripts/skills-manifest.mjs" --model-invocable)"
 FORBIDDEN_PATTERNS='\.cursorGrowth|AskQuestion|runner\.sh'
-RETIRED_PATTERNS='install-planrun\.sh --preset|\.agent-presets|agent/session-start'
+RETIRED_PATTERNS='install-planrun\.sh --preset|\.agent-presets|session-start'
 FAIL=0
 
 echo "==> Checking bundled skills (${#EXPECTED[@]})"
@@ -23,7 +30,6 @@ done
 # invocation. All 28 shipped with `disable-model-invocation: true`, so the
 # documented "load skills by situation" flow only worked when a user typed the
 # skill name; the rest stay user-invocable on purpose.
-MODEL_INVOCABLE=(master sprint-plan run review debug test delivery release)
 echo "==> Checking skill invocation policy (${#MODEL_INVOCABLE[@]} model-invocable)"
 for name in "${MODEL_INVOCABLE[@]}"; do
   skill_md="$SKILLS/$name/SKILL.md"
@@ -170,7 +176,6 @@ fi
 echo "==> Checking DSH adaptation (no Cursor-only tokens in bundled skills)"
 while IFS= read -r skill_dir; do
   base="$(basename "$skill_dir")"
-  [[ "$base" == "master" ]] && continue
   if grep -qE "$FORBIDDEN_PATTERNS" "$skill_dir/SKILL.md" 2>/dev/null; then
     echo "FAIL: skills/$base/SKILL.md contains forbidden Cursor-only token"
     grep -nE "$FORBIDDEN_PATTERNS" "$skill_dir/SKILL.md" || true
@@ -185,6 +190,15 @@ while IFS= read -r skill_dir; do
       fi
     done < <(find "$skill_dir/reference" -name '*.md' -type f)
   fi
+  # Scripts and data shipped inside a skill went unscanned, which is how
+  # `.cursorGrowth` survived in code-stats-viz/scripts/code_stats_viz.py.
+  while IFS= read -r extra_file; do
+    if grep -qE "$FORBIDDEN_PATTERNS" "$extra_file" 2>/dev/null; then
+      echo "FAIL: ${extra_file#"$SKILLS"/} contains forbidden Cursor-only token"
+      grep -nE "$FORBIDDEN_PATTERNS" "$extra_file" || true
+      FAIL=1
+    fi
+  done < <(find "$skill_dir" -type f \( -name '*.py' -o -name '*.sh' -o -name '*.json' -o -name '*.yaml' -o -name '*.yml' -o -name '*.ts' \))
 done < <(find "$SKILLS" -mindepth 1 -maxdepth 1 -type d)
 
 echo "==> Checking retired surfaces (preset install path · session-start event)"
@@ -209,7 +223,7 @@ if ! node "$ROOT/scripts/verify-doc-links.mjs"; then
 fi
 
 echo "==> Checking committed GitHub-install runtime"
-if ! bash "$ROOT/scripts/verify-lib-sync.sh"; then
+if ! "$BASH_BIN" "$ROOT/scripts/verify-lib-sync.sh"; then
   FAIL=1
 fi
 
@@ -309,15 +323,46 @@ for script in gate-check plan-check task-verify next-task; do
   fi
 done
 if [[ -f "$ROOT/scripts/dsh-guard.sh" ]]; then
-  if ! bash "$ROOT/scripts/dsh-guard.sh" help 2>/dev/null | grep -q gate-check; then
+  if ! "$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" help 2>/dev/null | grep -q gate-check; then
     echo "FAIL: dsh-guard.sh help missing gate-check"
     FAIL=1
   fi
 fi
 
 echo "==> Checking guard fixtures (gate regression matrix)"
-if ! bash "$ROOT/scripts/guard-fixtures.sh" all; then
+if ! "$BASH_BIN" "$ROOT/scripts/guard-fixtures.sh" all; then
   echo "FAIL: guard fixture matrix failed"
+  FAIL=1
+fi
+
+echo "==> Checking cross-platform launcher"
+if [[ ! -f "$ROOT/scripts/run-bash.mjs" ]]; then
+  echo "MISSING: scripts/run-bash.mjs"
+  FAIL=1
+elif ! node "$ROOT/scripts/run-bash.mjs" --selftest; then
+  echo "FAIL: scripts/run-bash.mjs cannot find a working POSIX shell"
+  FAIL=1
+else
+  echo "OK: scripts/run-bash.mjs finds a working shell"
+fi
+# A bare `bash` in an npm script is missing entirely on Windows without Git for
+# Windows, or resolves to the Store shim that always fails.
+if grep -qE '"(verify|verify:publish|verify:dogfood|verify:e2e|verify:github|verify:lib|verify:npm|gate-check|plan-check|task-verify|next-task|guard|pack:local|publish:packages)": "bash ' "$ROOT/package.json"; then
+  echo "FAIL: package.json entry scripts call bare bash instead of scripts/run-bash.mjs"
+  FAIL=1
+else
+  echo "OK: entry scripts go through the launcher"
+fi
+for pkg in workflow skill-provider bundle-planrun; do
+  if [[ -e "$ROOT/packages/$pkg/scripts/emit-js.mjs" ]]; then
+    echo "FAIL: packages/$pkg/scripts/emit-js.mjs is a hand-maintained copy — use scripts/emit-js.mjs"
+    FAIL=1
+  fi
+done
+echo "OK: single emit-js implementation"
+
+echo "==> Checking CI workflow"
+if ! node "$ROOT/scripts/verify-ci-workflow.mjs"; then
   FAIL=1
 fi
 
@@ -350,7 +395,7 @@ echo "==> Checking guard cwd resolution"
 GUARD_TMP="$(mktemp -d)"
 mkdir -p "$GUARD_TMP/nested/.dsh/growth"
 cp "$ROOT/templates/dogfood/plan-fixture.md" "$GUARD_TMP/nested/.dsh/growth/plan.md"
-if ! (cd "$GUARD_TMP/nested" && bash "$ROOT/scripts/dsh-guard.sh" gate-check >/dev/null); then
+if ! (cd "$GUARD_TMP/nested" && "$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" gate-check >/dev/null); then
   echo "FAIL: gate-check from nested cwd"
   FAIL=1
 else
@@ -361,7 +406,7 @@ rm -rf "$GUARD_TMP"
 echo "==> Checking install guard seed"
 INSTALL_TMP="$(mktemp -d)"
 git -C "$INSTALL_TMP" init -q
-PLANRUN_HOME="$ROOT" bash "$ROOT/scripts/install-planrun.sh" "$INSTALL_TMP" --copy-plan >/dev/null
+PLANRUN_HOME="$ROOT" "$BASH_BIN" "$ROOT/scripts/install-planrun.sh" "$INSTALL_TMP" --copy-plan >/dev/null
 if [[ ! -f "$INSTALL_TMP/scripts/dsh-guard.sh" ]]; then
   echo "FAIL: install-planrun.sh did not seed scripts/dsh-guard.sh"
   FAIL=1
@@ -455,7 +500,7 @@ else
 fi
 
 echo "==> Checking docs path neutrality"
-if ! bash "$ROOT/scripts/verify-docs-paths.sh"; then
+if ! "$BASH_BIN" "$ROOT/scripts/verify-docs-paths.sh"; then
   FAIL=1
 fi
 

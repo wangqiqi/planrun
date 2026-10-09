@@ -17,14 +17,17 @@ fi
 
 pnpm run build >/dev/null
 
-stale="$(git diff --name-only -- 'packages/*/lib/*.js')"
+# `git diff HEAD`, not bare `git diff`: the latter compares against the index, so
+# a stale build that was already `git add`ed looked clean. `**` covers a nested
+# emitter under lib/.
+stale="$(git diff --name-only HEAD -- 'packages/**/lib/*.js')"
 if [[ -n "$stale" ]]; then
   echo "FAIL: committed runtime is stale — rebuild and commit these:"
   printf '  %s\n' $stale
   exit 1
 fi
 
-untracked="$(git ls-files --others --exclude-standard -- 'packages/*/lib/*.js')"
+untracked="$(git ls-files --others --exclude-standard -- 'packages/**/lib/*.js')"
 if [[ -n "$untracked" ]]; then
   echo "FAIL: runtime module not committed — a git install would miss it:"
   printf '  %s\n' $untracked

@@ -96,16 +96,28 @@ done
 
 echo "==> import plugin + skill catalog"
 cat > "$WORK/smoke.mjs" <<'JS'
+import { SKILL_COUNT } from 'SKILLS_MANIFEST_SPECIFIER'
 import { apply } from '@planrun/skill-provider'
 let provider
 const ctx = { skills: { registerProvider: (create) => { provider = create(); return () => {} } } }
 apply(ctx)
 const catalog = await provider.list()
-if (catalog.length !== 28) throw new Error(`expected 28 skills, got ${catalog.length}`)
+// Compare against the shared manifest instead of a hardcoded number: a new skill
+// used to fail here with a confusing "expected 28" instead of a missing-name error.
+if (catalog.length !== SKILL_COUNT) throw new Error(`expected ${SKILL_COUNT} skills, got ${catalog.length}`)
 const master = await provider.get(catalog.find((candidate) => candidate.name === 'master'))
 if (master === undefined || master.content.length === 0) throw new Error('master skill body did not load')
 console.log(`skill-provider: ${catalog.length} skills, master ${master.content.length} chars`)
 JS
+# The smoke test runs from the throwaway profile, so point the import at this
+# checkout's manifest by absolute file URL.
+node -e "
+  const { readFileSync, writeFileSync } = require('node:fs')
+  const { pathToFileURL } = require('node:url')
+  const file = process.argv[process.argv.length - 1]
+  const specifier = pathToFileURL(process.argv[process.argv.length - 2]).href
+  writeFileSync(file, readFileSync(file, 'utf8').replace('SKILLS_MANIFEST_SPECIFIER', specifier))
+" "$ROOT/scripts/skills-manifest.mjs" "$WORK/smoke.mjs"
 if ! (cd "$PROFILE" && node "$WORK/smoke.mjs") >"$WORK/smoke.log" 2>&1; then
   fail "plugin import / catalog failed"; tail -20 "$WORK/smoke.log" >&2
 else

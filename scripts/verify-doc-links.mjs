@@ -43,8 +43,19 @@ const LINK = /\]\(([^)\s]+)\)/g
 const failures = []
 let checked = 0
 
+// Publishing boundary: a markdown file shipped inside a package may only link to
+// targets inside that package. A `../../../../docs/x.md` link resolves in the
+// repo but points at `<profile>/node_modules/docs/x.md` once installed, which is
+// exactly how 22 broken links shipped unnoticed — the in-repo check cannot see it.
+function packageRootFor(file) {
+  const parts = relative(ROOT, file).split(sep)
+  if (parts[0] !== 'packages' || parts.length < 3) return undefined
+  return join(ROOT, parts[0], parts[1])
+}
+
 for (const file of markdownFiles(ROOT)) {
   const text = readFileSync(file, 'utf8')
+  const packageRoot = packageRootFor(file)
   for (const match of text.matchAll(LINK)) {
     const raw = match[1]
     if (/^(?:https?:|mailto:|#)/.test(raw)) continue
@@ -57,6 +68,11 @@ for (const file of markdownFiles(ROOT)) {
       failures.push(`${shown}: ${raw} escapes the repository`)
     } else if (!existsSync(resolved)) {
       failures.push(`${shown}: ${raw} does not exist`)
+    } else if (packageRoot !== undefined && !resolved.startsWith(packageRoot + sep)) {
+      failures.push(
+        `${shown}: ${raw} escapes the published package — `
+        + `it resolves to ${relative(ROOT, resolved)} and would break under node_modules/`,
+      )
     }
   }
 }
