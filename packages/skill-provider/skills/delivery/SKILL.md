@@ -3,7 +3,7 @@ name: delivery
 description: >-
   Pre-ship delivery checklist (/delivery): visual, i18n, docs, API, UX, production
   readiness. After task-verify green. Universal checklist; project paths in learn/.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

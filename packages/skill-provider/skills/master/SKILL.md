@@ -5,7 +5,7 @@ description: >-
   or new sessions. Routes to sprint-plan, run, learn, review, and release — does not
   execute downstream work itself.
 user-invocable: true
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # master · Router

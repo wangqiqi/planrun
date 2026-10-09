@@ -3,7 +3,7 @@ name: review
 description: >-
   Structured PR and code review for planrun (REV-* tasks). Dual-axis Standards
   and Spec checklist. Read-only — use subagent with readonly preset when delegating.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

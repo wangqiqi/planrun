@@ -3,7 +3,7 @@ name: debug
 description: >-
   Systematic debug loop: reproduce → hypothesize → isolate → verify → record.
   No fix without root cause. Use when tests fail or behavior is unexplained.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

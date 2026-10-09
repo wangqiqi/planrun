@@ -4,7 +4,7 @@ description: >-
   Execute ACTIVE tasks from .dsh/growth/plan.md for planrun. Implement, verify,
   update plan mirror, commit per task. Load after sprint-plan approval. Sprint
   finish may hand off to release (v0.2).
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

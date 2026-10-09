@@ -3,7 +3,7 @@ name: release
 description: >-
   Sprint exit (/release): branch merge/PR/keep/discard, semver, CHANGELOG, tag.
   Use when shipping, merging, opening PR, or tagging. Not a Sprint Goal by itself.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

@@ -3,7 +3,7 @@ name: test
 description: >-
   Testing checklist — unit, integration, E2E, TDD red-green-refactor. Links
   project verify. Use when writing tests, TDD, or Playwright work.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 

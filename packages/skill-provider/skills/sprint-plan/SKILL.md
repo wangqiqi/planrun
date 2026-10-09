@@ -4,7 +4,7 @@ description: >-
   Sprint and multi-task planning for planrun. Use when breaking down goals into
   TASKs, writing .dsh/growth/plan.md, or SPIKE/DOC work. Not DSH /plan plan mode
   (single-task design). No business code in this skill.
-disable-model-invocation: true
+disable-model-invocation: false
 user-invocable: true
 ---
 
