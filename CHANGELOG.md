@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-09
+
 ### Fixed
 
 - **The plan gates could not fail** — four independent holes let a plan pass that should have
@@ -29,7 +31,31 @@
   resolved package-relative (`createRequire` for the catalog), and the dependency is declared.
 - **`verify-publish.sh` could not fail on a packed `workspace:` range** — it only inspected the
   source manifest and the tarball's entry names, and an unguarded `npm pack` aborted the script
-  before its own error branch.
+  before its own error branch. It now packs with `pnpm pack` (the only packer that rewrites
+  `workspace:^`), reads the packed manifest through a POSIX tar path, and asserts on real content.
+- **`bash` on `PATH` was a hard requirement, and on Windows it was often the wrong `bash`** —
+  every npm entry script now runs through `scripts/run-bash.mjs`, which probes for a shell that
+  actually starts (`<shell> -c "exit 0"`), skips the `%LOCALAPPDATA%\Microsoft\WindowsApps`
+  Store alias, consults `HKLM\SOFTWARE\GitForWindows\InstallPath` when Git is installed but not
+  exported to `PATH`, falls back to WSL with a `/mnt` path mapping, and says *why* it failed —
+  "found but could not start" is now distinct from "not installed". Nested `bash` calls inside the
+  verify scripts use the resolved `$BASH` instead of relying on `PATH`.
+- **Bundled skills linked outside their own package** — 23 markdown links used
+  `../../../../docs/...` / `templates/...`, which resolve in the repo but point at
+  `<profile>/node_modules/docs/...` once `@planrun/skill-provider` is installed from npm. They now
+  point at the published docs site, at the in-project `.dsh/growth/...` path, or describe the
+  target inline. A dangling `**plan**` skill name (renamed to `sprint-plan`), the retired
+  `session-start` hook name, two citations of a non-existent `docs/library-index.md`, a
+  `.cursorGrowth` literal in a bundled Python script, and a plan template that hardcoded
+  `pnpm run verify` for arbitrary projects are fixed with it.
+- **`plan` parsing drifted between the two implementations** — the shell walk of the
+  `**执行顺序**` line skipped the `SPIKE-`/`DOC-`/`REV-` filter the TypeScript parser applies,
+  `**Done when:**` (the shipped template's spelling) was invisible to the closed-sprint check,
+  `pending` printed two `0`s, and `VERIFY: (none)` produced a bash syntax error. A shared fixture
+  matrix now drives both parsers over the same plans and fails when they disagree.
+- **The doc-link guard could not see packaging-only breakage** — it resolves links in-repo, so a
+  link that escapes a published package looked valid. It now fails when a file inside
+  `packages/*` links outside that package.
 
 ### Changed
 
@@ -38,20 +64,27 @@
   "load skills by situation" flow only worked when a user typed the name. `master`, `sprint-plan`,
   `run`, `review`, `debug`, `test`, `delivery` and `release` now opt in; tool skills stay
   user-only on purpose, and `verify-planrun.sh` asserts the split.
-- **Plan parsing is one rule set again** — the shell walk of the `**执行顺序**` line skipped the
-  `SPIKE-`/`DOC-`/`REV-` filter that the TypeScript parser applies, `**Done when:**` (the shipped
-  template's spelling) was invisible to the closed-sprint check, `pending` printed two `0`s, and
-  `VERIFY: (none)` produced a bash syntax error. `scripts/guard-fixtures.sh` now drives both
-  parsers over the same plans and fails when they disagree.
+- **One `emit-js` implementation instead of three** — the per-package copies were hand-maintained
+  and could drift; `scripts/emit-js.mjs` runs from a package directory, removes stale output that
+  `tsc` leaves behind, and every package's `files` now uses `lib/**/*.js` so a nested emitter
+  cannot be silently dropped from the tarball.
+- **CI is a gate on three operating systems** — the workflow matrix is now
+  `ubuntu-latest` / `windows-latest` / `macos-latest`, `pnpm run verify` blocks, and the
+  `continue-on-error` on the build step is gone. `scripts/verify-ci-workflow.mjs` keeps it that way.
+- **Distribution docs match reality** — the npm channel is marked unpublished (all three packages
+  404 on `registry.npmjs.org`), the GitHub tag is the documented install path and is pinned
+  everywhere, and the example profile no longer re-inserts a plugin its own bundle already mounts.
+- **The bundled skill catalog lives in one place** — `scripts/skills-manifest.mjs` feeds the
+  verify scripts, so adding a skill no longer means editing the same 28-name list in three files.
 
 ### Added
 
 - **`scripts/guard-fixtures.sh`** — a 17-case regression matrix (`bad-plan`, `fallback-fail`,
   `backtick-acc`, `parity`) for the gates, wired into `pnpm run verify`
+- **`scripts/run-bash.mjs`** — cross-platform POSIX-shell launcher used by every npm entry script
+- **`scripts/verify-ci-workflow.mjs`** and **`scripts/skills-manifest.mjs`** — CI and catalog guards
 - **`DSH_GUARD_EXEC`** — `false` prints the acceptance/VERIFY command instead of `eval`-ing plan
   text; an acceptance cell wrapped in backticks (the template's own spelling) is now recognized
-- **`scripts/verify-npm-install.sh` guard** — and a template-copy equality check, so a guard fix
-  can no longer fail to reach `templates/growth/scripts/`
 
 ## [1.8.2] - 2026-09-30
 

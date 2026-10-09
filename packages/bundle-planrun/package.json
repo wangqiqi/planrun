@@ -1,7 +1,7 @@
 {
   "name": "@planrun/bundle",
   "description": "PlanRun profile bundle: mounts @planrun/skill-provider on base-backed profiles",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -15,7 +15,7 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "lib/*.js",
+    "lib/**/*.js",
     "cordis.patch.yml",
     "presets.patch.yml",
     "lib/types/**/*.d.ts"
@@ -42,7 +42,7 @@
     "@planrun/workflow": "workspace:^"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && node scripts/emit-js.mjs",
+    "build": "tsc -p tsconfig.json && node ../../scripts/emit-js.mjs",
     "clean": "rm -rf lib",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepare": "pnpm run build",

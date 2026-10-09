@@ -1,7 +1,7 @@
 {
   "name": "planrun",
   "private": true,
-  "version": "1.8.2",
+  "version": "1.9.0",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "homepage": "https://znza.top/planrun/",
   "type": "module",
@@ -20,24 +20,25 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "verify": "bash scripts/verify-planrun.sh",
-    "verify:publish": "bash scripts/verify-publish.sh",
+    "verify": "node scripts/run-bash.mjs scripts/verify-planrun.sh",
+    "verify:publish": "node scripts/run-bash.mjs scripts/verify-publish.sh",
     "verify:links": "node scripts/verify-doc-links.mjs",
-    "verify:dogfood": "bash scripts/verify-dogfood.sh",
-    "verify:e2e": "bash scripts/verify-plugin-e2e.sh",
-    "verify:github": "bash scripts/verify-github-install.sh",
-    "verify:lib": "bash scripts/verify-lib-sync.sh",
-    "pack:local": "bash scripts/pack-local.sh",
-    "publish:packages": "bash scripts/publish-packages.sh",
-    "gate-check": "bash scripts/dsh-guard.sh gate-check",
-    "plan-check": "bash scripts/dsh-guard.sh plan-check",
-    "task-verify": "bash scripts/dsh-guard.sh task-verify",
-    "next-task": "bash scripts/dsh-guard.sh next-task",
-    "guard": "bash scripts/dsh-guard.sh status",
-    "verify:npm": "bash scripts/verify-npm-install.sh"
+    "verify:dogfood": "node scripts/run-bash.mjs scripts/verify-dogfood.sh",
+    "verify:e2e": "node scripts/run-bash.mjs scripts/verify-plugin-e2e.sh",
+    "verify:github": "node scripts/run-bash.mjs scripts/verify-github-install.sh",
+    "verify:lib": "node scripts/run-bash.mjs scripts/verify-lib-sync.sh",
+    "pack:local": "node scripts/run-bash.mjs scripts/pack-local.sh",
+    "publish:packages": "node scripts/run-bash.mjs scripts/publish-packages.sh",
+    "gate-check": "node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check",
+    "plan-check": "node scripts/run-bash.mjs scripts/dsh-guard.sh plan-check",
+    "task-verify": "node scripts/run-bash.mjs scripts/dsh-guard.sh task-verify",
+    "next-task": "node scripts/run-bash.mjs scripts/dsh-guard.sh next-task",
+    "guard": "node scripts/run-bash.mjs scripts/dsh-guard.sh status",
+    "verify:npm": "node scripts/run-bash.mjs scripts/verify-npm-install.sh"
   },
   "engines": {
-    "node": "^22.19.0 || >=24"
+    "node": "^22.19.0 || >=24",
+    "pnpm": ">=10"
   },
   "dependencies": {
     "yaml": "^2.8.1"
