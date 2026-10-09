@@ -2,6 +2,57 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **The plan gates could not fail** — four independent holes let a plan pass that should have
+  blocked. `PLAN_APPROVED: (none)` (the placeholder the shipped templates carry) is a non-empty
+  string, so `gate-check` reported `OK: PLAN_APPROVED=(none)`; a task id with no table row made
+  `plan_task_row_field`'s pipeline return 1 under `set -euo pipefail`, killing `task-verify` with
+  exit 1 and *zero output*; `plan-check` printed its `FAIL:` lines and then returned 0, so the
+  documented handoff gate could not block; and `task-verify` reported `SKIP` with exit 0 when its
+  heuristic fallback verify had actually failed — "verify never ran" read as "verify passed".
+  `(none)` is now normalized to unset in both the shell and TypeScript parsers, the row lookup is
+  awk-based and reports a missing row, `plan-check` exits non-zero on a hard failure, and a failed
+  fallback propagates its exit code.
+- **`pnpm run verify` did not run on Windows** — `verify-planrun.sh` aborted at the persona check
+  because `python3` resolves to the Microsoft Store stub there (exit 49, every later check skipped);
+  POSIX `$ROOT` was embedded inside `node -e` script text (Node resolves `/e/repo/...` against the
+  current drive root); `core.autocrlf` made `gen-presets --check` report a false "stale"; and
+  `pnpm run verify` / `verify:publish` / `verify:dogfood` used bare `./scripts/x.sh` paths, which
+  cmd.exe cannot execute. The checks now use `node`, pass paths as argv, normalize CRLF before
+  comparing, ship a `.gitattributes` that keeps sources LF, and name `bash` explicitly.
+- **The registry channel lost the growth seed and the persona catalog** — `@planrun/workflow`
+  resolves `templates/growth` by walking up three levels, which only works for the `github:`
+  channel; an npm install therefore never seeded `.dsh/growth/plan.md`. It also found
+  `roles.json` only when both scoped packages sat side by side, so an isolated layout silently
+  dropped the persona hint. The build now copies the templates into the package, both are
+  resolved package-relative (`createRequire` for the catalog), and the dependency is declared.
+- **`verify-publish.sh` could not fail on a packed `workspace:` range** — it only inspected the
+  source manifest and the tarball's entry names, and an unguarded `npm pack` aborted the script
+  before its own error branch.
+
+### Changed
+
+- **Core workflow skills are model-invocable** — all 28 bundled skills shipped
+  `disable-model-invocation: true`, so the model could never load one and the documented
+  "load skills by situation" flow only worked when a user typed the name. `master`, `sprint-plan`,
+  `run`, `review`, `debug`, `test`, `delivery` and `release` now opt in; tool skills stay
+  user-only on purpose, and `verify-planrun.sh` asserts the split.
+- **Plan parsing is one rule set again** — the shell walk of the `**执行顺序**` line skipped the
+  `SPIKE-`/`DOC-`/`REV-` filter that the TypeScript parser applies, `**Done when:**` (the shipped
+  template's spelling) was invisible to the closed-sprint check, `pending` printed two `0`s, and
+  `VERIFY: (none)` produced a bash syntax error. `scripts/guard-fixtures.sh` now drives both
+  parsers over the same plans and fails when they disagree.
+
+### Added
+
+- **`scripts/guard-fixtures.sh`** — a 17-case regression matrix (`bad-plan`, `fallback-fail`,
+  `backtick-acc`, `parity`) for the gates, wired into `pnpm run verify`
+- **`DSH_GUARD_EXEC`** — `false` prints the acceptance/VERIFY command instead of `eval`-ing plan
+  text; an acceptance cell wrapped in backticks (the template's own spelling) is now recognized
+- **`scripts/verify-npm-install.sh` guard** — and a template-copy equality check, so a guard fix
+  can no longer fail to reach `templates/growth/scripts/`
+
 ## [1.8.2] - 2026-09-30
 
 ### Fixed

@@ -35,22 +35,30 @@ check_pkg() {
   fi
 
   rm -f "$ROOT/$dir"/*.tgz
-  # Unguarded, this aborted the script under `set -e` and made the FAIL branch
-  # below unreachable.
-  if ! (cd "$ROOT/$dir" && npm pack >/dev/null 2>&1); then
-    echo "FAIL: npm pack failed"
+  # `pnpm pack`, not `npm pack`: only pnpm rewrites `workspace:^` to a real
+  # version, so only its tarball is the artifact a consumer would resolve. The
+  # guard also aborts the script under `set -e`, which made the FAIL branch below
+  # unreachable.
+  if ! (cd "$ROOT/$dir" && pnpm pack >/dev/null 2>&1); then
+    echo "FAIL: pnpm pack failed"
     FAIL=1
     return
   fi
-  local tgz
+  local tgz tgz_tar
   tgz="$(ls -1 "$ROOT/$dir"/*.tgz 2>/dev/null | head -1)"
   if [[ -z "$tgz" || ! -f "$tgz" ]]; then
-    echo "FAIL: npm pack failed"
+    echo "FAIL: pnpm pack produced no tarball"
     FAIL=1
     return
   fi
+  # GNU tar reads a `E:\...` argument as a remote host spec ("Cannot connect to
+  # E: resolve failed"), so hand it a POSIX path. cygpath only exists on Windows.
+  tgz_tar="$tgz"
+  if command -v cygpath >/dev/null 2>&1; then
+    tgz_tar="$(cygpath -u "$tgz")"
+  fi
   local listing
-  listing="$(tar -tzf "$tgz")"
+  listing="$(tar -tzf "$tgz_tar")"
   local ok=true
   if ! grep -q '^package/lib/index.js$' <<< "$listing"; then
     echo "FAIL: tarball missing lib/index.js"
@@ -99,7 +107,7 @@ check_pkg() {
   # rewrites `workspace:^` to semver, but nothing verified that, so a publish
   # through another path could ship an unresolvable protocol.
   local packed_manifest
-  if packed_manifest="$(tar -xzOf "$tgz" package/package.json 2>/dev/null)" && [[ -n "$packed_manifest" ]]; then
+  if packed_manifest="$(tar -xzOf "$tgz_tar" package/package.json 2>/dev/null)" && [[ -n "$packed_manifest" ]]; then
     if grep -q '"workspace:' <<< "$packed_manifest"; then
       echo "FAIL: published manifest still contains a workspace: range"
       ok=false
