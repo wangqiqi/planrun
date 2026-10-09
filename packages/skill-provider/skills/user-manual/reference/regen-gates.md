@@ -65,6 +65,6 @@
 
 | 情况 | 动作 |
 |------|------|
-| walkthrough flaky | 修 wait/选器；≤2 轮自修后 `⚠️` → **plan** |
+| walkthrough flaky | 修 wait/选器；≤2 轮自修后 `⚠️` → **sprint-plan** |
 | 数据无法 seed | contract `shots[].manual: true` · 故事线文字降级 |
 | native-window CI 不可用 | 发版机在本地/专用机 regen；CI 只 L1 查文件 |

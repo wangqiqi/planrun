@@ -11,7 +11,7 @@ user-invocable: true
 
 **工具技能**（非 sprint-plan/run 主路径）。**用这个**：`.md` / Markdown 文本 → `.docx`。**不是那个**：编辑已有 Word 样式/修订 → anthropics **docx** skill 或 Office MCP；上线走查 → **delivery**；写操作手册正文 → **user-manual**。
 
-上游索引 → `docs/library-index.md` §mddocx。PlanRun **不**内置转换器；用户本机 `pip install` + 可选 MCP。
+上游索引以 **mddocx** 包自带文档为准。PlanRun **不**内置转换器；用户本机 `pip install` + 可选 MCP。
 
 ## 与 Office / docx skill 分流
 

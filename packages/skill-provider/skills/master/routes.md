@@ -48,7 +48,7 @@
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
 | `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |
 | User choices | **`ask_user_question`** tool |
-| Gate before run | `pnpm run gate-check` · [workflow-guard.md](../../../../docs/en/workflow-guard.md) |
+| Gate before run | `pnpm run gate-check` · [Workflow guard](https://znza.top/planrun/en/workflow-guard) |
 
 ## Persona · 呼叫（12 人格）
 
@@ -71,7 +71,7 @@
 
 项目昵称覆盖：`.dsh/growth/session/aliases.json`（优先于 roles.json nicknames）。
 
-`@planrun/workflow` 在 `session-start` 注入 Persona hint（含 `voice_cues` · `emotion_cues`）。
+`@planrun/workflow` 在 `agent/created` 注入 Persona hint（含 `voice_cues` · `emotion_cues`）。
 
 ## Subagents · ship · review · spike
 
@@ -83,7 +83,7 @@
 | `subagent_spike` | preset **planrun** 或 **planrun-spike** | **`sprint-plan`** SPIKE |
 | `subagent_ship` | preset **planrun** 或 **planrun-ship** | **`release`** |
 
-Presets ship with `@planrun/bundle` · [subagents.md](../../../../docs/en/subagents.md) · bundled `agents/*.md` in `@planrun/skill-provider`.
+Presets ship with `@planrun/bundle` · [Subagents](https://znza.top/planrun/en/subagents) · bundled `agents/*.md` in `@planrun/skill-provider`.
 
 ## Bundled skills (28)
 

@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：行为不变的重构、去重、死代码删除。**不是那个**：新功能 → **`run`**；scope 重排 → **`sprint-plan`**；专项只读回顾 → **`review`**.
 
-Standing discipline: [docs/en/discipline.md](../../../../docs/en/discipline.md)
+Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
 ## Principles
 
@@ -31,7 +31,7 @@ Before removing components, hooks, APIs, or routes:
 1. **grep production paths** — route tables · page imports · OpenAPI/client SDK · server router registration
 2. **Distinguish** test-only vs production references (test-only → delete tests/mocks too)
 3. **Phased** — UI round then API round (avoid half-clean); large removals → `SPIKE-*` + product confirm via **`sprint-plan`**
-4. **Verify** — `pnpm run verify` / full tests after delete; CHANGELOG `### Removed` one-line summary
+4. **Verify** — project verify command (e.g. `pnpm run verify`, `./scripts/verify.sh`) / full tests after delete; CHANGELOG `### Removed` one-line summary
 
 For error-path refactors, align with **`debug`** (don't swallow inner errors with generic outer messages).
 

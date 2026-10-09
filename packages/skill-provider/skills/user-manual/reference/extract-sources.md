@@ -51,10 +51,10 @@ grep：角色表 · 侧栏 · 默认首页 · 「空态」「错误」章节。
 
 缺 (1)(2) → 可生成**空模板手册**；缺 (3) → 可写手册但**不宜**自动化配图。
 
-## 与 plan / delivery 衔接
+## 与 sprint-plan / delivery 衔接
 
 | 场景 | 动作 |
 |------|------|
-| 大改版、图 >5 | **plan** Sprint · `DOC-*` |
+| 大改版、图 >5 | **sprint-plan** Sprint · `DOC-*` |
 | 提取 vs 实现冲突 | **delivery** 式 `Decision needed` |
 | 推断草稿完成 | 提议 Reader Test（`reader-test.md`） |

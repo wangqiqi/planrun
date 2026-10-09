@@ -12,7 +12,7 @@ user-invocable: true
 
 **Not DSH plan mode.** DSH `/plan` explores one task and exits through `exit_plan_mode`. This skill owns **multi-task / Sprint** planning and the `.dsh/growth/plan.md` mirror.
 
-Standing discipline: [docs/en/discipline.md](../../../../docs/en/discipline.md)
+Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
 **Persona**: planning tone follows active session persona; technical gates unchanged.
 
@@ -33,7 +33,7 @@ Sprint Goal = **capability / module / user-visible increment**. Not: tag-only, C
 
 1. **Clarify** Goal and Done-when with `ask_user_question` when ambiguous.
 2. **Decompose** into TASK rows with IDs (`TASK-001`, `SPIKE-001`, `DOC-001`).
-3. **Write** `.dsh/growth/plan.md` from [templates/growth/plan.md](../../../../templates/growth/plan.md) — include HTML metadata block (`PLANNING`, `PLAN_APPROVED`, `ACTIVE`, `VERIFY`, …).
+3. **Write** `.dsh/growth/plan.md` from `.dsh/growth/plan.md` (the seeded template, same path) — include HTML metadata block (`PLANNING`, `PLAN_APPROVED`, `ACTIVE`, `VERIFY`, …).
 4. **Set** `<!-- PLANNING: false -->` and `<!-- PLAN_APPROVED: YYYY-MM-DD -->` after user confirms.
 5. **Mark** `<!-- ACTIVE: TASK-xxx -->` (and one table row `⬜`/`🔧`) for **`run`**.
 6. **Hand off** — user loads **`run`** or continues in the same session.
@@ -45,7 +45,7 @@ pnpm run gate-check   # BLOCK → stay in sprint-plan
 pnpm run plan-check   # handoff structure
 ```
 
-See [docs/en/workflow-guard.md](../../../../docs/en/workflow-guard.md).
+See [Workflow guard](https://znza.top/planrun/en/workflow-guard). These `pnpm run` gates require a Node project: `install-planrun.sh` merges the guard scripts into the project's `package.json`.
 
 ## plan.md mirror format
 
@@ -53,14 +53,16 @@ See [docs/en/workflow-guard.md](../../../../docs/en/workflow-guard.md).
 <!-- PLANNING: false -->
 <!-- PLAN_APPROVED: 2026-09-08 -->
 <!-- ACTIVE: TASK-001 -->
-<!-- VERIFY: pnpm run verify -->
+<!-- VERIFY: <project verify command> -->
 
 **Goal:** …
 
 | ID | Task | Priority | Status | Acceptance | Target |
 |----|------|----------|--------|------------|--------|
-| TASK-001 | … | P0 | ⬜ | `pnpm run verify` | … |
+| TASK-001 | … | P0 | ⬜ | `<project verify command>` | … |
 ```
+
+Replace `<project verify command>` with your project's own verify command.
 
 **执行顺序**: `TASK-001` → `TASK-002`
 

@@ -28,7 +28,7 @@
 |------|------|
 | **run** | TASK 验收用 `task-verify`；报告非每 TASK 必做 |
 | **release** | 可选 `full` regen；CHANGELOG 可链 Sprint ID |
-| **plan** `DOC-*` | Done when 含 `doc_path` + `l1_script` 锚点 |
+| **sprint-plan** `DOC-*` | Done when 含 `doc_path` + `l1_script` 锚点 |
 
 ## from-logs 例外
 

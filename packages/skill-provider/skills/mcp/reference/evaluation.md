@@ -1,6 +1,6 @@
 # MCP Server Eval（母版精简）
 
-吸收自 anthropics mcp-builder 协议 · 母版出处 **`docs/library-index.md`** · 本文件为操作 SSOT。
+吸收自 anthropics mcp-builder 协议 · 本文件为操作 SSOT。
 
 ## 目的
 
