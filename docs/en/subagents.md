@@ -9,6 +9,9 @@ declarations (`packages/bundle-planrun/presets.patch.yml`), so installing the
 bundle is all it takes:
 
 ```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+
+# npm (not published yet):
 dsh plugin --profile web add @planrun/bundle
 
 # repo dev:
@@ -40,7 +43,7 @@ fails when the generated patch is stale.
 
 | Layer | Choice |
 |-------|--------|
-| Profile bundle | `dsh plugin --profile web add @planrun/bundle` |
+| Profile bundle | `dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"` (npm equivalent `@planrun/bundle` pending publish) |
 | Default preset | **`standard`** (full coding tools) — skills still load from bundle |
 | Delegation | Copy **planrun** delegation rows into your standard preset copy, **or** switch preset to **planrun** when you need named subagent tools |
 

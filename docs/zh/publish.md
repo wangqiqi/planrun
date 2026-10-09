@@ -1,6 +1,8 @@
 # 发布 PlanRun 到 npm
 
-`@planrun` 作用域三个公开包：
+> **状态：尚未发布。** `registry.npmjs.org` 对 `@planrun/bundle` · `@planrun/workflow` · `@planrun/skill-provider` 均返回 HTTP 404（对照组 `yaml/latest` 返回 200），维护者机器上也没有 npm token。下面「维护者发布」一节是**文档化流程**，不是一次已完成发版的记录。用户当前请走固定 tag 的 GitHub 直装 —— 见下文「GitHub 直装」一节。
+
+`@planrun` 作用域包含三个包：
 
 | 包 | 作用 |
 |----|------|
@@ -14,15 +16,25 @@
 
 ## 用户安装
 
+**当前可用（GitHub tag，必须固定版本）：**
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
+```
+
+**npm scope 发布之后（目前该命令返回 404）：**
+
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
 
 bundle 变更后**重启** profile（`dsh web`）。
 
-发版后可用 `pnpm run verify:npm` 端到端验证 registry 上的产物（装进一次性 profile 并 boot）；指定版本：`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.1`。
+发版后可用 `pnpm run verify:npm` 端到端验证 registry 上的产物（装进一次性 profile 并 boot）；指定版本：`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.2`。
 
 ## 维护者发布
+
+> **仅为流程文档，尚未对该 scope 执行。** 维护者机器上没有 npm token，下面任何一条都还没跑过。
 
 ### 前置
 
@@ -55,10 +67,10 @@ bash scripts/publish-packages.sh --pack-only
 
 ### GitHub 直装（免 npm 发布）
 
-仓库根本身就是 DSH bundle，因此不需要先发布 npm：
+**这是用户当前唯一可用的安装通道。** 仓库根本身就是 DSH bundle，因此不需要先发布 npm：
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
 ```
 
 pnpm 取源码后，DSH 直接挂载 `./cordis.patch.yml`（相对行名转成 `file://` URL）与 preset 声明。根 manifest 不声明 `prepare`，运行时（`packages/*/lib/*.js`）随源码提交，因此安装**不执行任何构建脚本**，也不需要 `allowBuilds` 授权。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。

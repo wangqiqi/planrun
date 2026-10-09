@@ -11,22 +11,20 @@ pnpm run build
 pnpm run verify
 ```
 
-DevDependencies point at sibling `deepseek-harness` for `@deepseek-ai/cordis` and `@deepseek-ai/dsh-skill`.
+The harness packages are **optional peer dependencies** resolved from your DSH profile, not bundled here: `skill-provider` and `workflow` both declare `@deepseek-ai/cordis` `^4.0.0`, and `workflow` additionally `@deepseek-ai/dsh-agent` / `@deepseek-ai/dsh-llm`. No sibling `deepseek-harness` checkout is needed to build (only `verify:dogfood`, §5).
 
 ## 2. Install the bundle
 
-**Published (recommended)**:
+**From GitHub, pinned (recommended — the only channel that works today)** — no npm registry, no build permission (the runtime is committed):
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+```
+
+**From npm (not published yet)** — `@planrun/bundle` returns 404 on `registry.npmjs.org`, so this command starts working only after the maintainer publishes the scope (steps in [publish.md](publish.md)):
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
-```
-
-See [publish.md](publish.md) for maintainer steps.
-
-**From GitHub** (no npm registry, no build permission — the runtime is committed):
-
-```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
 ```
 
 **From this repo** (`pack-local.sh` builds, then rewrites the `workspace:^` deps to `file:`):

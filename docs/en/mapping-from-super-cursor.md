@@ -55,7 +55,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 
 | Super Cursor | PlanRun |
 |---|---|
-| copy `.cursor/` | `dsh plugin add @planrun/bundle` |
+| copy `.cursor/` | `dsh plugin add "github:wangqiqi/planrun#<tag>"` (npm: `@planrun/bundle`, not published yet) |
 | `.cursorGrowth/` seeds | `install-planrun.sh` → `.dsh/growth/` |
 
 ## Dedup with deepseek-harness

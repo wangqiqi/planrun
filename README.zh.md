@@ -23,7 +23,7 @@ PlanRun 填这个缝：
 | 你得到 | 不是什么 |
 |---|---|
 | 28 个 bundled **skills** + **12 人格**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
-| **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` 一键进 profile | 不是 Cursor rules 复制粘贴 |
+| **`@planrun/bundle`** — 一套 bundle 把 28 skills + 12 人格装进 DSH profile（当前走 GitHub tag；npm 尚未发布） | 不是 Cursor rules 复制粘贴 |
 | **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
@@ -47,9 +47,9 @@ PlanRun 填这个缝：
 
 | 项 | 用途 |
 |----|------|
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / 本地 `file:` 安装 bundle |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | GitHub / 本地 `file:` 安装 bundle |
 | Node `^22.19` 或 `>=24` | build · verify · guard |
-| bash | `install-planrun.sh` · `dsh-guard.sh` |
+| POSIX shell（`bash`/`sh`） | `install-planrun.sh` · `dsh-guard.sh` · `pnpm run` 的 verify/guard 包装脚本，由 `scripts/run-bash.mjs` 自动定位（Windows 上用 Git for Windows 或 WSL） |
 
 完整表与三条安装路径 → **[docs/zh/install.md](docs/zh/install.md)**。
 
@@ -59,8 +59,8 @@ PlanRun 填这个缝：
 |--|--------------------------------|-------------------------------------|
 | **宿主** | DeepSeek Harness profile | Cursor IDE 项目 |
 | **plan 文件** | `.dsh/growth/plan.md` | `.cursorGrowth/plan.md` |
-| **安装** | `dsh plugin add @planrun/bundle` | `install-super-cursor.sh` → 目标 `.cursor/` |
-| **本仓** | `packages/*` 发 npm | `.cursor/` skills/rules（母版开发） |
+| **安装** | `dsh plugin add "github:wangqiqi/planrun#<tag>"`（npm：尚未发布） | `install-super-cursor.sh` → 目标 `.cursor/` |
+| **本仓** | `packages/*` — npm 待发布（当前走 GitHub tag） | `.cursor/` skills/rules（母版开发） |
 
 ---
 
@@ -131,23 +131,23 @@ pnpm run build
 pnpm run verify          # 28 skills + 12 personas + DSH 适配 token 结构检查
 ```
 
-开发时 `skill-provider` 的 peer 可指向同级 `deepseek-harness` checkout。
+harness 相关包（`@deepseek-ai/cordis` `^4.0.0`，`workflow` 另需 `@deepseek-ai/dsh-agent` / `@deepseek-ai/dsh-llm`）是**可选 peerDependencies**，由你的 DSH profile 提供 —— build/verify 不需要同级 `deepseek-harness` checkout（只有 `verify:dogfood` 需要，走 `DEEPSEEK_HARNESS_HOME`）。
 
 ### 2 · 安装 bundle（DSH profile）
 
-**已发布（推荐）**：
+**GitHub 直装、固定版本（当前唯一可用的安装通道）**。仓库根本身就是 bundle，且运行时入口已随源码提交，pnpm 不会执行任何构建脚本：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
+```
+
+**npm 通道（尚未发布）**：`@planrun/bundle` · `@planrun/workflow` · `@planrun/skill-provider` **都不在 registry 上** —— `registry.npmjs.org` 对三者均返回 404，下面的命令要等维护者发布该 scope 之后才可用（见 [publish.md](docs/zh/publish.md)）：
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
 
-**GitHub 直装**（无需 npm registry、无需构建授权）。仓库根本身就是 bundle，且运行时入口已随源码提交，pnpm 不会执行任何构建脚本：
-
-```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
-```
-
-请固定 tag 或 commit，避免后续 push 改变安装内容。**本通道与 `@planrun/bundle` 只能选一个**。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。
+请固定 tag 或 commit，避免后续 push 改变安装内容。**GitHub 通道与 npm 通道只能选一个**。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。
 
 **本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
 
@@ -251,7 +251,7 @@ pnpm run verify:links     # 仓库内所有 markdown 相对链接都能解析
 pnpm run verify:e2e       # 构建 → 装临时 profile → boot（须 DEEPSEEK_HARNESS_HOME）
 pnpm run verify:lib       # 提交的 packages/*/lib/*.js 与最新构建一致
 pnpm run verify:github    # github: 直装通道端到端（须 DEEPSEEK_HARNESS_HOME）
-pnpm run verify:npm       # registry 上已发布的 bundle 端到端（发版后跑）
+pnpm run verify:npm       # registry 上的 bundle 端到端（仅 npm 发版后跑 —— 目前尚未发布）
 pnpm run verify:dogfood   # 须 DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
@@ -277,10 +277,11 @@ pnpm run typecheck
 | **v1.2** | Harness 结构 dogfood（`verify:dogfood`） | ✅ |
 | **v1.3** | defer skills：`mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 人格** + 工具类 skills · 27 bundled | ✅ |
-| **v1.5** | npm 发布 · `@planrun/bundle` · guard cwd · 项目 guard 种子 | ✅ |
+| **v1.5** | npm 发布流程 · `@planrun/bundle` · guard cwd · 项目 guard 种子（`@planrun` scope 目前**未上架** registry，见安装章节） | ✅ |
 | **v1.6** | subagent 预设 · `agents/*.md` · `docs/zh/subagents.md` | ✅ |
 | **v1.7** | DSH API 对齐（`agent/created` · source kind）· 发布打包修复 · preset 改为官方 bundle 声明 · `verify:e2e` | ✅ |
-| **v1.8** | GitHub 直装通道（`github:wangqiqi/planrun`）· 自包含 `prepare` · `verify:links` · `verify:github` | ✅ current |
+| **v1.8** | GitHub 直装通道（`github:wangqiqi/planrun`）· 运行时随源码提交（无 `prepare`）· `verify:links` · `verify:github` | ✅ |
+| **v1.9** | 闸门硬化（假通过改真拦截）· 跨平台启动器 · 三平台 CI · 核心技能可由模型加载 · 打包与运行时加固 | ✅ current |
 
 变更记录 → [CHANGELOG.md](CHANGELOG.md)
 
@@ -297,7 +298,7 @@ pnpm run typecheck
 | [naming.md](docs/zh/naming.md) | 命名与包坐标 |
 | [workflow-guard.md](docs/zh/workflow-guard.md) | Sprint 闸门（dsh-guard） |
 | [workflow-hooks-map.md](docs/zh/workflow-hooks-map.md) | Cursor hook → DSH 触点映射 |
-| [publish.md](docs/zh/publish.md) | npm 发布与用户安装 |
+| [publish.md](docs/zh/publish.md) | npm 发布流程（尚未执行）· GitHub 直装通道 |
 | [subagents.md](docs/zh/subagents.md) | ship · review · spike 预设与委派 |
 
 ---

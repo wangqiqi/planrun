@@ -1,9 +1,18 @@
-# Example user patch — append to $DSH_HOME/profiles/web/cordis.patch.yml
+# Example PlanRun profile.
 #
-# Or install the planrun profile:
-#   cp -r profiles/planrun $DSH_HOME/profiles/planrun
-#   dsh plugin --profile planrun install
+# `package.json` declares the `planrun` bundle in `dsh.profile.bundles`, and that
+# bundle's own patch (`packages/bundle-planrun/cordis.patch.yml`) already mounts
+# `planrun-skills` (@planrun/skill-provider) and `planrun-workflow`
+# (@planrun/workflow). This file therefore carries no rows on purpose: inserting
+# either id here double-mounts the plugin and breaks boot.
+#
+# The dependency is the pinned GitHub tag, because that is the channel that works
+# today: `registry.npmjs.org` returns 404 for `@planrun/bundle`,
+# `@planrun/workflow` and `@planrun/skill-provider`. The `github:` install packs
+# the whole repo, whose committed `packages/*/lib/*.js` needs no build step.
+# When the scope is published, `"planrun": "^1.9.0"` becomes equivalent.
+#
+#   cp -r profiles/planrun "$DSH_HOME/profiles/planrun"
+#   dsh plugin --profile planrun add "github:wangqiqi/planrun#v1.9.0"
 
-- insert:
-    - id: planrun-skills
-      name: '@planrun/skill-provider'
+[]

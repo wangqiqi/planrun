@@ -11,22 +11,20 @@ pnpm run build
 pnpm run verify
 ```
 
-开发时 `skill-provider` 的 devDependencies 指向同级目录 `deepseek-harness`。
+harness 相关包是**可选 peerDependencies**，由你的 DSH profile 提供而非随包捆绑：`skill-provider` 与 `workflow` 都声明 `@deepseek-ai/cordis` `^4.0.0`，`workflow` 另声明 `@deepseek-ai/dsh-agent` / `@deepseek-ai/dsh-llm`。构建不需要同级 `deepseek-harness` checkout（只有 `verify:dogfood` 需要，见 §5）。
 
 ## 2. 安装 bundle
 
-**已发布（推荐）**：
+**GitHub 直装、固定版本（推荐：当前唯一可用通道）** —— 无需 npm registry、无需构建授权（运行时已提交进仓库）：
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
+```
+
+**npm 通道（尚未发布）** —— `@planrun/bundle` 在 `registry.npmjs.org` 上返回 404，要等维护者发布该 scope 后才可用（步骤见 [publish.md](publish.md)）：
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
-```
-
-发布与维护说明 → [publish.md](publish.md)
-
-**GitHub 直装**（无需 npm registry、无需构建授权 —— 运行时已提交进仓库）：
-
-```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
 ```
 
 **本仓开发**（`pack-local.sh` 会先构建，再把 `workspace:^` 改写成 file: 依赖）：
@@ -44,7 +42,7 @@ dsh --profile web --dump-config | grep planrun-skills
 ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 ```
 
-`@planrun/bundle`（目录 `packages/bundle-planrun/`）会通过依赖把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
+npm 通道的 `@planrun/bundle`（目录 `packages/bundle-planrun/`）会通过依赖把 skill 包链进 profile；**不要**再手动改 `cordis.patch.yml` 插入同一插件（避免双挂载）。
 
 从 harness 仓开发时可用：
 
@@ -102,10 +100,10 @@ plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth
 
 ### Subagent 预设（v1.6）
 
-四个 `planrun*` preset 现在**随 `@planrun/bundle` 一起安装**（`packages/bundle-planrun/presets.patch.yml` 里的官方 `@deepseek-ai/dsh-agent-preset` 声明）：
+四个 `planrun*` preset 现在**随 bundle 一起安装**（`packages/bundle-planrun/presets.patch.yml` 里的官方 `@deepseek-ai/dsh-agent-preset` 声明）：
 
 ```sh
-dsh plugin --profile web add @planrun/bundle
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
 # 装完重启 dsh web → preset 选择器出现 planrun / planrun-review / planrun-spike / planrun-ship
 ```
 

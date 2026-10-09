@@ -1,6 +1,6 @@
 # Harness dogfood (structural)
 
-PlanRun **structural dogfood** validates bundle artifacts, 16 bundled skills, growth install, and the guard loop (`gate-check` · `plan-check` · `next-task`) against a local **deepseek-harness** checkout — **without** interactive `dsh web`.
+PlanRun **structural dogfood** validates bundle artifacts, 28 bundled skills, growth install, and the guard loop (`gate-check` · `plan-check` · `next-task`) against a local **deepseek-harness** checkout — **without** interactive `dsh web`.
 
 For interactive sessions, see [quickstart.md](quickstart.md) §6 (Chinese: [zh/quickstart](../zh/quickstart.md)).
 

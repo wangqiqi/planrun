@@ -28,7 +28,7 @@ features:
     details: config/roles.json 定义语气与人设；run-start hook 注入 Persona hint，协作有辨识度又不自报姓名。
   - icon: 📦
     title: "@planrun/bundle"
-    details: dsh plugin add @planrun/bundle 一键挂载 skill-provider + workflow hooks，与 turtle-ui 等同模式。
+    details: 一套 bundle 挂载 skill-provider + workflow hooks —— 当前用固定 tag 的 GitHub 直装，npm 发布待定（与 turtle-ui 等同模式）。
   - icon: 🌱
     title: ".dsh/growth/"
     details: plan · learn · archive 项目本地镜像 Super Cursor 的 .cursorGrowth/，通常 gitignore，可审计可沉淀。
@@ -50,7 +50,7 @@ features:
 
 | 场景 | 建议 |
 |------|------|
-| ✅ 使用 DeepSeek Harness，想要 plan → run → verify 纪律 | 安装 `@planrun/bundle` |
+| ✅ 使用 DeepSeek Harness，想要 plan → run → verify 纪律 | 安装 bundle —— `@planrun/bundle`，或 npm 未发布期间用 `github:wangqiqi/planrun#<tag>` |
 | ✅ 需要 bundled skills + personas，不想手抄 `.cursor/` | Cordis plugin + growth 模板 |
 | ⚠️ 只用 Cursor、不用 DSH | 用 Super Cursor 母版 `.cursor/` 安装 |
 | ❌ 需要独立桌面应用或零 Node | 超出范围 — 宿主为 DSH + Node |

@@ -8,11 +8,11 @@
       "bundles": [
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
-        "@planrun/bundle"
+        "planrun"
       ]
     }
   },
   "dependencies": {
-    "@planrun/bundle": "workspace:^"
+    "planrun": "github:wangqiqi/planrun#v1.9.0"
   }
 }

@@ -1,6 +1,6 @@
 # Workflow guard (dsh-guard)
 
-DSH-native replacement for Super Cursor `runner.sh` gates — bash + pnpm scripts, no Cordis plugin required.
+DSH-native replacement for Super Cursor `runner.sh` gates — POSIX shell + pnpm scripts, no Cordis plugin required.
 
 Implementation: `scripts/dsh-guard.sh` sources `scripts/plan-parse.sh` for plan HTML meta and TASK table parsing.
 
@@ -20,6 +20,9 @@ Direct CLI:
 ```sh
 bash scripts/dsh-guard.sh gate-check
 bash scripts/dsh-guard.sh task-verify TASK-001
+
+# no bash on PATH? run the same scripts through the portable launcher:
+node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 ```
 
 ## Plan file resolution

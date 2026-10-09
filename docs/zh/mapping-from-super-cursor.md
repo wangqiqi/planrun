@@ -43,7 +43,7 @@
 
 | Super Cursor | PlanRun |
 |--------------|---------|
-| 复制 `.cursor/` | `dsh plugin add @planrun/bundle` |
+| 复制 `.cursor/` | `dsh plugin add "github:wangqiqi/planrun#<tag>"`（npm：`@planrun/bundle`，尚未发布） |
 | `.cursorGrowth/` 种子 | `install-planrun.sh` → `.dsh/growth/` |
 
 ## 与 deepseek-harness 去重

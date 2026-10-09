@@ -1,6 +1,13 @@
 # Publishing PlanRun to npm
 
-PlanRun ships three public packages under the `@planrun` scope:
+> **Status: not published yet.** `registry.npmjs.org` returns HTTP 404 for
+> `@planrun/bundle`, `@planrun/workflow` and `@planrun/skill-provider` (a control
+> request for `yaml/latest` returns 200), and there is no npm token on the
+> maintainer machine. The **Maintainer publish** section below is the documented
+> procedure, **not** a record of a completed release. Users install from a pinned
+> GitHub tag today — see the **Git install** section below.
+
+PlanRun is packaged as three packages under the `@planrun` scope:
 
 | Package | Role |
 |---------|------|
@@ -15,7 +22,15 @@ Directory `packages/bundle-planrun/` maps to npm name **`@planrun/bundle`**.
 files must ship — `verify:publish` reads `dsh.bundle.patch` and asserts each declared
 file is in the tarball.
 
-## User install (one line)
+## User install
+
+**Today (works) — GitHub tag, pinned:**
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+```
+
+**After the npm scope is published (not yet — this command currently returns 404):**
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
@@ -24,6 +39,9 @@ dsh plugin --profile web add @planrun/bundle
 Restart the profile after bundle changes (`dsh web`).
 
 ## Maintainer publish
+
+> **Procedure only — not yet run for this scope.** No npm token exists on the
+> maintainer machine, so nothing below has been executed.
 
 ### Prerequisites
 
@@ -67,17 +85,17 @@ bash scripts/publish-packages.sh --pack-only
 composed rows, imports the skill provider, and boots headless. It needs a built
 `deepseek-harness` checkout (`DEEPSEEK_HARNESS_HOME`) and skips cleanly without one.
 
-`pnpm run verify:npm` covers the artifact users actually get: it installs
+`pnpm run verify:npm` covers the artifact users will get once the scope is published: it installs
 `@planrun/bundle@<repo version>` from the registry into a throwaway profile and boots it. Run it
-after publishing (`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.1` for any other
+after publishing (`bash scripts/verify-npm-install.sh @planrun/bundle@1.8.2` — pass any published
 version).
 
 ### Git install (supported alternative)
 
-The repository root is itself a DSH bundle, so the GitHub channel needs no npm publish:
+**This is the channel users can install today.** The repository root is itself a DSH bundle, so it needs no npm publish:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
 ```
 
 pnpm fetches sources and DSH mounts `./cordis.patch.yml` (relative rows become `file://` URLs)

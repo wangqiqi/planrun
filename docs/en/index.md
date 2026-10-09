@@ -28,7 +28,7 @@ features:
     details: config/roles.json defines voice and tone; run-start hook injects Persona hints without breaking verify discipline.
   - icon: 📦
     title: "@planrun/bundle"
-    details: dsh plugin add @planrun/bundle — one command for skill-provider + workflow hooks (same pattern as turtle-ui).
+    details: one bundle for skill-provider + workflow hooks — install from a pinned GitHub tag today, npm publish pending (same pattern as turtle-ui).
   - icon: 🌱
     title: ".dsh/growth/"
     details: plan · learn · archive mirror Super Cursor's .cursorGrowth/ — project-local, usually gitignored, auditable.
@@ -50,7 +50,7 @@ features:
 
 | Scenario | Recommendation |
 |----------|----------------|
-| ✅ DeepSeek Harness user wanting plan → run → verify discipline | Install `@planrun/bundle` |
+| ✅ DeepSeek Harness user wanting plan → run → verify discipline | Install the bundle — `@planrun/bundle`, or `github:wangqiqi/planrun#<tag>` while npm is unpublished |
 | ✅ Need bundled skills + personas without copying `.cursor/` | Cordis plugin + growth templates |
 | ⚠️ Cursor only, no DSH | Super Cursor mother `.cursor/` install |
 | ❌ Standalone desktop app or zero Node | Out of scope — host is DSH + Node |

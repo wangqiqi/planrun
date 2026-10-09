@@ -23,7 +23,7 @@ PlanRun fills that gap:
 | You get | It is not |
 |---|---|
 | 28 bundled **skills** + **12 personas** (Cordis plugin mount) | A fork of `deepseek-harness` |
-| **`@planrun/bundle`** — `dsh plugin add @planrun/bundle` installs it into a profile | Copy-pasted Cursor rules |
+| **`@planrun/bundle`** — one bundle installs 28 skills + 12 personas into a DSH profile (GitHub tag today; npm not published yet) | Copy-pasted Cursor rules |
 | **`.dsh/growth/`** — a project-local plan · learn · archive mirror | A replacement for DSH's built-in `/plan` plan mode |
 
 The daily rule: **approve one sprint-plan · run it in one go · stop only for decisions · tick ✅ only after verify**
@@ -47,9 +47,9 @@ The daily rule: **approve one sprint-plan · run it in one go · stop only for d
 
 | Item | Required for |
 |------|----------------|
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | npm / local `file:` bundle install |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) + `dsh` | GitHub / local `file:` bundle install |
 | Node `^22.19` or `>=24` | build · verify · guard scripts |
-| bash | `install-planrun.sh` · `dsh-guard.sh` |
+| A POSIX shell (`bash`/`sh`) | `install-planrun.sh` · `dsh-guard.sh` · the `pnpm run` verify/guard wrappers, which locate it via `scripts/run-bash.mjs` (Git for Windows or WSL on Windows) |
 
 Full table and three install paths → **[docs/en/install.md](docs/en/install.md)**.
 
@@ -59,8 +59,8 @@ Full table and three install paths → **[docs/en/install.md](docs/en/install.md
 |--|--------------------------------|--------------------------------------|
 | **Host** | DeepSeek Harness profile | Cursor IDE project |
 | **Plan file** | `.dsh/growth/plan.md` | `.cursorGrowth/plan.md` |
-| **Install** | `dsh plugin add @planrun/bundle` | `install-super-cursor.sh` → target `.cursor/` |
-| **This repo** | `packages/*` published to npm | `.cursor/` skills/rules (dev mother pack) |
+| **Install** | `dsh plugin add "github:wangqiqi/planrun#<tag>"` (npm: not published yet) | `install-super-cursor.sh` → target `.cursor/` |
+| **This repo** | `packages/*` — npm publish pending (GitHub tag works today) | `.cursor/` skills/rules (dev mother pack) |
 
 ---
 
@@ -131,23 +131,23 @@ pnpm run build
 pnpm run verify          # 28 skills + 12 personas + DSH adapter token checks
 ```
 
-While developing, `skill-provider`'s peers can point at a sibling `deepseek-harness` checkout.
+The harness packages (`@deepseek-ai/cordis` `^4.0.0`, plus `@deepseek-ai/dsh-agent` / `@deepseek-ai/dsh-llm` for `workflow`) are **optional peer dependencies** provided by your DSH profile — build/verify needs no sibling `deepseek-harness` checkout (only `verify:dogfood` does, via `DEEPSEEK_HARNESS_HOME`).
 
 ### 2 · Install the bundle (DSH profile)
 
-**Published (recommended)**:
+**From GitHub, pinned (works today — the only install channel that works)**. The repo root is itself a bundle and its runtime entry points are committed, so pnpm runs no build script at all:
+
+```sh
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+```
+
+**From npm (not published yet)**: `@planrun/bundle`, `@planrun/workflow` and `@planrun/skill-provider` are **not on the registry** — `registry.npmjs.org` returns 404 for all three, so the command below only works after the maintainer publishes the scope (see [publish.md](docs/en/publish.md)):
 
 ```sh
 dsh plugin --profile web add @planrun/bundle
 ```
 
-**From GitHub** (no npm registry, no build permission). The repo root is itself a bundle and its runtime entry points are committed, so pnpm runs no build script at all:
-
-```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
-```
-
-Pin a tag or a commit so a later push cannot change what you install. Install this channel **or** `@planrun/bundle`, never both. `pnpm run verify:lib` fails when the committed runtime drifts from `src/`.
+Pin a tag or a commit so a later push cannot change what you install. Install the GitHub channel **or** the npm one, never both. `pnpm run verify:lib` fails when the committed runtime drifts from `src/`.
 
 **From this repo** (`pack-local.sh` builds first, then rewrites the `workspace:^` deps to `file:`):
 
@@ -250,7 +250,7 @@ pnpm run verify:links     # every repo-relative markdown link resolves
 pnpm run verify:e2e       # build → install into a temp profile → boot (needs DEEPSEEK_HARNESS_HOME)
 pnpm run verify:lib       # committed packages/*/lib/*.js matches a fresh build
 pnpm run verify:github    # the github: channel end to end (needs DEEPSEEK_HARNESS_HOME)
-pnpm run verify:npm       # the published registry bundle end to end (after a release)
+pnpm run verify:npm       # the registry bundle end to end (only after an npm release — nothing is published yet)
 pnpm run verify:dogfood   # needs DEEPSEEK_HARNESS_HOME
 pnpm run gate-check    # when a plan exists
 pnpm run typecheck
@@ -283,10 +283,11 @@ present, that the root patch and preset declarations composed, and boots headles
 | **v1.2** | Harness structural dogfood (`verify:dogfood`) | ✅ |
 | **v1.3** | Deferred skills: `mcp` · `study` · `user-manual` · `test-report` | ✅ |
 | **v1.4** | **12 personas** + tool skills · 27 bundled | ✅ |
-| **v1.5** | npm publish · `@planrun/bundle` · guard cwd · project guard seed | ✅ |
+| **v1.5** | npm publish procedure · `@planrun/bundle` · guard cwd · project guard seed (the `@planrun` scope is **not** on the registry today — see install) | ✅ |
 | **v1.6** | subagent presets · `agents/*.md` · `docs/en/subagents.md` | ✅ |
 | **v1.7** | DSH API alignment (`agent/created` · source kind) · packaging fixes · presets as official bundle declarations · `verify:e2e` | ✅ |
-| **v1.8** | GitHub-install channel (`github:wangqiqi/planrun`) · self-contained `prepare` · `verify:links` · `verify:github` | ✅ current |
+| **v1.8** | GitHub-install channel (`github:wangqiqi/planrun`) · committed runtime (no `prepare`) · `verify:links` · `verify:github` | ✅ |
+| **v1.9** | Gate hardening (fail-closed plan gates) · cross-platform launcher · three-OS CI · model-invocable core skills · packaging + runtime hardening | ✅ current |
 
 Changelog → [CHANGELOG.md](CHANGELOG.md)
 
@@ -303,7 +304,7 @@ Changelog → [CHANGELOG.md](CHANGELOG.md)
 | [naming.md](docs/en/naming.md) | Naming and package coordinates |
 | [workflow-guard.md](docs/en/workflow-guard.md) | Sprint gate (dsh-guard) |
 | [workflow-hooks-map.md](docs/en/workflow-hooks-map.md) | Cursor hook → DSH touchpoint mapping |
-| [publish.md](docs/en/publish.md) | npm publishing and user install |
+| [publish.md](docs/en/publish.md) | npm publish procedure (not yet run) · GitHub install channel |
 | [subagents.md](docs/en/subagents.md) | ship · review · spike presets and delegation |
 
 ---

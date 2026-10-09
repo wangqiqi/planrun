@@ -1,6 +1,6 @@
 # Install PlanRun
 
-Anyone can use PlanRun: **MIT license**, **public** `@planrun/*` npm packages, no author account required. You still need the right **host** and **toolchain** (see below).
+Anyone can use PlanRun: **MIT license**, no author account required. The **GitHub tag** channel works today; the `@planrun/*` npm packages are **not published yet** (see [publish.md](publish.md)). You still need the right **host** and **toolchain** (see below).
 
 中文版 → [zh/install](../zh/install.md) · [zh/quickstart](../zh/quickstart.md)。Step-by-step → [quickstart.md](quickstart.md).
 
@@ -8,28 +8,33 @@ Anyone can use PlanRun: **MIT license**, **public** `@planrun/*` npm packages, n
 
 | You are | Use |
 |---------|-----|
-| **DSH user** — running agents in [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | **Path A** — `@planrun/bundle` (recommended) |
-| **DSH user without the npm registry** | **Path A′** — `dsh plugin add github:wangqiqi/planrun` |
+| **DSH user** — running agents in [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | **Path A′** — `dsh plugin add "github:wangqiqi/planrun#<tag>"` (recommended: the only channel that works today) |
+| **DSH user** — once the `@planrun/*` scope is on npm | **Path A** — `@planrun/bundle` (not published yet) |
 | **PlanRun contributor** — hacking this repo | **Path B** — clone + `file:` bundle |
 | **Super Cursor user** — Cursor-only, no DSH | **Path C** — install Super Cursor `.cursor/` into your project (separate repo / `install-super-cursor.sh`) |
 
-PlanRun **skills in npm** target **DSH**. The `.cursor/` tree in this repo is the **Super Cursor mother pack**; it is not published as `@planrun/bundle`.
+PlanRun's bundled **skills** target **DSH**. The `.cursor/` tree in this repo is the **Super Cursor mother pack**; it is not published as `@planrun/bundle`.
 
 ## Prerequisites
 
 | Requirement | Notes |
 |-------------|--------|
-| **DeepSeek Harness** + `dsh` CLI | Required for Path A/B |
+| **DeepSeek Harness** + `dsh` CLI | Required for Path A/A′/B |
 | **Node.js** `^22.19` or `>=24` | Build and guard scripts |
 | **pnpm** | Monorepo dev / verify |
 | **Git** | Target project for `.dsh/growth/` |
-| **bash** | `install-planrun.sh`, `dsh-guard.sh` |
+| **A POSIX shell** (`bash`/`sh`) | `install-planrun.sh`, `dsh-guard.sh`, and the `pnpm run` verify/guard scripts — `scripts/run-bash.mjs` locates a working shell (on Windows: Git for Windows or WSL). No `bash` on `PATH` required. |
 
 **Not required**: a specific Linux user, this maintainer's machine paths, or Cursor IDE.
 
 **Optional later**: `@planrun/workflow` hooks (included in the bundle), external tools (e.g. `mddocx` for **md2docx-export** skill). The four `planrun*` agent presets ship inside the bundle as `@deepseek-ai/dsh-agent-preset` declarations — no separate install step.
 
-## Path A — npm user (recommended)
+## Path A — npm user (not published yet)
+
+> **Status: unavailable today.** `registry.npmjs.org` returns HTTP 404 for
+> `@planrun/bundle`, `@planrun/workflow` and `@planrun/skill-provider`, and there
+> is no npm token on the maintainer machine. Use **Path A′** now; the steps below
+> start working once the scope is published ([publish.md](publish.md)).
 
 1. Install and configure DSH (see upstream harness docs).
 2. Add the bundle to your profile:
@@ -58,7 +63,7 @@ ls "$DSH_HOME/profiles/web/node_modules/@planrun/skill-provider/skills/"
 
 **Do not** manually insert the same plugin again in `cordis.patch.yml` — double mount breaks boot.
 
-## Path A′ — GitHub (no npm registry)
+## Path A′ — GitHub tag (recommended — works today)
 
 The repo root is itself a DSH bundle: `dsh.bundle.patch` points at `cordis.patch.yml` (rows use
 paths relative to the patch, which DSH turns into `file://` URLs) and at
@@ -66,7 +71,7 @@ paths relative to the patch, which DSH turns into `file://` URLs) and at
 published to npm:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#v1.8.0"
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
 ```
 
 A git install fetches sources only. The runtime entry points (`packages/*/lib/*.js`) are
@@ -77,7 +82,7 @@ without running any build script: no `allowBuilds` permission, no local toolchai
 `pnpm run verify:github` exercises the whole channel (`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#ref`
 tests an unpushed commit).
 
-Pin a tag (`#v1.8.0`) or a commit so a later push cannot change what you install. Verify as in
+Pin a tag (`#v1.9.0` is the current release) or a commit so a later push cannot change what you install. Verify as in
 Path A. Install **Path A or Path A′**, never both: two mounts of the same skill provider collide
 in the skill registry.
 
@@ -135,13 +140,14 @@ pnpm run task-verify
 pnpm run next-task
 ```
 
-Details → [workflow-guard.md](workflow-guard.md).
+`pnpm run` forwards to `scripts/run-bash.mjs`, which probes for a working POSIX shell first
+(see Prerequisites). Details → [workflow-guard.md](workflow-guard.md).
 
 ## Common errors
 
 | Symptom | Fix |
 |---------|-----|
-| `WORKSPACE_PKG_NOT_FOUND` on `dsh plugin add file:…` | Run `pnpm run build` in PlanRun repo; publish uses npm, not `workspace:^` in consumer profile |
+| `WORKSPACE_PKG_NOT_FOUND` on `dsh plugin add file:…` | Run `scripts/pack-local.sh` (it rewrites `workspace:^` to `file:` and stages `dist-local/`), or install the pinned GitHub tag |
 | Git install fails, pnpm mentions an ignored build script | The checkout must declare no `prepare`/`prepublish` script — this channel ships committed runtime. Run `pnpm run verify:lib` and commit `packages/*/lib/*.js` |
 | Bundle not visible in session | Restart DSH profile after plugin add |
 | `gate-check` BLOCK | Set `PLAN_APPROVED` in `.dsh/growth/plan.md` (or `.cursorGrowth/plan.md` when dogfooding PlanRun itself) |
@@ -149,6 +155,6 @@ Details → [workflow-guard.md](workflow-guard.md).
 
 ## Related
 
-- [publish.md](publish.md) — maintainer npm publish
+- [publish.md](publish.md) — maintainer npm publish (procedure; not yet run for this scope)
 - [subagents.md](subagents.md) — `planrun` presets
 - [workflow-hooks-map.md](workflow-hooks-map.md) — `@planrun/workflow`

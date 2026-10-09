@@ -1,6 +1,6 @@
 # Workflow guard（dsh-guard）
 
-Super Cursor `runner.sh` 闸门的 DSH 替代 — bash + pnpm 脚本，**不依赖** Cordis plugin。
+Super Cursor `runner.sh` 闸门的 DSH 替代 — POSIX shell + pnpm 脚本，**不依赖** Cordis plugin。
 
 实现：`scripts/dsh-guard.sh` + `scripts/plan-parse.sh`（解析 plan HTML 元数据与 TASK 表）。
 
@@ -18,6 +18,9 @@ Super Cursor `runner.sh` 闸门的 DSH 替代 — bash + pnpm 脚本，**不依�
 ```sh
 bash scripts/dsh-guard.sh gate-check
 bash scripts/dsh-guard.sh task-verify TASK-001
+
+# PATH 上没有 bash？用可移植启动器跑同样的脚本：
+node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 ```
 
 ## plan 路径解析
