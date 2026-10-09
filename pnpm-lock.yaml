@@ -59,6 +59,9 @@ importers:
       '@deepseek-ai/dsh-llm':
         specifier: '>=0.0.1-0'
         version: 0.0.1-rc.1(@deepseek-ai/cordis@4.0.2)(@deepseek-ai/dsh-attachment@0.0.1-rc.1(@deepseek-ai/cordis@4.0.2)(@deepseek-ai/dsh-brand@0.0.1-rc.1(@deepseek-ai/cordis@4.0.2)))(@deepseek-ai/dsh-brand@0.0.1-rc.1(@deepseek-ai/cordis@4.0.2))(@deepseek-ai/dsh-timeout@0.0.1-rc.1(@deepseek-ai/cordis@4.0.2))
+      '@planrun/skill-provider':
+        specifier: workspace:^
+        version: link:../skill-provider
     devDependencies:
       '@types/node':
         specifier: ^22.19.0

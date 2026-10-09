@@ -16,12 +16,26 @@ function copyTree(src: string, dest: string): void {
   }
 }
 
-/** Resolve PlanRun repo root (templates/growth). */
+/** Package root of @planrun/workflow: `…/lib/` → `…/`. */
+const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url))
+
+/**
+ * Resolve the directory that holds `templates/growth`.
+ *
+ * Two layouts must work:
+ * - repo / `github:` channel — the package sits at `<repo>/packages/workflow`, so
+ *   the templates are three levels up from `lib/`;
+ * - npm install — the build copies `templates/growth` into the package itself.
+ *
+ * The old single `../../..` candidate only matched the first, so a registry
+ * install silently never seeded `.dsh/growth/plan.md`.
+ */
 export function resolvePlanrunHome(explicit?: string): string | undefined {
   const candidates = [
     explicit,
     process.env.PLANRUN_HOME,
-    join(fileURLToPath(new URL('.', import.meta.url)), '../../..'),
+    PACKAGE_ROOT,
+    join(PACKAGE_ROOT, '..', '..'),
   ].filter(Boolean) as string[]
   for (const root of candidates) {
     if (existsSync(join(root, 'templates/growth'))) return root

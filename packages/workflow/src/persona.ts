@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolvePlanrunHome } from './growth.js'
@@ -48,6 +49,22 @@ export type ResolvePersonaResult =
 
 const WORKFLOW_PKG = fileURLToPath(new URL('.', import.meta.url))
 
+/**
+ * Resolve the bundled catalog through Node's own resolver.
+ *
+ * The previous sibling-path guess (`../../skill-provider/config/roles.json`)
+ * only works when both scoped packages sit side by side — not under pnpm's
+ * isolated layout — and the failure was silent (no persona hint, no error).
+ * `@planrun/skill-provider` declares the subpath export for this file.
+ */
+function resolvePackagedRolesPath(): string | undefined {
+  try {
+    return createRequire(import.meta.url).resolve('@planrun/skill-provider/config/roles.json')
+  } catch {
+    return undefined
+  }
+}
+
 function walkUpForFile(start: string, relative: string): string | undefined {
   let dir = start
   while (dir !== dirname(dir)) {
@@ -63,6 +80,7 @@ export function resolveRolesPath(planrunHome?: string): string | undefined {
   const home = resolvePlanrunHome(planrunHome)
   const candidates = [
     home ? join(home, 'packages/skill-provider/config/roles.json') : undefined,
+    resolvePackagedRolesPath(),
     join(WORKFLOW_PKG, '../../skill-provider/config/roles.json'),
     walkUpForFile(process.cwd(), 'node_modules/@planrun/skill-provider/config/roles.json'),
   ].filter(Boolean) as string[]
