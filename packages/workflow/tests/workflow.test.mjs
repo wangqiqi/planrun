@@ -23,7 +23,9 @@ test('ensureGrowth creates plan.md from templates', () => {
   assert.ok(planrunHome)
   const result = ensureGrowth(root, planrunHome)
   assert.equal(result.created, true)
-  assert.ok(result.growthDir.endsWith('.dsh/growth'))
+  // Windows joins with a backslash: comparing against a POSIX literal made this
+  // test fail on every Windows checkout.
+  assert.ok(result.growthDir.endsWith(join('.dsh', 'growth')), result.growthDir)
   rmSync(root, { recursive: true, force: true })
 })
 
@@ -71,8 +73,33 @@ test('buildRunStopSteer chains to next task', () => {
   rmSync(dir, { recursive: true, force: true })
 })
 
-test('buildPersonaStartContext uses dashu by default', () => {
-  const root = mkdtempSync(join(tmpdir(), 'planrun-persona-'))
+test('the (none) placeholder is not an approval', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'planrun-none-'))
+  const planPath = join(dir, 'plan.md')
+  writeFileSync(
+    planPath,
+    `<!-- PLANNING: false -->
+<!-- PLAN_APPROVED: (none) -->
+<!-- ACTIVE: TASK-001 -->
+| TASK-001 | a | P0 | ⬜ | ok | x |
+`,
+  )
+  const snap = loadPlanSnapshot(planPath)
+  assert.ok(snap)
+  assert.equal(snap.gate, 'NO_APPROVAL', '(none) must not satisfy the run gate')
+  assert.equal(snap.active, 'TASK-001')
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('the shipped growth template does not pass the run gate', () => {
+  const planrunHome = resolvePlanrunHome(join(import.meta.dirname, '../../..'))
+  assert.ok(planrunHome)
+  const snap = loadPlanSnapshot(join(planrunHome, 'templates/growth/plan.md'))
+  assert.ok(snap)
+  assert.notEqual(snap.gate, 'OK')
+})
+
+test('buildPersonaStartContext uses dashu by default', () => {  const root = mkdtempSync(join(tmpdir(), 'planrun-persona-'))
   const planrunHome = resolvePlanrunHome(join(import.meta.dirname, '../../..'))
   assert.ok(planrunHome)
   const hint = buildPersonaStartContext(root, planrunHome)

@@ -22,6 +22,16 @@ function meta(content: string, key: string): string {
   return match?.[1]?.trim() ?? ''
 }
 
+/**
+ * `(none)` is the placeholder the shipped plan templates carry, and it is a
+ * non-empty string, so a gate that only tests emptiness accepted it as a
+ * written approval date. Treat it as unset everywhere.
+ */
+function metaValue(content: string, key: string): string {
+  const value = meta(content, key)
+  return value === '(none)' ? '' : value
+}
+
 function shouldSkip(id: string): boolean {
   return SKIP_PREFIXES.some((prefix) => id.startsWith(prefix))
 }
@@ -130,20 +140,19 @@ export function loadPlanSnapshot(planPath: string): PlanSnapshot | undefined {
   if (!existsSync(planPath)) return undefined
   const content = readFileSync(planPath, 'utf8')
   const planning = meta(content, 'PLANNING') === 'true'
-  const planApproved = meta(content, 'PLAN_APPROVED')
+  const planApproved = metaValue(content, 'PLAN_APPROVED')
   const autonomous = meta(content, 'AUTONOMOUS') === 'true'
   const sprint = meta(content, 'SPRINT')
-  let active = meta(content, 'ACTIVE')
-  if (!active || active === '(none)') {
+  let active = metaValue(content, 'ACTIVE')
+  if (!active) {
     const activeRow = content.match(/\| (?:ACTIVE|🔧) \|/)
     if (activeRow) {
       const line = content.split('\n').find((l) => l.includes('| ACTIVE |') || l.includes('| 🔧 |'))
       active = line?.split('|')[1]?.replace(/\*/g, '').trim() ?? ''
     }
   }
-  if (active === '(none)') active = ''
   const gate = planning ? 'PLANNING' : planApproved ? 'OK' : 'NO_APPROVAL'
-  const verify = meta(content, 'VERIFY') || './scripts/verify-planrun.sh'
+  const verify = metaValue(content, 'VERIFY') || './scripts/verify-planrun.sh'
   const maxLoops = Number.parseInt(meta(content, 'MAX_LOOPS') || '15', 10)
   return {
     path: planPath,

@@ -6,12 +6,23 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SC_SKIP_PREFIXES="${SC_SKIP_PREFIXES:-REV- SPIKE- DOC-}"
 HEURISTICS_ENABLED="${DSH_GUARD_HEURISTICS:-true}"
 FALLBACK_VERIFY="${DSH_GUARD_FALLBACK_VERIFY:-}"
+# `eval` runs text taken from the plan file, so it is a local code-execution
+# surface. Keep it on by default (existing plans rely on it) but make it a
+# documented switch, and always echo what is about to run.
+EXEC_ENABLED="${DSH_GUARD_EXEC:-true}"
 
 resolve_plan_file() {
-  local candidate dir
+  local candidate dir plan_env
   if [[ -n "${DSH_GROWTH_PLAN:-}" ]]; then
-    if [[ -f "${DSH_GROWTH_PLAN}" ]]; then
-      echo "$(cd "$(dirname "${DSH_GROWTH_PLAN}")" && pwd)/$(basename "${DSH_GROWTH_PLAN}")"
+    plan_env="${DSH_GROWTH_PLAN}"
+    # GNU dirname/basename split on "/" only: a Windows-style value such as
+    # E:\repo\.dsh\growth\plan.md produced "<cwd>/E:\repo\...plan.md" and the
+    # guard then reported "plan 不存在" for a file that exists.
+    if command -v cygpath >/dev/null 2>&1; then
+      plan_env="$(cygpath -u "$plan_env" 2>/dev/null || printf '%s' "$plan_env")"
+    fi
+    if [[ -f "$plan_env" ]]; then
+      echo "$(cd "$(dirname "$plan_env")" && pwd)/$(basename "$plan_env")"
       return 0
     fi
     echo "FAIL: DSH_GROWTH_PLAN 不存在: ${DSH_GROWTH_PLAN}" >&2
@@ -62,6 +73,16 @@ source "$ROOT/scripts/plan-parse.sh" "$PLAN"
 
 cmd="${1:-status}"
 
+# Commands that only read the plan used to fall through to plan-parse.sh with an
+# empty path, where `PLAN_FILE="${1:-plan.md}"` silently parsed a stray
+# ./plan.md from the cwd. Refuse instead.
+require_plan() {
+  if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
+    echo "FAIL: plan 不存在（.dsh/growth/plan.md 或 .cursorGrowth/plan.md 或 DSH_GROWTH_PLAN）" >&2
+    return 1
+  fi
+}
+
 gate_check() {
   local reason
   if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
@@ -93,7 +114,7 @@ gate_check() {
 }
 
 plan_check() {
-  local issues=0
+  local issues=0 fails=0
   echo "=== dsh-guard plan-check ==="
   echo "plan: ${PLAN:-（未找到）}"
   if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
@@ -126,7 +147,7 @@ plan_check() {
     echo "INFO: PLANNING=true — 仅 sprint-plan"
   elif [[ -z "$(plan_plan_approved)" ]]; then
     echo "FAIL: <!-- PLAN_APPROVED --> 未设置（run 硬闸门）"
-    issues=$((issues + 1))
+    fails=$((fails + 1))
   fi
   if ! grep -qE '^\*\*(执行顺序|Order)\*\*' "$PLAN" 2>/dev/null; then
     echo "WARN: 缺 **执行顺序** 行（NEXT 回退靠表序）"
@@ -166,7 +187,7 @@ plan_check() {
   vmeta="$(plan_verify)"
   if [[ "$vmeta" == *"dsh-guard"* && "$vmeta" == *"verify"* ]]; then
     echo "FAIL: <!-- VERIFY --> 不得为 dsh-guard verify（无限递归）；应写 pnpm run verify 或 ./scripts/verify-planrun.sh"
-    issues=$((issues + 1))
+    fails=$((fails + 1))
   elif [[ "$vmeta" != *" "* && "$vmeta" == ./* ]]; then
     vpath="${vmeta#./}"
     if [[ ! -f "$ROOT/$vpath" ]]; then
@@ -174,12 +195,15 @@ plan_check() {
       issues=$((issues + 1))
     fi
   fi
-  if [[ "$issues" -eq 0 ]]; then
+  # `plan-check` is the documented handoff gate (run skill, install docs), so a
+  # hard FAIL must be non-zero. WARN stays advisory so a healthy-but-untidy plan
+  # can still hand off.
+  if [[ "$fails" -eq 0 && "$issues" -eq 0 ]]; then
     echo "OK: handoff 就绪"
     return 0
   fi
-  echo "CHECK: ${issues} 项待补齐"
-  return 0
+  echo "CHECK: ${fails} 项阻断 · ${issues} 项待补齐"
+  [[ "$fails" -eq 0 ]]
 }
 
 run_fallback_verify() {
@@ -199,12 +223,41 @@ run_fallback_verify() {
     eval "$verify_cmd"
     return $?
   fi
-  return 1
+  # 2 = nothing to run, distinct from 1 = a fallback ran and failed.
+  return 2
+}
+
+# The template writes acceptance commands wrapped in backticks (`` `pnpm run
+# verify` ``), which never matched the raw-command prefix below and silently
+# fell through to the heuristic fallback.
+strip_backticks() {
+  local value="$1"
+  value="${value#"${value%%[![:space:]]*}"}"
+  value="${value%"${value##*[![:space:]]}"}"
+  if [[ ${#value} -ge 2 && "$value" == '`'*'`' ]]; then
+    value="${value#\`}"
+    value="${value%\`}"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+  fi
+  printf '%s' "$value"
+}
+
+run_acceptance() {
+  local command="$1"
+  if [[ "$EXEC_ENABLED" != "true" ]]; then
+    echo "SKIP: DSH_GUARD_EXEC=$EXEC_ENABLED — 不执行验收命令: $command"
+    return 0
+  fi
+  echo "==> Running acceptance command: $command"
+  cd "$ROOT"
+  # shellcheck disable=SC2086
+  eval "$command"
 }
 
 task_verify() {
   local id="${1:-$(plan_active)}"
-  local acc loc
+  local acc loc acc_cmd rc
   if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
     echo "FAIL: plan 不存在" >&2
     return 1
@@ -213,25 +266,22 @@ task_verify() {
     echo "FAIL: 无 ACTIVE 任务 ID" >&2
     return 1
   fi
-  acc="$(plan_task_acceptance "$id")"
-  loc="$(plan_task_landing "$id")"
   echo "=== dsh-guard task-verify: ${id} ==="
   echo "plan: $PLAN"
+  # A missing row used to abort the whole guard with exit 1 and zero output,
+  # because the lookup pipeline ran under `set -euo pipefail`.
+  if ! plan_task_has_row "$id"; then
+    echo "FAIL: plan 里没有 ${id} 这一行（检查 <!-- ACTIVE --> / NEXT 是否与表格一致）" >&2
+    return 1
+  fi
+  acc="$(plan_task_acceptance "$id")"
+  loc="$(plan_task_landing "$id")"
   echo "验收: ${acc}"
   echo "落点: ${loc}"
 
-  if [[ "$acc" =~ ^(\./|cd |npm |pnpm |npx |pytest |grep |cargo |go test|make |bash ) ]]; then
-    echo "==> Running acceptance command"
-    cd "$ROOT"
-    # shellcheck disable=SC2086
-    eval "$acc"
-    return $?
-  fi
-
-  if [[ "$acc" == grep* ]]; then
-    cd "$ROOT"
-    # shellcheck disable=SC2086
-    eval "$acc"
+  acc_cmd="$(strip_backticks "$acc")"
+  if [[ "$acc_cmd" =~ ^(\./|cd |npm |pnpm |npx |pytest |grep |cargo |go test|make |bash ) ]]; then
+    run_acceptance "$acc_cmd"
     return $?
   fi
 
@@ -240,13 +290,20 @@ task_verify() {
     return 0
   fi
 
+  # A failing fallback verify used to be swallowed and reported as SKIP/exit 0,
+  # which turned "verify never ran" into "verify passed".
   if run_fallback_verify; then
     return 0
+  else
+    rc=$?
   fi
-
-  echo "SKIP: 验收列为描述性文字，请 Agent 按列手动执行；打版前须跑全量 VERIFY"
-  echo "TIP: plan 验收列优先写 pnpm run verify / bash scripts/... 等可执行命令"
-  return 0
+  if [[ "$rc" -eq 2 ]]; then
+    echo "SKIP: 验收列为描述性文字，且没有可跑的回退脚本；请 Agent 按列手动执行"
+    echo "TIP: plan 验收列优先写 pnpm run verify / bash scripts/... 等可执行命令"
+    return 0
+  fi
+  echo "FAIL: 回退校验失败（exit ${rc}）—— 验收未通过" >&2
+  return "$rc"
 }
 
 print_status() {
@@ -280,6 +337,10 @@ run_verify() {
   if [[ "$verify_cmd" == *"dsh-guard"* && "$verify_cmd" == *"verify"* ]]; then
     verify_cmd="$FALLBACK_VERIFY"
   fi
+  if [[ "$EXEC_ENABLED" != "true" ]]; then
+    echo "SKIP: DSH_GUARD_EXEC=$EXEC_ENABLED — 不执行 VERIFY: $verify_cmd"
+    return 0
+  fi
   echo "==> Full VERIFY: $verify_cmd"
   cd "$ROOT"
   # shellcheck disable=SC2086
@@ -300,12 +361,15 @@ case "$cmd" in
     gate_check
     ;;
   next-task)
+    require_plan || exit 1
     plan_next_task
     ;;
   active)
+    require_plan || exit 1
     plan_active
     ;;
   pending)
+    require_plan || exit 1
     plan_pending_count
     ;;
   plan-check)
@@ -333,6 +397,7 @@ Plan 路径（优先级）:
   DSH_GROWTH_PLAN          显式 plan 路径
   DSH_GUARD_HEURISTICS     true（默认）| false
   DSH_GUARD_FALLBACK_VERIFY  描述性验收回退脚本（默认 ./scripts/verify-planrun.sh）
+  DSH_GUARD_EXEC           true（默认）| false；false 时只打印验收/VERIFY 命令而不执行
 EOF
     ;;
   *)

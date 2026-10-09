@@ -22,14 +22,31 @@ plan_meta() {
   grep -E "<!-- ${key}:" "$PLAN_FILE" 2>/dev/null | head -1 | sed -E "s/.*<!-- ${key}:[[:space:]]*([^>]+)[[:space:]]*-->.*/\1/" | sed 's/[[:space:]]*$//' || true
 }
 
+# The shipped plan templates carry `(none)` as a placeholder, and `(none)` is a
+# non-empty string. A gate that only tests emptiness therefore treats a written
+# date as optional. Every sentinel-capable key goes through this normalizer.
+plan_meta_value() {
+  local value
+  value="$(plan_meta "$1")"
+  if [[ "$value" == "(none)" ]]; then
+    echo ""
+  else
+    echo "$value"
+  fi
+}
+
 plan_pending_count() {
-  grep -c '| ⬜ |' "$PLAN_FILE" 2>/dev/null || echo "0"
+  # `grep -c` already prints 0 on no match (and exits 1); appending another
+  # `echo 0` made this print "0\n0".
+  local count
+  count="$(grep -c '| ⬜ |' "$PLAN_FILE" 2>/dev/null || true)"
+  echo "${count:-0}"
 }
 
 plan_active() {
   local meta
-  meta="$(plan_meta "ACTIVE")"
-  if [[ -n "$meta" && "$meta" != "(none)" ]]; then
+  meta="$(plan_meta_value "ACTIVE")"
+  if [[ -n "$meta" ]]; then
     echo "$meta"
     return 0
   fi
@@ -40,7 +57,7 @@ plan_active() {
 
 plan_verify() {
   local v
-  v="$(plan_meta "VERIFY")"
+  v="$(plan_meta_value "VERIFY")"
   if [[ -n "$v" ]]; then
     echo "$v"
   else
@@ -77,7 +94,10 @@ plan_sprint_goal_ritual_only() {
   goal="$(plan_sprint_goal_text)"
   [[ -z "$goal" ]] && return 1
   lower="$(printf '%s' "$goal" | tr '[:upper:]' '[:lower:]')"
-  if ! printf '%s' "$lower" | grep -qiE '(打版|发版|release|打[[:space:]]*tag|打tag|merge|合并|开[[:space:]]*pr|changelog|归档|verify|验收|commit|提交|push|发版)'; then
+  # Only a goal that *opens* with an exit action is a ritual sprint. The shipped
+  # template Goal names "verify-only" as a counter-example, so an unanchored
+  # token list warned on a pristine install.
+  if ! printf '%s' "$lower" | grep -qE '^[[:space:]]*(打版|发版|release|打[[:space:]]*tag|打tag|merge|合并|开[[:space:]]*pr|changelog|归档|verify|验收|commit|提交|push)'; then
     return 1
   fi
   if printf '%s' "$lower" | grep -qiE '(实现|模块|功能|接入|引擎|插件|重构|迁移|交付|mvp|api|服务|client|skill|tts|long|架构|接口)'; then
@@ -87,7 +107,7 @@ plan_sprint_goal_ritual_only() {
 }
 
 plan_plan_approved() {
-  plan_meta "PLAN_APPROVED"
+  plan_meta_value "PLAN_APPROVED"
 }
 
 plan_max_loops() {
@@ -103,10 +123,39 @@ plan_max_loops() {
 plan_task_row_field() {
   local id="$1"
   local col="$2"
-  grep -E "\| \*\*${id}\*\* \||\| ${id} \|" "$PLAN_FILE" 2>/dev/null | head -1 | awk -F'|' -v c="$col" '{
-    gsub(/^[ \t]+|[ \t]+$/, "", $c);
-    print $c;
-  }'
+  if [[ ! -f "$PLAN_FILE" ]]; then
+    echo ""
+    return 0
+  fi
+  # Match the trimmed ID cell instead of interpolating the id into a `grep -E`
+  # pattern: a padded cell (`| TASK-01  |`) or a metacharacter used to miss, and
+  # the missing `|| true` on the old pipeline killed the whole guard silently.
+  awk -F'|' -v id="$id" -v c="$col" '
+    {
+      cell = $2
+      gsub(/^[ \t*]+|[ \t*]+$/, "", cell)
+      if (cell != id) next
+      value = $c
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      print value
+      exit
+    }
+  ' "$PLAN_FILE" 2>/dev/null || true
+}
+
+plan_task_has_row() {
+  local id="$1" found
+  if [[ ! -f "$PLAN_FILE" ]]; then
+    return 1
+  fi
+  found="$(awk -F'|' -v id="$1" '
+    {
+      cell = $2
+      gsub(/^[ \t*]+|[ \t*]+$/, "", cell)
+      if (cell == id) { print "yes"; exit }
+    }
+  ' "$PLAN_FILE" 2>/dev/null || true)"
+  [[ "$found" == "yes" ]]
 }
 
 plan_task_status() {
@@ -136,7 +185,7 @@ plan_task_landing() {
 }
 
 plan_last_done() {
-  plan_meta "LAST_DONE"
+  plan_meta_value "LAST_DONE"
 }
 
 plan_sprint_status() {
@@ -161,15 +210,16 @@ plan_done_when_unchecked() {
     return 0
   fi
   awk '
+    /^\*\*Done when/ { in_done=1; next }
     /^### Done when/ { in_done=1; next }
-    /^### / && in_done { exit }
+    in_done && (/^### / || /^\*\*[A-Za-z]/) { exit }
     in_done && /^- \[ \]/ { count++ }
     END { print count+0 }
   ' "$PLAN_FILE" 2>/dev/null || echo "0"
 }
 
 plan_next_meta() {
-  plan_meta "NEXT"
+  plan_meta_value "NEXT"
 }
 
 plan_resolve_task_id() {
@@ -198,8 +248,10 @@ plan_order_line() {
 
 plan_order_tokens() {
   local line="$1"
-  echo "$line" | sed -E 's/^\*\*(执行顺序|Order)\*\*[：:][[:space:]]*//' \
-    | tr '→' '\n' \
+  # `tr '→' '\n'` is byte-oriented on GNU tr, so the 3-byte arrow became three
+  # newlines; only the empty-token skip below kept the parse alive.
+  printf '%s\n' "$line" | sed -E 's/^\*\*(执行顺序|Order)\*\*[：:][[:space:]]*//' \
+    | sed -E 's/→/\n/g' \
     | sed -E 's/`([^`]+)`/\1/g;s/^[[:space:]]+//;s/[[:space:]]+$//'
 }
 
@@ -217,6 +269,11 @@ plan_next_in_order() {
     [[ -z "$token" ]] && continue
     resolved="$(plan_resolve_task_id "$token" "$sprint")"
     [[ -z "$resolved" ]] && continue
+    # The shell twin used to skip this filter, so SPIKE-/DOC-/REV- rows in the
+    # order line could be handed out as the next task (the TS parser skips them).
+    if plan_id_should_skip "$resolved"; then
+      continue
+    fi
     if [[ "$found" -eq 1 ]]; then
       status="$(plan_task_status "$resolved")"
       if [[ "$status" == "⬜" || "$status" == "🔧" ]]; then
