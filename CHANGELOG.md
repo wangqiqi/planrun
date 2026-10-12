@@ -36,6 +36,18 @@
   for the required config keys of every tracked `@deepseek-ai/*` plugin, so the next such
   drift fails the build instead of the UI.
 
+- **The macOS verify job and the docs workflow went red on every push.** Three causes, all of
+  them silent-failure shaped. `guard-fixtures.sh` interpolated a variable directly before a
+  full-width character (`$RC）`), and bash 3.2 folds those bytes into the variable name, so
+  `set -u` killed the fixture matrix on macOS only. `planrun-manifest.mjs` and
+  `planrun-doctor.mjs` decided whether they had been invoked as a CLI with a path `resolve()`
+  comparison; the ESM loader canonicalizes module URLs while `process.argv[1]` keeps the path
+  as typed, so behind a symlink (`/var` → `/private/var` on macOS) both exited 0 having done
+  nothing — the install wrote no manifest and `doctor` reported a clean project it had never
+  inspected. They now compare real paths, and a `path-canon` fixture covers it. Separately,
+  `docs.yml` pinned pnpm 9 while the root manifest requires pnpm `>= 10`, so `pnpm install`
+  aborted before VitePress ever ran; it now pins pnpm 11 like `verify.yml`.
+
 ## [1.9.0] - 2026-10-09
 
 ### Fixed
