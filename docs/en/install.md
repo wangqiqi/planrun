@@ -151,6 +151,7 @@ pnpm run doctor        # install drift check: guard files · template · package
 | `WORKSPACE_PKG_NOT_FOUND` on `dsh plugin add file:…` | Run `scripts/pack-local.sh` (it rewrites `workspace:^` to `file:` and stages `dist-local/`), or install the pinned GitHub tag |
 | Git install fails, pnpm mentions an ignored build script | The checkout must declare no `prepare`/`prepublish` script — this channel ships committed runtime. Run `pnpm run verify:lib` and commit `packages/*/lib/*.js` |
 | Bundle not visible in session | Restart DSH profile after plugin add |
+| Presets/skills still look stale after a bundle update | DSH does **not** watch the profile for file changes. Toggle the bundle off/on in **Settings → Built-in plugins** (in-process reload), or restart `dsh web`. Swapping the files is not enough — a running instance keeps the definitions it mounted, so a preset can stay on 「加载失败」 |
 | `gate-check` BLOCK | Set `PLAN_APPROVED` in `.dsh/growth/plan.md` (or `.cursorGrowth/plan.md` when dogfooding PlanRun itself) |
 | `doctor` FAIL: guard script drifted | Re-run `install-planrun.sh --here` (it records the new hashes), or copy `templates/growth/scripts/*` into `scripts/` |
 | `doctor` FAIL: package versions disagree | The DSH profile and the project were installed from different tags — align both, the FAIL line prints the exact command |

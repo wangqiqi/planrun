@@ -104,6 +104,7 @@ pnpm run doctor        # 版本漂移体检：guard 脚本 · 模板 · 包版�
 | `WORKSPACE_PKG_NOT_FOUND` | 跑 `scripts/pack-local.sh`（会把 `workspace:^` 改写成 `file:` 并输出到 `dist-local/`），或改用固定 tag 的 GitHub 直装 |
 | GitHub 安装失败、pnpm 提示 build script 被忽略 | 该通道不应声明 `prepare`/`prepublish`（运行时是提交进仓库的）；跑 `pnpm run verify:lib` 并把 `packages/*/lib/*.js` 提交 |
 | bundle 不可见 | `dsh plugin add` 后重启 profile |
+| 预设/技能/插件更新后界面还是旧的 | DSH **不监听** profile 文件变化。在 **设置 → 内置插件** 里对该 bundle 做一次**关/开**（触发 in-process reload），或重启 `dsh web`。只把文件换掉不够——运行中的实例仍持旧定义，例如预设会一直显示「加载失败」 |
 | `gate-check` BLOCK | `.dsh/growth/plan.md` 设 `PLAN_APPROVED` |
 | `doctor` FAIL：guard 脚本漂移 | 重跑 `install-planrun.sh --here`（会记录新 hash），或把 `templates/growth/scripts/*` 复制进 `scripts/` |
 | `doctor` FAIL：包版本不一致 | DSH profile 与项目装自不同 tag —— 对齐两边，FAIL 行会打印具体命令 |
