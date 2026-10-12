@@ -296,7 +296,7 @@ else
 fi
 
 echo "==> Checking workflow guard"
-for f in scripts/dsh-guard.sh scripts/plan-parse.sh scripts/planrun-manifest.mjs; do
+for f in scripts/dsh-guard.sh scripts/plan-parse.sh scripts/planrun-manifest.mjs scripts/planrun-doctor.mjs; do
   if [[ ! -f "$ROOT/$f" ]]; then
     echo "MISSING: $f"
     FAIL=1
@@ -306,7 +306,7 @@ for f in scripts/dsh-guard.sh scripts/plan-parse.sh scripts/planrun-manifest.mjs
 done
 # templates/growth/scripts/* is what lands in a user project; it used to be an
 # unmanaged byte-copy, so a guard fix could silently fail to reach an install.
-for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs; do
+for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs planrun-doctor.mjs; do
   if ! cmp -s "$ROOT/scripts/$f" "$ROOT/templates/growth/scripts/$f"; then
     echo "FAIL: templates/growth/scripts/$f drifted from scripts/$f — copy it over"
     FAIL=1
@@ -314,7 +314,7 @@ for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs; do
     echo "OK: template guard copy in sync ($f)"
   fi
 done
-for script in gate-check plan-check task-verify next-task; do
+for script in gate-check plan-check task-verify next-task doctor; do
   if ! grep -q "\"$script\"" "$ROOT/package.json"; then
     echo "MISSING: package.json script $script"
     FAIL=1

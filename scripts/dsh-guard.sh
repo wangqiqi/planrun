@@ -350,6 +350,22 @@ run_verify() {
   eval "$verify_cmd"
 }
 
+guard_doctor() {
+  # `doctor` lives in Node, not bash: it hashes files, parses JSON and scans
+  # node_modules — all portable there, all painful in POSIX shell.
+  local module="$ROOT/scripts/planrun-doctor.mjs"
+  if [[ ! -f "$module" ]]; then
+    echo "FAIL: 缺少 $module —— 重跑 install-planrun.sh --here 补齐 planrun-doctor.mjs / planrun-manifest.mjs" >&2
+    return 1
+  fi
+  if ! command -v node >/dev/null 2>&1; then
+    echo "FAIL: doctor 需要 node" >&2
+    return 2
+  fi
+  # --project first so an explicit user flag (parsed later) still wins.
+  node "$module" --project "$ROOT" "$@"
+}
+
 case "$cmd" in
   status)
     print_status
@@ -375,12 +391,16 @@ case "$cmd" in
     require_plan || exit 1
     plan_pending_count
     ;;
+  doctor)
+    shift
+    guard_doctor "$@"
+    ;;
   plan-check)
     plan_check
     ;;
   help|-h|--help)
     cat <<EOF
-用法: $0 [status|gate-check|task-verify|verify|plan-check|next-task|...]
+用法: $0 [status|gate-check|task-verify|verify|plan-check|next-task|doctor|...]
 
   status        Sprint 状态（默认）
   gate-check    run 硬闸门（PLANNING / PLAN_APPROVED）
@@ -388,6 +408,7 @@ case "$cmd" in
   verify        全量 VERIFY（打版前 / P0 闭合）
   plan-check    plan handoff 结构检查
   next-task     按执行顺序解析下一 ⬜ ID
+  doctor        版本漂移体检（guard 脚本 · 模板 schema · 包版本 · 清单）
   active        当前 ACTIVE 任务 ID
   pending       待办 ⬜ 数量
 

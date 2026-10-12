@@ -27,6 +27,7 @@ const guardScripts = {
   'plan-check': guard('plan-check'),
   'task-verify': guard('task-verify'),
   'next-task': guard('next-task'),
+  doctor: guard('doctor'),
   guard: guard('status'),
 }
 

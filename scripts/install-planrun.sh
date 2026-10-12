@@ -105,7 +105,7 @@ fi
 if [[ "$INSTALL_GUARD" == true ]]; then
   TARGET_SCRIPTS="$TARGET/scripts"
   mkdir -p "$TARGET_SCRIPTS"
-  for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs; do
+  for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs planrun-doctor.mjs; do
     src="$SOURCE/templates/growth/scripts/$f"
     dest="$TARGET_SCRIPTS/$f"
     if [[ ! -f "$dest" ]]; then
@@ -163,6 +163,7 @@ PlanRun 项目模板已安装到: $GROWTH
      pnpm run plan-check    # handoff 结构
      pnpm run task-verify   # 当前 ACTIVE 验收
      pnpm run next-task     # 下一待办 ID
+     pnpm run doctor        # 版本漂移体检（guard 脚本 · 模板 · 包版本 · 清单）
 
 文档: $SOURCE/docs/zh/quickstart.md · $SOURCE/docs/en/workflow-guard.md
 
