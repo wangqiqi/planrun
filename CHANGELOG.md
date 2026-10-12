@@ -26,6 +26,16 @@
   the TASK id and the field counts, and `task-verify` refuses to verify that row instead of
   guessing which column was meant. Covered by the `table-shape` guard fixtures.
 
+- **All four planrun agent presets showed 「加载失败」 in the DSH Web UI.** The
+  `@deepseek-ai/dsh-tool-fs-search` row omitted `sampleOverCapGlobResults`, which the plugin
+  declares as `z.boolean().required()` — no default. Every preset naming it therefore failed
+  to mount with `invalid config: $.sampleOverCapGlobResults missing required value`, and the
+  registry reported the whole preset as broken. The row now passes `false` (keep the
+  modification-time head page rather than sampling across top-level entries).
+  `pnpm run verify` gained `verify-preset-required-config.mjs`, which scans the preset sources
+  for the required config keys of every tracked `@deepseek-ai/*` plugin, so the next such
+  drift fails the build instead of the UI.
+
 ## [1.9.0] - 2026-10-09
 
 ### Fixed

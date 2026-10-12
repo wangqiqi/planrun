@@ -436,6 +436,11 @@ elif ! grep -q 'toolFilter' "$ROOT/presets/planrun/plugins.yml"; then
 else
   echo "OK: planrun delegation + toolFilter"
 fi
+# DSH rejects a preset row whose plugin config omits a required key at mount time
+# and then shows the whole preset as broken — all four planrun presets did.
+if ! node "$ROOT/scripts/verify-preset-required-config.mjs" "$ROOT"/presets/*/plugins.yml; then
+  FAIL=1
+fi
 if ! node "$ROOT/scripts/gen-presets.mjs" --check; then
   FAIL=1
 fi

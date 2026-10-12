@@ -49,6 +49,10 @@
 
           - id: tool-fs-search
             name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              # Required (no default) by the plugin; false keeps the modification-time head
+              # page instead of sampling across top-level entries.
+              sampleOverCapGlobResults: false
 
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
@@ -196,6 +200,10 @@
 
           - id: tool-fs-search
             name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              # Required (no default) by the plugin; false keeps the modification-time head
+              # page instead of sampling across top-level entries.
+              sampleOverCapGlobResults: false
 
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
@@ -237,6 +245,10 @@
 
           - id: tool-fs-search
             name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              # Required (no default) by the plugin; false keeps the modification-time head
+              # page instead of sampling across top-level entries.
+              sampleOverCapGlobResults: false
 
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
@@ -286,6 +298,10 @@
 
           - id: tool-fs-search
             name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              # Required (no default) by the plugin; false keeps the modification-time head
+              # page instead of sampling across top-level entries.
+              sampleOverCapGlobResults: false
 
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
