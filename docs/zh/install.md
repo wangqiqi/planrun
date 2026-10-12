@@ -92,6 +92,7 @@ pnpm run gate-check
 pnpm run plan-check
 pnpm run task-verify
 pnpm run next-task
+pnpm run doctor        # 版本漂移体检：guard 脚本 · 模板 · 包版本
 ```
 
 `pnpm run` 会转交 `scripts/run-bash.mjs`，由它先探测可用的 POSIX shell（见「前置条件」）。详见 [workflow-guard.md](workflow-guard.md)。
@@ -104,6 +105,8 @@ pnpm run next-task
 | GitHub 安装失败、pnpm 提示 build script 被忽略 | 该通道不应声明 `prepare`/`prepublish`（运行时是提交进仓库的）；跑 `pnpm run verify:lib` 并把 `packages/*/lib/*.js` 提交 |
 | bundle 不可见 | `dsh plugin add` 后重启 profile |
 | `gate-check` BLOCK | `.dsh/growth/plan.md` 设 `PLAN_APPROVED` |
+| `doctor` FAIL：guard 脚本漂移 | 重跑 `install-planrun.sh --here`（会记录新 hash），或把 `templates/growth/scripts/*` 复制进 `scripts/` |
+| `doctor` FAIL：包版本不一致 | DSH profile 与项目装自不同 tag —— 对齐两边，FAIL 行会打印具体命令 |
 
 ## 相关
 

@@ -70,6 +70,7 @@ pnpm run gate-check
 pnpm run plan-check
 pnpm run task-verify    # 任务收尾前
 pnpm run next-task      # 找下一项
+pnpm run doctor         # 版本漂移体检：guard 脚本 · 模板 · 包版本
 ```
 
 plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。

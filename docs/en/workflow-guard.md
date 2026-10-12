@@ -2,7 +2,7 @@
 
 DSH-native replacement for Super Cursor `runner.sh` gates — POSIX shell + pnpm scripts, no Cordis plugin required.
 
-Implementation: `scripts/dsh-guard.sh` sources `scripts/plan-parse.sh` for plan HTML meta and TASK table parsing.
+Implementation: `scripts/dsh-guard.sh` sources `scripts/plan-parse.sh` for plan HTML meta and TASK table parsing; `doctor` delegates to the Node modules `scripts/planrun-doctor.mjs` + `scripts/planrun-manifest.mjs`.
 
 ## Commands
 
@@ -12,6 +12,7 @@ Implementation: `scripts/dsh-guard.sh` sources `scripts/plan-parse.sh` for plan 
 | `pnpm run plan-check` | Handoff structure warnings (ACTIVE, 执行顺序, VERIFY, …) |
 | `pnpm run task-verify` | Run ACTIVE task acceptance (or heuristic fallback) |
 | `pnpm run next-task` | Next pending TASK ID from 执行顺序 / table |
+| `pnpm run doctor` | Install drift check — guard files · plan template · `@planrun/*` versions vs the version manifest |
 | `pnpm run guard` | Status summary (`dsh-guard.sh status`) |
 | `pnpm run verify` | Full structural verify (`verify-planrun.sh`) |
 
@@ -20,10 +21,26 @@ Direct CLI:
 ```sh
 bash scripts/dsh-guard.sh gate-check
 bash scripts/dsh-guard.sh task-verify TASK-001
+bash scripts/dsh-guard.sh doctor --json
 
 # no bash on PATH? run the same scripts through the portable launcher:
 node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 ```
+
+## Install drift check (`doctor`)
+
+`install-planrun.sh` writes `.dsh/growth/.planrun-manifest.json` (PlanRun version · guard sha256 · template schema · install time). `doctor` reads it back and reports four checks:
+
+| Check | Fails when |
+|-------|-----------|
+| `manifest` | manifest missing, unparsable, or written by another schema |
+| `guard-files` | a tracked `scripts/*` file was edited after install, or differs from the reference copy |
+| `plan-template` | recorded template schema is older than this build, `plan.md` is missing, or core HTML meta is missing |
+| `packages` | installed `planrun` / `@planrun/*` versions disagree with each other, with the project record, or with the reference build |
+
+Exit codes: **0** no drift · **1** drift (each FAIL prints a `FIX:` line) · **2** cannot determine (not a PlanRun project). A check with nothing to compare against is `SKIP`, never a fabricated failure — including the npm channel still being unpublished.
+
+Reference copy resolution order: `--expect-guard` → `--source` → `PLANRUN_HOME` → the manifest's `planrunSource` → the DSH profile package. Flags: `--json` (machine output), `--no-profile` (ignore profile packages), `--project <dir>`, `--reference-version x.y.z`.
 
 ## Plan file resolution
 

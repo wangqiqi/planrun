@@ -108,7 +108,7 @@ docs/                   # en/ · zh/ — VitePress 文档站
 | Agent presets | `presets/` → `presets.patch.yml` | 官方 `@deepseek-ai/dsh-agent-preset` 声明（由 `scripts/gen-presets.mjs` 生成） |
 | Growth 模板 | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
 | 安装脚本 | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
-| Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
+| Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` · `doctor` |
 
 Bundle 声明（`patch` 是**有序列表**，与官方 `dsh-web-app` 同模式）：
 
@@ -190,6 +190,7 @@ pnpm run gate-check    # PLAN_APPROVED + ACTIVE
 pnpm run plan-check    # handoff 结构
 pnpm run task-verify   # 当前 ACTIVE 验收
 pnpm run next-task     # 下一待办 TASK id
+pnpm run doctor        # 版本漂移：guard 脚本 · 模板 · 包版本
 ```
 
 plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGrowth/plan.md`）。详见 [docs/zh/workflow-guard.md](docs/zh/workflow-guard.md)。

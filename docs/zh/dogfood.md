@@ -39,7 +39,7 @@ pnpm run verify:dogfood
 3. Guard 循环 — `gate-check` · `plan-check` · `next-task`  
 4. Bundle 产物 — skill-provider · workflow · bundle `lib/`，以及 `cordis.patch.yml` 和生成的 `presets.patch.yml`  
 5. **28 skills** 磁盘清单 + `master/routes.md`  
-6. `install-planrun.sh` 在临时 git 根种子 `.dsh/growth/`
+6. `install-planrun.sh` 在临时 git 根种子 `.dsh/growth/` + 可用的版本清单（`.planrun-manifest.json`）
 
 ## 交互 dogfood（手动）
 

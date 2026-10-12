@@ -34,7 +34,7 @@ features:
     details: plan · learn · archive 项目本地镜像 Super Cursor 的 .cursorGrowth/，通常 gitignore，可审计可沉淀。
   - icon: 🚧
     title: Workflow guard
-    details: gate-check · plan-check · task-verify · next-task — Sprint 批准后才编码，验收绿才勾 ✅。
+    details: gate-check · plan-check · task-verify · next-task · doctor — Sprint 批准后才编码，验收绿才勾 ✅。
   - icon: 🔄
     title: Super Cursor 映射
     details: sprint-plan 对应 plan · ask_user_question 对应 AskQuestion · 完整对照见 mapping 文档。

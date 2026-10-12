@@ -138,6 +138,7 @@ pnpm run gate-check
 pnpm run plan-check
 pnpm run task-verify
 pnpm run next-task
+pnpm run doctor        # install drift check: guard files · template · package versions
 ```
 
 `pnpm run` forwards to `scripts/run-bash.mjs`, which probes for a working POSIX shell first
@@ -151,6 +152,8 @@ pnpm run next-task
 | Git install fails, pnpm mentions an ignored build script | The checkout must declare no `prepare`/`prepublish` script — this channel ships committed runtime. Run `pnpm run verify:lib` and commit `packages/*/lib/*.js` |
 | Bundle not visible in session | Restart DSH profile after plugin add |
 | `gate-check` BLOCK | Set `PLAN_APPROVED` in `.dsh/growth/plan.md` (or `.cursorGrowth/plan.md` when dogfooding PlanRun itself) |
+| `doctor` FAIL: guard script drifted | Re-run `install-planrun.sh --here` (it records the new hashes), or copy `templates/growth/scripts/*` into `scripts/` |
+| `doctor` FAIL: package versions disagree | The DSH profile and the project were installed from different tags — align both, the FAIL line prints the exact command |
 | Skills load but plan path wrong | PlanRun dev uses `.cursorGrowth/plan.md`; normal projects use `.dsh/growth/plan.md` |
 
 ## Related

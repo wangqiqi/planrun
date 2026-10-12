@@ -34,7 +34,7 @@ features:
     details: plan · learn · archive mirror Super Cursor's .cursorGrowth/ — project-local, usually gitignored, auditable.
   - icon: 🚧
     title: Workflow guard
-    details: gate-check · plan-check · task-verify · next-task — no coding before PLAN_APPROVED; no ✅ without verify.
+    details: gate-check · plan-check · task-verify · next-task · doctor — no coding before PLAN_APPROVED; no ✅ without verify.
   - icon: 🔄
     title: Super Cursor mapping
     details: sprint-plan ↔ plan · ask_user_question ↔ AskQuestion · full table in mapping docs.
