@@ -156,17 +156,22 @@ plan_check() {
     echo "WARN: 缺 **执行顺序** 行（NEXT 回退靠表序）"
     issues=$((issues + 1))
   fi
-  local line cols bad=0
-  while IFS= read -r line; do
-    [[ "$line" =~ \|[[:space:]]*(⬜|🔧)[[:space:]]*\| ]] || continue
-    cols="$(echo "$line" | awk -F'|' '{print NF}')"
-    if [[ "$cols" -lt 8 ]]; then
-      bad=$((bad + 1))
-    fi
-  done < <(grep -E '\| (⬜|🔧) \|' "$PLAN" 2>/dev/null || true)
-  if [[ "$bad" -gt 0 ]]; then
-    echo "WARN: ${bad} 行活跃任务可能缺「验收」或「落点」"
-    issues=$((issues + 1))
+  # A row whose field count differs from the header shifts every positional
+  # column ($5 status · $6 acceptance · $7 target). The old check only looked for
+  # *missing* columns (`NF < 8`), so one column *extra* — a bare `|` inside a
+  # cell, e.g. `docs/en|zh` — passed as healthy while task-verify silently ran
+  # the heuristic fallback instead of the acceptance. Hard FAIL: the acceptance
+  # cell cannot be trusted once the columns moved.
+  local shape_issues lineno task_id fields expected_cols
+  expected_cols="$(plan_table_columns)"
+  shape_issues="$(plan_table_shape_issues)"
+  if [[ -n "$shape_issues" ]]; then
+    while IFS=: read -r lineno task_id fields; do
+      [[ -z "$lineno" ]] && continue
+      echo "FAIL: TASK 表第 ${lineno} 行（${task_id}）字段数 ${fields} ≠ 表头 ${expected_cols}"
+      echo "      单元格里可能混进了裸 | —— 改用 {en,zh} 这类写法；列错位会让验收格不可信"
+      fails=$((fails + 1))
+    done <<<"$shape_issues"
   fi
   if plan_sprint_appears_closed; then
     local unchecked pending_tasks
@@ -275,6 +280,17 @@ task_verify() {
   # because the lookup pipeline ran under `set -euo pipefail`.
   if ! plan_task_has_row "$id"; then
     echo "FAIL: plan 里没有 ${id} 这一行（检查 <!-- ACTIVE --> / NEXT 是否与表格一致）" >&2
+    return 1
+  fi
+  # Fail closed on a shifted row. Reading $6 positionally would hand back the
+  # status cell as the acceptance, fail the executable-command test, and drop
+  # through to the heuristic fallback — reporting "verified" for an acceptance
+  # that never ran (exactly what a bare `|` inside a cell did in SPRINT-01).
+  local shape_issue
+  shape_issue="$(plan_table_shape_issues | awk -F: -v id="$id" '$2 == id { print; exit }')"
+  if [[ -n "$shape_issue" ]]; then
+    echo "FAIL: ${id} 所在行字段数与表头不符（${shape_issue}）—— TASK 表列已错位，验收格不可信" >&2
+    echo "      单元格里可能混进了裸 |（改用 {en,zh} 这类写法）；修好再跑 —— 不回退到启发式验证" >&2
     return 1
   fi
   acc="$(plan_task_acceptance "$id")"
