@@ -120,6 +120,55 @@ plan_max_loops() {
   fi
 }
 
+# The TASK table is read positionally (`awk -F'|'`: $5 status · $6 acceptance ·
+# $7 target). A bare `|` inside a cell — `docs/en|zh` — adds a field and shifts
+# every later column, so the status cell got read as the acceptance cell and
+# task-verify fell back to heuristic verify: "acceptance never ran" read as
+# "passed". These two helpers expose the table shape so the gates can fail
+# closed instead of guessing which column was meant.
+plan_table_columns() {
+  # Field count of the TASK table header row (`| ID | … |`), 0 when absent.
+  if [[ ! -f "$PLAN_FILE" ]]; then
+    echo "0"
+    return 0
+  fi
+  awk -F'|' '
+    done { next }
+    /^[[:space:]]*\|/ {
+      cell = $2
+      gsub(/^[ \t*]+|[ \t*]+$/, "", cell)
+      if (cell == "ID") { print NF; done = 1 }
+    }
+    END { if (!done) print 0 }
+  ' "$PLAN_FILE" 2>/dev/null || echo "0"
+}
+
+plan_table_shape_issues() {
+  # One `<line>:<id>:<fields>` per TASK-table row whose field count differs from
+  # the header. Only the block that starts at the `| ID | …` header is inspected,
+  # so unrelated tables elsewhere in the plan are left alone.
+  local expected
+  expected="$(plan_table_columns)"
+  if [[ ! -f "$PLAN_FILE" || -z "$expected" || "$expected" -lt 2 ]]; then
+    return 0
+  fi
+  awk -F'|' -v expected="$expected" '
+    in_table {
+      if ($0 !~ /^[[:space:]]*\|/) { in_table = 0; next }
+      id = $2
+      gsub(/^[ \t*]+|[ \t*]+$/, "", id)
+      if (id == "" || id ~ /^-+$/) next
+      if (NF != expected) print NR ":" id ":" NF
+      next
+    }
+    /^[[:space:]]*\|/ {
+      cell = $2
+      gsub(/^[ \t*]+|[ \t*]+$/, "", cell)
+      if (cell == "ID") in_table = 1
+    }
+  ' "$PLAN_FILE" 2>/dev/null || true
+}
+
 plan_task_row_field() {
   local id="$1"
   local col="$2"
