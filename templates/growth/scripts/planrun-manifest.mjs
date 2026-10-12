@@ -25,7 +25,7 @@
  *   node planrun-manifest.mjs --help
  */
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -204,9 +204,24 @@ function main(argv) {
   return 2
 }
 
-// Only run as a CLI when invoked directly; importable from the doctor.
-const invokedDirectly =
-  process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))
-if (invokedDirectly) {
+/**
+ * Only run as a CLI when invoked directly; the doctor imports these helpers.
+ *
+ * Compare *real* paths: the ESM loader canonicalizes module URLs (resolving
+ * symlinks) while `process.argv[1]` keeps the path as typed. On macOS `/tmp` and
+ * `/var` are symlinks, so a `resolve()` comparison was false and the CLI exited 0
+ * without doing anything — `install-planrun.sh` wrote no manifest and `doctor`
+ * then reported a clean install it had never inspected.
+ */
+function isDirectInvocation(entry) {
+  if (!entry) return false
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
+}
+
+if (isDirectInvocation(process.argv[1])) {
   process.exit(main(process.argv.slice(2)))
 }

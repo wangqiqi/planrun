@@ -16,8 +16,11 @@
 #   table-shape    a bare `|` inside a TASK cell added a field, shifting the
 #                  positional columns: task-verify read the status cell as the
 #                  acceptance and reported a passing heuristic fallback instead
+#   path-canon     the ESM loader canonicalizes module URLs while argv keeps the
+#                  path as typed, so every CLI guarded by a `resolve()` equality
+#                  silently exited 0 on macOS, where /tmp and /var are symlinks
 #
-# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|all]
+# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|path-canon|all]
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -513,6 +516,38 @@ EOF
   fi
 }
 
+case_path_canonicalization() {
+  echo "==> path-canon: 软链路径下 CLI 不能静默空转"
+  local link="$TMP/planrun-link" dir out help
+  rm -rf "$link"
+  if ! ln -s "$ROOT" "$link" 2>/dev/null || [[ ! -e "$link/scripts/planrun-manifest.mjs" ]]; then
+    pass "path-canon: 跳过（本平台创建不出软链）"
+    return
+  fi
+
+  # The sharpest check: a silently skipped main() prints nothing at all.
+  help="$(node "$link/scripts/planrun-manifest.mjs" --help 2>&1)"
+  if [[ -n "$help" ]]; then
+    pass "path-canon: 软链下 manifest CLI 有输出"
+  else
+    fail "path-canon: 软链下 manifest CLI 静默空转"
+  fi
+
+  dir="$(doctor_project pathcanon)"
+  if [[ -f "$dir/.dsh/growth/.planrun-manifest.json" ]]; then
+    pass "path-canon: 安装写出了版本清单"
+  else
+    fail "path-canon: 安装没写出版本清单"
+  fi
+
+  out="$(node "$link/scripts/planrun-doctor.mjs" --project "$dir" --source "$ROOT" --no-profile 2>&1)"
+  if [[ "$?" -eq 0 && "$out" == *"无漂移"* ]]; then
+    pass "path-canon: 软链下 doctor 判定无漂移"
+  else
+    fail "path-canon: 软链下 doctor 结果异常：$(printf '%s' "$out" | tail -1)"
+  fi
+}
+
 case "${MODE}" in
   bad-plan) case_bad_plan ;;
   fallback-fail) case_fallback_fail ;;
@@ -520,6 +555,7 @@ case "${MODE}" in
   parity) case_parity ;;
   doctor) case_doctor ;;
   table-shape) case_table_shape ;;
+  path-canon) case_path_canonicalization ;;
   all)
     case_bad_plan
     case_fallback_fail
@@ -527,9 +563,10 @@ case "${MODE}" in
     case_parity
     case_doctor
     case_table_shape
+    case_path_canonicalization
     ;;
   *)
-    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|all）" >&2
+    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|path-canon|all）" >&2
     exit 2
     ;;
 esac

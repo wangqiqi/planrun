@@ -25,7 +25,7 @@
  *                           [--source <planrun-root>] [--expect-guard <dir>]
  *                           [--reference-version x.y.z] [--no-profile]
  */
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
@@ -429,7 +429,22 @@ function main(argv) {
   return report.exitCode
 }
 
-const invokedDirectly = process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))
-if (invokedDirectly) {
+/**
+ * Only run as a CLI when invoked directly; the module stays importable (tests,
+ * the manifest writer). Compare *real* paths: the ESM loader canonicalizes
+ * module URLs while `process.argv[1]` keeps the path as typed, so a `resolve()`
+ * comparison silently skipped main() on macOS, where `/tmp` and `/var` are
+ * symlinks — `doctor` then exited 0 having checked nothing.
+ */
+function isDirectInvocation(entry) {
+  if (!entry) return false
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
+}
+
+if (isDirectInvocation(process.argv[1])) {
   process.exit(main(process.argv.slice(2)))
 }
