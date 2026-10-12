@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added
+
+- **`doctor` proves what an install actually is.** `install-planrun.sh` now records
+  `.dsh/growth/.planrun-manifest.json` (PlanRun version · guard sha256 · template schema ·
+  install time), and `pnpm run doctor` reads it back to report whether the installed guard
+  scripts, the growth template, the installed `planrun` / `@planrun/*` packages and that
+  record still agree. Exit codes are `0` no drift · `1` drift · `2` cannot determine; every
+  FAIL prints a `FIX:` line, and a check with no reference to compare against is `SKIP`
+  rather than a fabricated failure — the unpublished npm channel must not read as drift.
+  This closes the gap that started the sprint: a DSH profile running 1.9.0 alongside 1.8.1
+  guard scripts had no way to say so. Covered by seven new guard fixtures
+  (`guard-fixtures.sh doctor`) and the `verify:dogfood` install-seed check.
+
 ## [1.9.0] - 2026-10-09
 
 ### Fixed
