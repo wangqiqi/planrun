@@ -13,8 +13,11 @@
 #   doctor         nothing proved *which* PlanRun version seeded a project, so a
 #                  hand-edited guard, a stale template schema, a skewed package
 #                  version and a missing manifest all had to start reporting
+#   table-shape    a bare `|` inside a TASK cell added a field, shifting the
+#                  positional columns: task-verify read the status cell as the
+#                  acceptance and reported a passing heuristic fallback instead
 #
-# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|doctor|all]
+# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|all]
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -449,21 +452,84 @@ case_doctor() {
   fi
 }
 
+case_table_shape() {
+  echo "==> table-shape: 单元格裸 | 切歪列必须 fail closed"
+  local bad_plan="$TMP/table-shape-bad.md" good_plan="$TMP/table-shape-good.md"
+
+  # The bad row carries a bare `|` inside the Task cell — one field *extra*.
+  # The old plan-check only looked for *missing* columns (NF < 8) and passed it.
+  cat >"$bad_plan" <<'EOF'
+<!-- PLANNING: false -->
+<!-- SPRINT: SPRINT-99 -->
+<!-- PLAN_APPROVED: 2026-10-12 -->
+<!-- ACTIVE: TASK-001 -->
+<!-- VERIFY: pnpm run verify -->
+
+**执行顺序**: `TASK-001`
+
+| ID | Task | Priority | Status | Acceptance | Target |
+|----|------|----------|--------|------------|--------|
+| TASK-001 | docs/en|zh | P0 | 🔧 | `bash -c 'exit 0'` | `x` |
+EOF
+
+  # Same plan with the pipe removed — must stay green.
+  sed 's#| docs/en|zh |#| docs/{en,zh} |#' "$bad_plan" >"$good_plan"
+
+  run_guard "$bad_plan" plan-check
+  if [[ "$RC" -ne 0 && "$OUT" == *"字段数"* && "$OUT" == *"TASK-001"* ]]; then
+    pass "table-shape: plan-check 拦住错位行（exit ${RC}）"
+  else
+    fail "table-shape: plan-check 没拦住错位行（exit ${RC}）"
+    echo "$OUT" >&2
+  fi
+
+  run_guard "$bad_plan" task-verify
+  if [[ "$RC" -eq 1 && "$OUT" == *"列已错位"* ]]; then
+    pass "table-shape: task-verify 拦住错位行（exit 1）"
+  else
+    fail "table-shape: task-verify 没拦住错位行（exit ${RC}）"
+    echo "$OUT" >&2
+  fi
+  # The whole point: no silent heuristic fallback once the columns moved.
+  if [[ "$OUT" == *"fallback"* || "$OUT" == *"SKIP: 验收列"* || "$OUT" == *"验收未通过"* ]]; then
+    fail "table-shape: task-verify 仍然回退到启发式验证"
+  else
+    pass "table-shape: 列错位时不回退启发式验证"
+  fi
+
+  run_guard "$good_plan" plan-check
+  if [[ "$RC" -eq 0 ]]; then
+    pass "table-shape: 干净行 plan-check 通过"
+  else
+    fail "table-shape: 干净行 plan-check 误报（exit ${RC}）"
+    echo "$OUT" >&2
+  fi
+  run_guard "$good_plan" task-verify
+  if [[ "$RC" -eq 0 ]]; then
+    pass "table-shape: 干净行 task-verify 通过"
+  else
+    fail "table-shape: 干净行 task-verify 误报（exit ${RC}）"
+    echo "$OUT" >&2
+  fi
+}
+
 case "${MODE}" in
   bad-plan) case_bad_plan ;;
   fallback-fail) case_fallback_fail ;;
   backtick-acc) case_backtick_acc ;;
   parity) case_parity ;;
   doctor) case_doctor ;;
+  table-shape) case_table_shape ;;
   all)
     case_bad_plan
     case_fallback_fail
     case_backtick_acc
     case_parity
     case_doctor
+    case_table_shape
     ;;
   *)
-    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|doctor|all）" >&2
+    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|doctor|table-shape|all）" >&2
     exit 2
     ;;
 esac
