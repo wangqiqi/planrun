@@ -10,8 +10,11 @@
 #                  executable branch, so the command never ran
 #   parity         the shell and TS plan parsers answered differently on the
 #                  same plan (skip prefixes, pending count, `(none)` VERIFY)
+#   doctor         nothing proved *which* PlanRun version seeded a project, so a
+#                  hand-edited guard, a stale template schema, a skewed package
+#                  version and a missing manifest all had to start reporting
 #
-# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|all]
+# Usage: bash scripts/guard-fixtures.sh [bad-plan|fallback-fail|backtick-acc|parity|doctor|all]
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -343,19 +346,124 @@ EOF
   fi
 }
 
+doctor_project() { # doctor_project <name> — fresh temp project with a real install
+  local dir="$TMP/doctor-$1"
+  rm -rf "$dir"
+  mkdir -p "$dir/.git"
+  printf '{"name":"doctor-fixture","scripts":{}}\n' >"$dir/package.json"
+  "$BASH_BIN" "$ROOT/scripts/install-planrun.sh" "$dir" --copy-plan >/dev/null 2>&1
+  printf '%s' "$dir"
+}
+
+run_doctor() { # run_doctor <project> [extra args...]
+  OUT="$(node "$ROOT/scripts/planrun-doctor.mjs" --project "$1" --source "$ROOT" --no-profile "${@:2}" 2>&1)"
+  RC=$?
+}
+
+expect_doctor_drift() { # expect_doctor_drift <label> <project> <needle>
+  local label="$1" dir="$2" needle="$3"
+  run_doctor "$dir"
+  if [[ "$RC" -ne 1 ]]; then
+    fail "doctor ${label}: 期望 exit 1，实得 ${RC}"
+    echo "$OUT" >&2
+    return
+  fi
+  if [[ "$OUT" != *"$needle"* ]]; then
+    fail "doctor ${label}: 输出里没看到「${needle}」"
+    echo "$OUT" >&2
+    return
+  fi
+  pass "doctor ${label}: exit 1 · 命中「${needle}」"
+}
+
+case_doctor() {
+  echo "==> doctor: 版本漂移体检（干净 + 四类漂移 + 非项目）"
+  local dir json
+
+  # 1) 干净安装：exit 0，且 --json 的四项检查一致
+  dir="$(doctor_project clean)"
+  if [[ ! -f "$dir/.dsh/growth/.planrun-manifest.json" ]]; then
+    fail "doctor clean: 安装没写出版本清单"
+  else
+    run_doctor "$dir"
+    if [[ "$RC" -ne 0 ]]; then
+      fail "doctor clean: 期望 exit 0，实得 ${RC}"
+      echo "$OUT" >&2
+    else
+      pass "doctor clean: exit 0（无漂移）"
+    fi
+    json="$(node "$ROOT/scripts/planrun-doctor.mjs" --project "$dir" --source "$ROOT" --no-profile --json 2>&1)"
+    if printf '%s' "$json" | node -e '
+        let raw = ""
+        process.stdin.on("data", (chunk) => { raw += chunk })
+        process.stdin.on("end", () => {
+          const report = JSON.parse(raw)
+          if (report.exitCode !== 0) throw new Error(`exitCode ${report.exitCode}`)
+          if (!Array.isArray(report.checks) || report.checks.length !== 4) throw new Error("checks != 4")
+        })
+      '; then
+      pass "doctor clean: --json 输出 4 项检查 · exitCode 0"
+    else
+      fail "doctor clean: --json 输出不可用"
+      echo "$json" >&2
+    fi
+  fi
+
+  # 2) guard 脚本装后被改动（清单 hash 对不上）
+  dir="$(doctor_project guard-drift)"
+  printf '\n# tampered\n' >>"$dir/scripts/dsh-guard.sh"
+  expect_doctor_drift "guard-drift" "$dir" "安装后被改动"
+
+  # 3) 模板 schema 漂移（清单记录的 schema 落后于当前构建）
+  dir="$(doctor_project schema-drift)"
+  node -e '
+    const fs = require("node:fs")
+    const file = process.argv[1]
+    const manifest = JSON.parse(fs.readFileSync(file, "utf8"))
+    manifest.planTemplateSchema = 0
+    fs.writeFileSync(file, JSON.stringify(manifest, null, 2))
+  ' "$dir/.dsh/growth/.planrun-manifest.json"
+  expect_doctor_drift "schema-drift" "$dir" "模板 schema 漂移"
+
+  # 4) 包版本漂移（装着的 planrun 与项目记录的版本不一致 —— 就是本 Sprint 的现场）
+  dir="$(doctor_project package-drift)"
+  mkdir -p "$dir/node_modules/planrun"
+  printf '{"name":"planrun","version":"1.8.1"}\n' >"$dir/node_modules/planrun/package.json"
+  expect_doctor_drift "package-drift" "$dir" "不一致"
+
+  # 5) 清单缺失（装过，但证明不了版本）
+  dir="$(doctor_project no-manifest)"
+  rm -f "$dir/.dsh/growth/.planrun-manifest.json"
+  expect_doctor_drift "no-manifest" "$dir" "没有 .dsh/growth/.planrun-manifest.json"
+
+  # 6) 非 PlanRun 项目 → 无法判定 exit 2
+  dir="$TMP/doctor-not-a-project"
+  rm -rf "$dir"
+  mkdir -p "$dir"
+  run_doctor "$dir"
+  if [[ "$RC" -eq 2 ]]; then
+    pass "doctor not-a-project: exit 2（无法判定）"
+  else
+    fail "doctor not-a-project: 期望 exit 2，实得 ${RC}"
+    echo "$OUT" >&2
+  fi
+}
+
 case "${MODE}" in
   bad-plan) case_bad_plan ;;
   fallback-fail) case_fallback_fail ;;
   backtick-acc) case_backtick_acc ;;
   parity) case_parity ;;
+  doctor) case_doctor ;;
   all)
     case_bad_plan
     case_fallback_fail
     case_backtick_acc
     case_parity
+    case_doctor
     ;;
   *)
-    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|all）" >&2
+    echo "Unknown mode: ${MODE}（bad-plan|fallback-fail|backtick-acc|parity|doctor|all）" >&2
     exit 2
     ;;
 esac
