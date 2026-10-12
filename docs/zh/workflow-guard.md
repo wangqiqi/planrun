@@ -71,6 +71,8 @@ node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 
 - **Status**：`⬜` · `🔧` · `✅`
 - **Acceptance**：优先可执行命令；描述性验收 → 启发式回退（`DSH_GUARD_FALLBACK_VERIFY`）
+- **一格一条命令**：`task-verify` 去掉反引号后把整格 `eval` 成**一条**命令。写单条命令，或 `bash -c 'a && b'`；写成 `cmd1 + cmd2` 会被当一条跑挂。
+- **单元格禁裸竖线**：多一个字段就把位置列全部右移（`$5` 状态 · `$6` 验收 · `$7` 落点）。行字段数与表头不一致时，`plan-check` 硬 FAIL，`task-verify` **拒绝验收该行**而不是回退到启发式验证。`en|zh` 请写成 `{en,zh}`。
 
 ## 环境变量
 

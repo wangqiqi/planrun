@@ -15,6 +15,17 @@
   guard scripts had no way to say so. Covered by seven new guard fixtures
   (`guard-fixtures.sh doctor`) and the `verify:dogfood` install-seed check.
 
+### Fixed
+
+- **A TASK row whose field count drifts from the header now fails closed.** A bare `|`
+  inside a cell (`docs/en|zh`) added a field and shifted the positional columns, so
+  `task-verify` read the status cell as the acceptance, skipped the executable-command
+  branch and reported a passing heuristic fallback — "acceptance never ran" read as
+  "passed". `plan-check` had only looked for *missing* columns (`NF < 8`) and let the extra
+  one through. Both now compare every row against the header: `plan-check` prints the line,
+  the TASK id and the field counts, and `task-verify` refuses to verify that row instead of
+  guessing which column was meant. Covered by the `table-shape` guard fixtures.
+
 ## [1.9.0] - 2026-10-09
 
 ### Fixed

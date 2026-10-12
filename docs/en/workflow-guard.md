@@ -79,6 +79,8 @@ Super Cursor–compatible columns:
 
 - **Status**: `⬜` · `🔧` · `✅` (growth template also maps `ACTIVE`/`TODO`/`DONE`)
 - **Acceptance**: executable command preferred (`pnpm run verify`, `bash scripts/...`)
+- **One command per cell**: `task-verify` strips the backticks and `eval`s the whole cell as one command. Write a single command, or `bash -c 'a && b'` for a sequence — `cmd1 + cmd2` runs as one broken command.
+- **No bare `|` inside a cell**: it adds a field and shifts every positional column (`$5` status · `$6` acceptance · `$7` target). A row whose field count differs from the header is a hard `plan-check` FAIL, and `task-verify` **refuses to verify it** instead of falling back to heuristic verify. Write `{en,zh}` rather than `en|zh`.
 - Descriptive acceptance → heuristic fallback (`DSH_GUARD_FALLBACK_VERIFY`, default `./scripts/verify-planrun.sh`)
 
 ## Environment
