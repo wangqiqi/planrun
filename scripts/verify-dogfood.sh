@@ -207,6 +207,26 @@ check_install_seed() {
   else
     echo "OK: install-planrun.sh → scripts/dsh-guard.sh"
   fi
+  # The manifest is what lets `doctor` prove which version seeded the project.
+  local manifest="$tmp/.dsh/growth/.planrun-manifest.json"
+  local manifest_ok=false
+  if [[ -f "$manifest" ]] && node -e '
+      const fs = require("node:fs")
+      const m = JSON.parse(fs.readFileSync(process.argv[1], "utf8"))
+      if (m.schema !== 1) throw new Error(`manifest schema ${m.schema}`)
+      if (!m.planrunVersion) throw new Error("planrunVersion missing")
+      if (!m.files || !m.files["scripts/dsh-guard.sh"]) throw new Error("guard sha256 missing")
+    ' "$manifest"; then
+    manifest_ok=true
+  fi
+  if [[ "$manifest_ok" != true ]]; then
+    echo "FAIL: .dsh/growth/.planrun-manifest.json missing or unusable (schema/version/guard sha256)"
+    FAIL=1
+  else
+    local manifest_version
+    manifest_version="$(node -e 'process.stdout.write(String(JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")).planrunVersion))' "$manifest")"
+    echo "OK: install-planrun.sh → .planrun-manifest.json (planrun ${manifest_version})"
+  fi
   rm -rf "$tmp"
 }
 

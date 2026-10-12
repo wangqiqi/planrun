@@ -6,6 +6,7 @@ Copied by `install-planrun.sh` into your repo `scripts/` directory.
 |--------|------|
 | `dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` |
 | `plan-parse.sh` | plan.md HTML meta + TASK table parser (sourced by guard) |
+| `planrun-manifest.mjs` | records the installed PlanRun version + guard sha256 → `.dsh/growth/.planrun-manifest.json` |
 | `run-bash.mjs` | locates a working POSIX shell, so the npm scripts work on Windows too |
 
 Plan resolution (same as `@planrun/workflow`):

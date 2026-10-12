@@ -105,7 +105,7 @@ fi
 if [[ "$INSTALL_GUARD" == true ]]; then
   TARGET_SCRIPTS="$TARGET/scripts"
   mkdir -p "$TARGET_SCRIPTS"
-  for f in dsh-guard.sh plan-parse.sh; do
+  for f in dsh-guard.sh plan-parse.sh planrun-manifest.mjs; do
     src="$SOURCE/templates/growth/scripts/$f"
     dest="$TARGET_SCRIPTS/$f"
     if [[ ! -f "$dest" ]]; then
@@ -129,6 +129,20 @@ if [[ "$INSTALL_GUARD" == true ]]; then
   else
     echo "WARN: 未找到 node，跳过 package.json 合并；可手动添加 node scripts/run-bash.mjs scripts/dsh-guard.sh <cmd>" >&2
   fi
+fi
+
+# Record what was installed. Without this the project cannot tell which PlanRun
+# version seeded it, so a stale guard script looks exactly like a fresh one.
+MANIFEST_MODULE="$SOURCE/scripts/planrun-manifest.mjs"
+if [[ -f "$TARGET/scripts/planrun-manifest.mjs" ]]; then
+  MANIFEST_MODULE="$TARGET/scripts/planrun-manifest.mjs"
+fi
+if [[ -f "$MANIFEST_MODULE" ]] && command -v node >/dev/null 2>&1; then
+  if ! node "$MANIFEST_MODULE" write "$TARGET" --source "$SOURCE"; then
+    echo "WARN: 版本清单写入失败（doctor 将无法证明安装版本）" >&2
+  fi
+else
+  echo "WARN: 未找到 node 或 planrun-manifest.mjs，跳过版本清单（doctor 将无法证明安装版本）" >&2
 fi
 
 cat <<EOF
