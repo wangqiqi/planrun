@@ -19,9 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # pnpm 11 for the same reason as verify.yml: the root manifest declares
+      # `engines.pnpm >= 10`, so the runner's default pnpm 9 aborts the install
+      # with ERR_PNPM_UNSUPPORTED_ENGINE before the docs build ever starts.
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 11
       - uses: actions/setup-node@v4
         with:
           node-version: '24'

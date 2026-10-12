@@ -94,7 +94,7 @@ case_bad_plan() {
 EOF
   run_guard "$none" gate-check
   if [[ "$RC" -ne 0 ]]; then
-    pass "(none) 占位符不再算批准（gate-check rc=$RC）"
+    pass "(none) 占位符不再算批准（gate-check rc=${RC}）"
   else
     fail "(none) 占位符仍能过 gate-check：$OUT"
   fi
@@ -110,7 +110,7 @@ EOF
 EOF
   run_guard "$missing" task-verify TASK-999
   if [[ "$RC" -ne 0 && -n "$OUT" ]]; then
-    pass "缺任务行：非零退出且给出原因（rc=$RC）"
+    pass "缺任务行：非零退出且给出原因（rc=${RC}）"
   else
     fail "缺任务行：rc=$RC 输出字节=${#OUT}"
   fi
@@ -125,7 +125,7 @@ EOF
 EOF
   run_guard "$noappr" plan-check
   if [[ "$RC" -ne 0 ]]; then
-    pass "plan-check 对缺 PLAN_APPROVED 返回非零（rc=$RC）"
+    pass "plan-check 对缺 PLAN_APPROVED 返回非零（rc=${RC}）"
   else
     fail "plan-check 仍然永远返回 0：$OUT"
   fi
@@ -152,19 +152,19 @@ EOF
   if [[ "$RC" -eq 0 ]]; then
     pass "健康 plan 上 plan-check 依旧绿"
   else
-    fail "健康 plan 被 plan-check 拦下（rc=$RC）：$OUT"
+    fail "健康 plan 被 plan-check 拦下（rc=${RC}）：$OUT"
   fi
   run_guard "$good" gate-check
   if [[ "$RC" -eq 0 ]]; then
     pass "健康 plan 上 gate-check 依旧绿"
   else
-    fail "健康 plan 被 gate-check 拦下（rc=$RC）：$OUT"
+    fail "健康 plan 被 gate-check 拦下（rc=${RC}）：$OUT"
   fi
   run_guard "$good" task-verify
   if [[ "$RC" -eq 0 ]]; then
     pass "可执行验收列会跑并返回它的退出码（rc=0）"
   else
-    fail "可执行验收列 rc=$RC：$OUT"
+    fail "可执行验收列 rc=${RC}：$OUT"
   fi
 }
 
@@ -189,7 +189,7 @@ EOF
   if [[ "$RC" -eq 3 ]]; then
     pass "回退校验失败会传播到 task-verify（rc=3）"
   else
-    fail "回退校验失败被吞：rc=$RC，输出：$OUT"
+    fail "回退校验失败被吞：rc=${RC}，输出：$OUT"
   fi
 
   cat >"$plan" <<EOF
@@ -207,7 +207,7 @@ EOF
   if [[ "$RC" -eq 0 ]]; then
     pass "回退校验通过时 task-verify 仍为 0"
   else
-    fail "回退校验通过却失败：rc=$RC，输出：$OUT"
+    fail "回退校验通过却失败：rc=${RC}，输出：$OUT"
   fi
   FIX_FALLBACK=""
 
@@ -227,7 +227,7 @@ EOF
   if [[ "$RC" -eq 0 && "$OUT" == *SKIP* ]]; then
     pass "关掉启发式时是显式 SKIP（rc=0）"
   else
-    fail "关掉启发式时期望 SKIP/rc=0，实得 rc=$RC：$OUT"
+    fail "关掉启发式时期望 SKIP/rc=0，实得 rc=${RC}：$OUT"
   fi
   FIX_HEURISTICS=""
 }
@@ -249,7 +249,7 @@ EOF
   if [[ "$RC" -eq 7 ]]; then
     pass "反引号包起来的验收命令会被执行（rc=7）"
   else
-    fail "反引号验收命令没有执行：rc=$RC，输出：$OUT"
+    fail "反引号验收命令没有执行：rc=${RC}，输出：$OUT"
   fi
 
   FIX_EXEC=false
@@ -257,7 +257,7 @@ EOF
   if [[ "$RC" -eq 0 && "$OUT" == *"DSH_GUARD_EXEC"* ]]; then
     pass "DSH_GUARD_EXEC=false 时只打印不执行（rc=0）"
   else
-    fail "DSH_GUARD_EXEC=false 未生效：rc=$RC，输出：$OUT"
+    fail "DSH_GUARD_EXEC=false 未生效：rc=${RC}，输出：$OUT"
   fi
   FIX_EXEC=""
 }
@@ -290,7 +290,7 @@ EOF
     fail "顺序链没有跳过 SPIKE-：$shell_next"
   fi
   if [[ "$shell_next" == "$ts_next" ]]; then
-    pass "shell 与 TS 的 next-task 一致（$shell_next）"
+    pass "shell 与 TS 的 next-task 一致（${shell_next}）"
   else
     fail "shell 与 TS 的 next-task 不一致：shell=$shell_next ts=$ts_next"
   fi
@@ -298,7 +298,7 @@ EOF
   shell_pending="$(DSH_GROWTH_PLAN="$plan" "$BASH_BIN" "$GUARD" pending)"
   ts_pending="$(node_parity "$plan" pending)"
   if [[ "$shell_pending" == "$ts_pending" ]]; then
-    pass "shell 与 TS 的待办计数一致（$shell_pending）"
+    pass "shell 与 TS 的待办计数一致（${shell_pending}）"
   else
     fail "待办计数不一致：shell=$shell_pending ts=$ts_pending"
   fi
@@ -306,7 +306,7 @@ EOF
   shell_verify="$(. "$ROOT/scripts/plan-parse.sh" "$plan"; plan_verify)"
   ts_verify="$(node_parity "$plan" verify)"
   if [[ "$shell_verify" == "$ts_verify" ]]; then
-    pass "VERIFY:(none) 两侧都回落到默认脚本（$shell_verify）"
+    pass "VERIFY:(none) 两侧都回落到默认脚本（${shell_verify}）"
   else
     fail "VERIFY:(none) 回落不一致：shell=$shell_verify ts=$ts_verify"
   fi
@@ -328,7 +328,7 @@ EOF
   if [[ "$unchecked" == "1" ]]; then
     pass "Done when 检查认得 **Done when:**（未勾 1 项）"
   else
-    fail "Done when 计数=$unchecked（期望 1）"
+    fail "Done when 计数=${unchecked}（期望 1）"
   fi
 
   # Zero pending must print exactly one 0.
