@@ -242,3 +242,102 @@ test('createUserMessage mints a distinct id per message', () => {
   })
   assert.notEqual(build().id, build().id)
 })
+
+// ---- A finished sprint must terminate the autonomous chain ----
+//
+// Regression: `buildRunStopSteer` had no terminal state. A closed plan with no
+// pending tasks kept returning a steer on **every** `agent/turn-stopping`, and
+// each steer starts another turn — so the session looped forever: first
+// "sprint complete — verify, archive, reconcile plan", then, once `loopCount`
+// reached MAX_LOOPS, "MAX_LOOPS=… Review plan and continue manually" on every
+// turn with no way out. `.cursor/hooks/run-stop.sh` guards this with
+// `plan_autonomous_chain_idle` (placed *before* the MAX_LOOPS branch); the TS
+// hook was missing it.
+
+/** A closed, fully reconciled plan — the state a sprint sits in after /release. */
+function closedPlan({ sprintStatus = 'closed' } = {}) {
+  const dir = mkdtempSync(join(tmpdir(), 'planrun-closed-'))
+  const planPath = join(dir, 'plan.md')
+  writeFileSync(
+    planPath,
+    `<!-- PLANNING: false -->
+<!-- PLAN_APPROVED: 2026-09-08 -->
+<!-- AUTONOMOUS: true -->
+<!-- SPRINT: SPRINT-06 -->
+<!-- SPRINT_STATUS: ${sprintStatus} -->
+<!-- ACTIVE: (none) -->
+<!-- NEXT: (none) -->
+<!-- MAX_LOOPS: 15 -->
+| ID | Task | P | Status | Acc | Target |
+| TASK-001 | a | P0 | ✅ | ok | x |
+**执行顺序**: TASK-001
+`,
+  )
+  return { dir, planPath }
+}
+
+test('loadPlanSnapshot reads SPRINT_STATUS (lower-cased)', () => {
+  const { dir, planPath } = closedPlan({ sprintStatus: 'CLOSED' })
+  const snap = loadPlanSnapshot(planPath)
+  assert.ok(snap)
+  assert.equal(snap.sprintStatus, 'closed')
+  assert.equal(snap.autonomous, true)
+  assert.equal(snap.pendingCount, 0)
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('closed sprint with no pending work: no steer at loop 1', () => {
+  const { dir, planPath } = closedPlan()
+  assert.equal(buildRunStopSteer({ planPath, loopCount: 1 }), undefined)
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('closed sprint: no steer past MAX_LOOPS either (the infinite-followup bug)', () => {
+  const { dir, planPath } = closedPlan()
+  for (const loopCount of [15, 16, 99]) {
+    assert.equal(
+      buildRunStopSteer({ planPath, loopCount }),
+      undefined,
+      `loop ${loopCount} must not steer a finished sprint`,
+    )
+  }
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('closed sprint: 20 turn-stops steer nothing (chain is terminal)', async () => {
+  const { dir, planPath } = closedPlan()
+  const { ctx, handlers, agent, steered } = harness(undefined)
+  apply(ctx, { planrunHome: PLANRUN_HOME, planPath })
+  handlers.get('agent/created')({ agent })
+  for (let turn = 0; turn < 20; turn += 1) {
+    await handlers.get('agent/turn-stopping')({ agent })
+  }
+  assert.equal(steered.length, 0, 'a closed sprint must produce 0 steers, however many turns run')
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('running sprint still steers (the guard must not silence live chains)', () => {
+  const { dir, planPath } = autonomousPlan()
+  assert.match(buildRunStopSteer({ planPath, loopCount: 1 }) ?? '', /TASK-002/)
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('closed sprint that still has a pending task keeps steering', () => {
+  // Contradictory metadata must not strand work: only `closed` **and** zero
+  // pending means "there is no chain left to run".
+  const dir = mkdtempSync(join(tmpdir(), 'planrun-closed-pending-'))
+  const planPath = join(dir, 'plan.md')
+  writeFileSync(
+    planPath,
+    `<!-- PLANNING: false -->
+<!-- PLAN_APPROVED: 2026-09-08 -->
+<!-- AUTONOMOUS: true -->
+<!-- SPRINT: SPRINT-06 -->
+<!-- SPRINT_STATUS: closed -->
+| TASK-001 | a | P0 | ⬜ | ok | x |
+**执行顺序**: TASK-001
+`,
+  )
+  assert.match(buildRunStopSteer({ planPath, loopCount: 1 }) ?? '', /TASK-001/)
+  rmSync(dir, { recursive: true, force: true })
+})

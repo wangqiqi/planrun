@@ -17,6 +17,18 @@
 
 ### Fixed
 
+- **A finished sprint no longer steers the session forever.** `buildRunStopSteer` had no
+  terminal state: a plan carrying `<!-- SPRINT_STATUS: closed -->` with no pending tasks still
+  returned a steer on **every** `agent/turn-stopping` — and every steer starts another turn.
+  The session therefore looped endlessly, first on "sprint complete — verify, archive,
+  reconcile plan", then, once `loopCount` reached `MAX_LOOPS`, on "MAX_LOOPS=… Review plan and
+  continue manually" with no way out. `.cursor/hooks/run-stop.sh` guards exactly this with
+  `plan_autonomous_chain_idle`, placed **before** the MAX_LOOPS branch ("避免收尾后反复
+  followup"); the TS hook never had that guard, and `PlanSnapshot` had no `SPRINT_STATUS`
+  field to test. `run-stop` now returns `undefined` for `closed` + zero pending, ahead of the
+  MAX_LOOPS check, so a live chain is still capped while a finished one goes quiet. Covered by
+  six tests, including 20 consecutive turn-stops on a closed plan producing zero steers.
+
 - **A TASK row whose field count drifts from the header now fails closed.** A bare `|`
   inside a cell (`docs/en|zh`) added a field and shifted the positional columns, so
   `task-verify` read the status cell as the acceptance, skipped the executable-command

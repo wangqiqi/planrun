@@ -8,6 +8,14 @@ export interface PlanSnapshot {
   readonly planApproved: string
   readonly autonomous: boolean
   readonly sprint: string
+  /**
+   * `SPRINT_STATUS` meta, lower-cased. `closed` is the documented value a sprint
+   * carries once it is archived and reconciled (see the shipped plan template and
+   * `skills/plan/reference/autonomy-chain.md`). `run-stop` reads it to tell a
+   * finished sprint from a running one — without it the autonomous chain has no
+   * terminal state and steers the session forever.
+   */
+  readonly sprintStatus: string
   readonly active: string
   readonly activeStatus: string
   readonly pendingCount: number
@@ -143,6 +151,7 @@ export function loadPlanSnapshot(planPath: string): PlanSnapshot | undefined {
   const planApproved = metaValue(content, 'PLAN_APPROVED')
   const autonomous = meta(content, 'AUTONOMOUS') === 'true'
   const sprint = meta(content, 'SPRINT')
+  const sprintStatus = meta(content, 'SPRINT_STATUS').toLowerCase()
   let active = metaValue(content, 'ACTIVE')
   if (!active) {
     const activeRow = content.match(/\| (?:ACTIVE|🔧) \|/)
@@ -160,6 +169,7 @@ export function loadPlanSnapshot(planPath: string): PlanSnapshot | undefined {
     planApproved,
     autonomous,
     sprint,
+    sprintStatus,
     active,
     activeStatus: active ? taskStatus(content, active) : '',
     pendingCount: pendingCount(content),

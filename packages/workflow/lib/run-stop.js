@@ -3,6 +3,17 @@ export function buildRunStopSteer(input) {
     const plan = loadPlanSnapshot(input.planPath);
     if (!plan || !plan.autonomous)
         return undefined;
+    // Sprint 已闭合且无待办：自治链无活可派，**必须返回 undefined**。
+    //
+    // 少了这道守卫，收尾后的会话会被无限带起：`pendingCount === 0` 分支每轮 steer 一次
+    // （"sprint complete — verify, archive, reconcile plan"），到 MAX_LOOPS 之后改由
+    // MAX_LOOPS 分支继续 steer —— 而**每一条 steer 都会再触发一次 turn-stopping**，
+    // 于是 loopCount 只增不减，会话永远停不下来。
+    //
+    // 与 `.cursor/hooks/run-stop.sh` 的 `plan_autonomous_chain_idle` 同义，且同样
+    // **先于 MAX_LOOPS 判定**（那边注释：避免收尾后反复 followup）。
+    if (plan.sprintStatus === 'closed' && plan.pendingCount === 0)
+        return undefined;
     if (input.loopCount >= plan.maxLoops) {
         return `PlanRun: MAX_LOOPS=${plan.maxLoops}. Review plan and continue manually.`;
     }

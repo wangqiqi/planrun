@@ -129,6 +129,7 @@ export function loadPlanSnapshot(planPath) {
     const planApproved = metaValue(content, 'PLAN_APPROVED');
     const autonomous = meta(content, 'AUTONOMOUS') === 'true';
     const sprint = meta(content, 'SPRINT');
+    const sprintStatus = meta(content, 'SPRINT_STATUS').toLowerCase();
     let active = metaValue(content, 'ACTIVE');
     if (!active) {
         const activeRow = content.match(/\| (?:ACTIVE|🔧) \|/);
@@ -146,6 +147,7 @@ export function loadPlanSnapshot(planPath) {
         planApproved,
         autonomous,
         sprint,
+        sprintStatus,
         active,
         activeStatus: active ? taskStatus(content, active) : '',
         pendingCount: pendingCount(content),
