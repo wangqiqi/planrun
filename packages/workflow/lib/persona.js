@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolvePlanrunHome } from './growth.js';
+import { GROWTH_REL } from './growth-paths.js';
 const WORKFLOW_PKG = fileURLToPath(new URL('.', import.meta.url));
 /**
  * Resolve the bundled catalog through Node's own resolver.
@@ -52,13 +53,16 @@ export function loadRolesCatalog(rolesPath) {
     return JSON.parse(readFileSync(path, 'utf8'));
 }
 export function resolveSessionDir(cwd) {
+    const canonical = join(cwd, GROWTH_REL, 'session');
+    if (existsSync(join(cwd, GROWTH_REL)))
+        return canonical;
     const dsh = join(cwd, '.dsh/growth/session');
     if (existsSync(join(cwd, '.dsh/growth')))
         return dsh;
     const legacy = join(cwd, '.cursorGrowth/session');
     if (existsSync(legacy) || existsSync(join(cwd, '.cursorGrowth')))
         return legacy;
-    return dsh;
+    return canonical;
 }
 export function resolveSessionPersonaPath(cwd) {
     const direct = join(resolveSessionDir(cwd), 'persona.json');
@@ -66,12 +70,15 @@ export function resolveSessionPersonaPath(cwd) {
         return direct;
     // aliases.json has always walked up from the project root; persona.json did
     // not, so a session started in a subdirectory silently lost the active persona.
-    const walked = walkUpForFile(cwd, '.dsh/growth/session/persona.json')
+    const walked = walkUpForFile(cwd, `${GROWTH_REL}/session/persona.json`)
+        ?? walkUpForFile(cwd, '.dsh/growth/session/persona.json')
         ?? walkUpForFile(cwd, '.cursorGrowth/session/persona.json');
     return walked ?? direct;
 }
 export function resolveAliasesPath(cwd) {
     const candidates = [
+        join(cwd, `${GROWTH_REL}/session/aliases.json`),
+        walkUpForFile(cwd, `${GROWTH_REL}/session/aliases.json`),
         join(cwd, '.dsh/growth/session/aliases.json'),
         walkUpForFile(cwd, '.dsh/growth/session/aliases.json'),
         walkUpForFile(cwd, '.cursorGrowth/session/aliases.json'),

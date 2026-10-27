@@ -3,6 +3,7 @@ import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolvePlanrunHome } from './growth.js'
+import { GROWTH_REL } from './growth-paths.js'
 
 export interface Persona {
   readonly id: string
@@ -97,11 +98,13 @@ export function loadRolesCatalog(rolesPath?: string): RolesCatalog | undefined {
 }
 
 export function resolveSessionDir(cwd: string): string {
+  const canonical = join(cwd, GROWTH_REL, 'session')
+  if (existsSync(join(cwd, GROWTH_REL))) return canonical
   const dsh = join(cwd, '.dsh/growth/session')
   if (existsSync(join(cwd, '.dsh/growth'))) return dsh
   const legacy = join(cwd, '.cursorGrowth/session')
   if (existsSync(legacy) || existsSync(join(cwd, '.cursorGrowth'))) return legacy
-  return dsh
+  return canonical
 }
 
 export function resolveSessionPersonaPath(cwd: string): string {
@@ -109,13 +112,16 @@ export function resolveSessionPersonaPath(cwd: string): string {
   if (existsSync(direct)) return direct
   // aliases.json has always walked up from the project root; persona.json did
   // not, so a session started in a subdirectory silently lost the active persona.
-  const walked = walkUpForFile(cwd, '.dsh/growth/session/persona.json')
+  const walked = walkUpForFile(cwd, `${GROWTH_REL}/session/persona.json`)
+    ?? walkUpForFile(cwd, '.dsh/growth/session/persona.json')
     ?? walkUpForFile(cwd, '.cursorGrowth/session/persona.json')
   return walked ?? direct
 }
 
 export function resolveAliasesPath(cwd: string): string | undefined {
   const candidates = [
+    join(cwd, `${GROWTH_REL}/session/aliases.json`),
+    walkUpForFile(cwd, `${GROWTH_REL}/session/aliases.json`),
     join(cwd, '.dsh/growth/session/aliases.json'),
     walkUpForFile(cwd, '.dsh/growth/session/aliases.json'),
     walkUpForFile(cwd, '.cursorGrowth/session/aliases.json'),

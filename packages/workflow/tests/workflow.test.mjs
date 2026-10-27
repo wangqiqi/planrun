@@ -25,7 +25,7 @@ test('ensureGrowth creates plan.md from templates', () => {
   assert.equal(result.created, true)
   // Windows joins with a backslash: comparing against a POSIX literal made this
   // test fail on every Windows checkout.
-  assert.ok(result.growthDir.endsWith(join('.dsh', 'growth')), result.growthDir)
+  assert.ok(result.growthDir.endsWith('.growing'), result.growthDir)
   rmSync(root, { recursive: true, force: true })
 })
 
@@ -55,8 +55,8 @@ test('loadPlanSnapshot reads ACTIVE and AUTONOMOUS', () => {
 
 test('buildRunStopSteer chains to next task', () => {
   const dir = mkdtempSync(join(tmpdir(), 'planrun-stop-'))
-  mkdirSync(join(dir, '.dsh/growth'), { recursive: true })
-  const planPath = join(dir, '.dsh/growth/plan.md')
+  mkdirSync(join(dir, '.growing'), { recursive: true })
+  const planPath = join(dir, '.growing/plan.md')
   writeFileSync(
     planPath,
     `<!-- PLANNING: false -->

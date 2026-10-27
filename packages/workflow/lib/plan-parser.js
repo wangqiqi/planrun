@@ -1,4 +1,5 @@
 import { readFileSync, existsSync } from 'node:fs';
+import { GROWTH_REL, walkUpForExistingPlan } from './growth-paths.js';
 const SKIP_PREFIXES = ['REV-', 'SPIKE-', 'DOC-'];
 function meta(content, key) {
     const re = new RegExp(`<!--\\s*${key}:\\s*([^>]+)\\s*-->`);
@@ -111,15 +112,10 @@ export function resolvePlanPath(cwd, explicit) {
     const envPlan = process.env.DSH_GROWTH_PLAN;
     if (envPlan && existsSync(envPlan))
         return envPlan;
-    const candidates = [
-        `${cwd}/.dsh/growth/plan.md`,
-        `${cwd}/.cursorGrowth/plan.md`,
-    ];
-    for (const candidate of candidates) {
-        if (existsSync(candidate))
-            return candidate;
-    }
-    return candidates[0];
+    const walked = walkUpForExistingPlan(cwd);
+    if (walked)
+        return walked;
+    return `${cwd}/${GROWTH_REL}/plan.md`;
 }
 export function loadPlanSnapshot(planPath) {
     if (!existsSync(planPath))

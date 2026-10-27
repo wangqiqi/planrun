@@ -1,6 +1,7 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { growthDirAt, migrateLegacyGrowth } from './growth-paths.js';
 function copyTree(src, dest) {
     mkdirSync(dest, { recursive: true });
     for (const entry of readdirSync(src)) {
@@ -26,7 +27,7 @@ const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url));
  * - npm install — the build copies `templates/growth` into the package itself.
  *
  * The old single `../../..` candidate only matched the first, so a registry
- * install silently never seeded `.dsh/growth/plan.md`.
+ * install silently never seeded `.growing/plan.md`.
  */
 export function resolvePlanrunHome(explicit) {
     const candidates = [
@@ -41,9 +42,10 @@ export function resolvePlanrunHome(explicit) {
     }
     return undefined;
 }
-/** Idempotent `.dsh/growth/` bootstrap (Super Cursor growth-init for DSH). */
+/** Idempotent `.growing/` bootstrap (Super Cursor growth-init for DSH). */
 export function ensureGrowth(projectRoot, planrunHome) {
-    const growthDir = join(projectRoot, '.dsh/growth');
+    migrateLegacyGrowth(projectRoot);
+    const growthDir = growthDirAt(projectRoot);
     const templateDir = planrunHome ? join(planrunHome, 'templates/growth') : undefined;
     let created = false;
     if (!existsSync(growthDir)) {
