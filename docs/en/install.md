@@ -22,7 +22,7 @@ PlanRun's bundled **skills** target **DSH**. The `.cursor/` tree in this repo is
 | **DeepSeek Harness** + `dsh` CLI | Required for Path A/A′/B |
 | **Node.js** `^22.19` or `>=24` | Build and guard scripts |
 | **pnpm** | Monorepo dev / verify |
-| **Git** | Target project for `.dsh/growth/` |
+| **Git** | Target project for `.growing/` |
 | **A POSIX shell** (`bash`/`sh`) | `install-planrun.sh`, `dsh-guard.sh`, and the `pnpm run` verify/guard scripts — `scripts/run-bash.mjs` locates a working shell (on Windows: Git for Windows or WSL). No `bash` on `PATH` required. |
 
 **Not required**: a specific Linux user, this maintainer's machine paths, or Cursor IDE.
@@ -52,7 +52,7 @@ export PLANRUN_HOME="$PWD/planrun"
 "$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
 ```
 
-Creates `.dsh/growth/` (plan · learn · archive). Add `.dsh/growth/` to `.gitignore` if needed.
+Creates `.growing/` (plan · learn · archive). Add `.growing/` to `.gitignore` if needed.
 
 5. **Verify** bundle mounted:
 
@@ -123,7 +123,7 @@ See [dogfood.md](dogfood.md).
 | Piece | Location |
 |-------|----------|
 | Rules · skills · agents | Super Cursor mother repo `.cursor/` |
-| Project-specific plan/learn | `.cursorGrowth/` (gitignored) on target project |
+| Project-specific plan/learn | `.growing/` (gitignored) on target project |
 
 Use upstream **install-super-cursor** flow into your application repo. PlanRun npm bundle is **not** required for pure Cursor workflows.
 
@@ -131,7 +131,7 @@ Mapping DSH ↔ Super Cursor → [mapping-from-super-cursor.md](mapping-from-sup
 
 ## Workflow guard (after plan approval)
 
-In a project with `.dsh/growth/plan.md` and `PLAN_APPROVED` set:
+In a project with `.growing/plan.md` and `PLAN_APPROVED` set:
 
 ```sh
 pnpm run gate-check
@@ -152,10 +152,10 @@ pnpm run doctor        # install drift check: guard files · template · package
 | Git install fails, pnpm mentions an ignored build script | The checkout must declare no `prepare`/`prepublish` script — this channel ships committed runtime. Run `pnpm run verify:lib` and commit `packages/*/lib/*.js` |
 | Bundle not visible in session | Restart DSH profile after plugin add |
 | Presets/skills still look stale after a bundle update | DSH does **not** watch the profile for file changes. Toggle the bundle off/on in **Settings → Built-in plugins** (in-process reload), or restart `dsh web`. Swapping the files is not enough — a running instance keeps the definitions it mounted, so a preset can stay on 「加载失败」 |
-| `gate-check` BLOCK | Set `PLAN_APPROVED` in `.dsh/growth/plan.md` (or `.cursorGrowth/plan.md` when dogfooding PlanRun itself) |
+| `gate-check` BLOCK | Set `PLAN_APPROVED` in `.growing/plan.md` (or `.growing/plan.md` when dogfooding PlanRun itself) |
 | `doctor` FAIL: guard script drifted | Re-run `install-planrun.sh --here` (it records the new hashes), or copy `templates/growth/scripts/*` into `scripts/` |
 | `doctor` FAIL: package versions disagree | The DSH profile and the project were installed from different tags — align both, the FAIL line prints the exact command |
-| Skills load but plan path wrong | PlanRun dev uses `.cursorGrowth/plan.md`; normal projects use `.dsh/growth/plan.md` |
+| Skills load but plan path wrong | PlanRun dev uses `.growing/plan.md`; normal projects use `.growing/plan.md` |
 
 ## Related
 

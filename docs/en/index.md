@@ -30,8 +30,8 @@ features:
     title: "@planrun/bundle"
     details: one bundle for skill-provider + workflow hooks — install from a pinned GitHub tag today, npm publish pending (same pattern as turtle-ui).
   - icon: 🌱
-    title: ".dsh/growth/"
-    details: plan · learn · archive mirror Super Cursor's .cursorGrowth/ — project-local, usually gitignored, auditable.
+    title: ".growing/"
+    details: plan · learn · archive mirror Super Cursor's .growing/ — project-local, usually gitignored, auditable.
   - icon: 🚧
     title: Workflow guard
     details: gate-check · plan-check · task-verify · next-task · doctor — no coding before PLAN_APPROVED; no ✅ without verify.

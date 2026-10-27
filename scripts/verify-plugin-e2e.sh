@@ -163,10 +163,10 @@ set -e
 check_boot "boot" "$boot_out" "$boot_code"
 [[ "$FAIL" == 0 ]] && ok "plugins loaded (boot stopped only at the model call)"
 
-if [[ -f "$WORK/project/.dsh/growth/plan.md" ]]; then
-  ok "workflow plugin seeded .dsh/growth/plan.md"
+if [[ -f "$WORK/project/.growing/plan.md" ]]; then
+  ok "workflow plugin seeded .growing/plan.md"
 else
-  fail "workflow plugin did not seed .dsh/growth/plan.md — its listeners may not be firing"
+  fail "workflow plugin did not seed .growing/plan.md — its listeners may not be firing"
 fi
 
 echo "==> boot headless with the planrun agent preset selected"

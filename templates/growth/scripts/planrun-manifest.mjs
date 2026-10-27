@@ -31,7 +31,11 @@ import { fileURLToPath } from 'node:url'
 
 export const MANIFEST_SCHEMA = 1
 export const PLAN_TEMPLATE_SCHEMA = 1
-export const MANIFEST_REL = join('.dsh', 'growth', '.planrun-manifest.json')
+export const MANIFEST_REL = join('.growing', '.planrun-manifest.json')
+export const LEGACY_MANIFEST_RELS = [
+  join('.dsh', 'growth', '.planrun-manifest.json'),
+  join('.cursorGrowth', '.planrun-manifest.json'),
+]
 
 /**
  * Files `install-planrun.sh` drops next to the guard. Hashed at install time so
@@ -43,8 +47,14 @@ export const TRACKED_FILES = [
   'scripts/run-bash.mjs',
 ]
 
-export function manifestPath(projectRoot) {
-  return join(resolve(projectRoot), MANIFEST_REL)
+export function manifestPath(projectRoot, { forWrite = false } = {}) {
+  const root = resolve(projectRoot)
+  if (forWrite) return join(root, MANIFEST_REL)
+  for (const rel of [MANIFEST_REL, ...LEGACY_MANIFEST_RELS]) {
+    const candidate = join(root, rel)
+    if (existsSync(candidate)) return candidate
+  }
+  return join(root, MANIFEST_REL)
 }
 
 export function sha256File(file) {
@@ -94,7 +104,7 @@ export function buildManifest(projectRoot, { source = null, version = null, now 
 
 export function writeManifest(projectRoot, options = {}) {
   const manifest = buildManifest(projectRoot, options)
-  const target = manifestPath(projectRoot)
+  const target = manifestPath(projectRoot, { forWrite: true })
   mkdirSync(dirname(target), { recursive: true })
   writeFileSync(target, `${JSON.stringify(manifest, null, 2)}\n`)
   return { path: target, manifest }

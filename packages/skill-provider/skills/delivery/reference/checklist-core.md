@@ -16,7 +16,7 @@
 
 ### 2. Internationalization (i18n)
 
-> Project paths → `.dsh/growth/learn/acceptance.md`
+> Project paths → `.growing/learn/acceptance.md`
 
 **Skip** (state in report): internal CLI/lib only, no user UI, or team waived i18n this release.
 

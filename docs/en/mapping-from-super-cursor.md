@@ -39,7 +39,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | execution/* | domain skills (v0.2) | defer |
 | tech/* (13 stacks) | per-stack preset packs (v1) | defer |
 | super-cursor-persona, cursor-standalone | docs/en/discipline.md §Persona + workflow inject | **merge** |
-| roles.json personas (12) | `@planrun/skill-provider/config/roles.json` + `.dsh/growth/session/` | **keep** (v1.4) |
+| roles.json personas (12) | `@planrun/skill-provider/config/roles.json` + `.growing/session/` | **keep** (v1.4) |
 
 ## Runtime
 
@@ -47,7 +47,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 |---|---|---|
 | hooks.json | @planrun/workflow plugin | **keep** (v1.1 Cordis plugin) |
 | runner.sh | `scripts/dsh-guard.sh` + `pnpm run gate-check` | **keep** (guard MVP) |
-| plan.md HTML meta SSOT | `.dsh/growth/plan.md` + guard | **keep** (session todos still parallel) |
+| plan.md HTML meta SSOT | `.growing/plan.md` + guard | **keep** (session todos still parallel) |
 | commands/*.md | skill description + user slash | **merge** |
 | agents/ship, review, spike | subagent presets (`presets.patch.yml` declarations) + `agents/*.md` | **keep** (v1.6) |
 
@@ -56,7 +56,7 @@ Status key: **keep** (bundled or docs) · **rename** · **merge** · **defer** (
 | Super Cursor | PlanRun |
 |---|---|
 | copy `.cursor/` | `dsh plugin add "github:wangqiqi/planrun#<tag>"` (npm: `@planrun/bundle`, not published yet) |
-| `.cursorGrowth/` seeds | `install-planrun.sh` → `.dsh/growth/` |
+| `.growing/` seeds | `install-planrun.sh` → `.growing/` |
 
 ## Dedup with deepseek-harness
 

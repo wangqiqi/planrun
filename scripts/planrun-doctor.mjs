@@ -46,10 +46,17 @@ const CORE_META = ['PLANNING', 'SPRINT', 'PLAN_APPROVED', 'VERIFY']
 /* ------------------------------------------------------------------ helpers */
 
 /** Walk up from `start` looking for the project's growth dir. */
+function growthDirAt(root) {
+  if (existsSync(join(root, '.growing'))) return join(root, '.growing')
+  if (existsSync(join(root, '.dsh', 'growth'))) return join(root, '.dsh', 'growth')
+  if (existsSync(join(root, '.cursorGrowth'))) return join(root, '.cursorGrowth')
+  return null
+}
+
 export function findProjectRoot(start) {
   let dir = resolve(start)
   while (true) {
-    if (existsSync(join(dir, '.dsh', 'growth'))) return dir
+    if (growthDirAt(dir)) return dir
     const parent = dirname(dir)
     if (parent === dir) return null
     dir = parent
@@ -58,7 +65,9 @@ export function findProjectRoot(start) {
 
 export function planFileFor(projectRoot, env = process.env) {
   if (env.DSH_GROWTH_PLAN && existsSync(env.DSH_GROWTH_PLAN)) return resolve(env.DSH_GROWTH_PLAN)
-  return join(projectRoot, '.dsh', 'growth', 'plan.md')
+  const growth = growthDirAt(resolve(projectRoot))
+  if (growth) return join(growth, 'plan.md')
+  return join(projectRoot, '.growing', 'plan.md')
 }
 
 function referenceHasGuard(dir) {
@@ -162,7 +171,7 @@ export function checkManifest(projectRoot) {
   const result = readManifest(projectRoot)
   if (!result.ok) {
     const detail = {
-      missing: '项目里没有 .dsh/growth/.planrun-manifest.json —— 无法证明装的是哪个版本',
+      missing: '项目里没有 .growing/.planrun-manifest.json —— 无法证明装的是哪个版本',
       unparsable: `版本清单不是合法 JSON: ${result.error}`,
       'not-an-object': '版本清单不是 JSON 对象',
       'schema-mismatch': `版本清单 schema 不匹配: ${result.error}`,
@@ -307,12 +316,12 @@ export function checkPackages(packages, { referenceVersion, manifest }) {
 export function runDoctor(options = {}) {
   const env = options.env ?? process.env
   const projectRoot = options.project ? resolve(options.project) : findProjectRoot(options.cwd ?? process.cwd())
-  if (!projectRoot || !existsSync(join(projectRoot, '.dsh', 'growth'))) {
+  if (!projectRoot || !growthDirAt(projectRoot)) {
     return {
       project: projectRoot ?? resolve(options.cwd ?? process.cwd()),
       exitCode: EXIT_CANNOT_DETERMINE,
       checks: [
-        skip('project', '项目定位', '没有找到 .dsh/growth/ —— 这不是一个 PlanRun 项目（先跑 install-planrun.sh）'),
+        skip('project', '项目定位', '没有找到 .growing/（或旧 growth 目录）—— 这不是一个 PlanRun 项目（先跑 install-planrun.sh）'),
       ],
     }
   }

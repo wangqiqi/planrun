@@ -44,11 +44,11 @@ pnpm run verify:dogfood
 3. **Guard loop** — `DSH_GROWTH_PLAN=<fixture>` → `gate-check` · `plan-check` · `next-task`
 4. **Bundle artifacts** — `bundle-planrun` · `skill-provider` · `workflow` `lib/` after `pnpm run build`, plus `cordis.patch.yml` and the generated `presets.patch.yml`
 5. **28 skills** — disk inventory + `master/routes.md` references
-6. **Install seed** — `install-planrun.sh` creates `.dsh/growth/` plus a usable version manifest (`.planrun-manifest.json`) on a temp git root (does not modify harness)
+6. **Install seed** — `install-planrun.sh` creates `.growing/` plus a usable version manifest (`.planrun-manifest.json`) on a temp git root (does not modify harness)
 
 ## Guard fixture SSOT
 
-`templates/dogfood/plan-fixture.md` is the **single source of truth** for automated guard tests. The harness repo may keep its own `.dsh/growth/plan.md`; dogfood does not require changing upstream harness files.
+`templates/dogfood/plan-fixture.md` is the **single source of truth** for automated guard tests. The harness repo may keep its own `.growing/plan.md`; dogfood does not require changing upstream harness files.
 
 ## Interactive dogfood (manual)
 

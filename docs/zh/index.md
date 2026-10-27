@@ -30,8 +30,8 @@ features:
     title: "@planrun/bundle"
     details: 一套 bundle 挂载 skill-provider + workflow hooks —— 当前用固定 tag 的 GitHub 直装，npm 发布待定（与 turtle-ui 等同模式）。
   - icon: 🌱
-    title: ".dsh/growth/"
-    details: plan · learn · archive 项目本地镜像 Super Cursor 的 .cursorGrowth/，通常 gitignore，可审计可沉淀。
+    title: ".growing/"
+    details: plan · learn · archive 项目本地镜像 Super Cursor 的 .growing/，通常 gitignore，可审计可沉淀。
   - icon: 🚧
     title: Workflow guard
     details: gate-check · plan-check · task-verify · next-task · doctor — Sprint 批准后才编码，验收绿才勾 ✅。

@@ -36,7 +36,7 @@ After apply, run manifest `post_apply`, then `./scripts/verify.sh`.
 
 ## Pure DSH projects (no `.cursor/`)
 
-When the target has only `.dsh/growth/` and harness skills:
+When the target has only `.growing/` and harness skills:
 
 1. Use **`install-planrun.sh --here`** for growth seeds
 2. For greenfield app stacks, either work from a **planrun checkout** (`$PLANRUN_HOME/.cursor/bin/scaffold.sh`) or hand-roll README + verify per stack conventions

@@ -29,7 +29,7 @@ node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 
 ## Install drift check (`doctor`)
 
-`install-planrun.sh` writes `.dsh/growth/.planrun-manifest.json` (PlanRun version · guard sha256 · template schema · install time). `doctor` reads it back and reports four checks:
+`install-planrun.sh` writes `.growing/.planrun-manifest.json` (PlanRun version · guard sha256 · template schema · install time). `doctor` reads it back and reports four checks:
 
 | Check | Fails when |
 |-------|-----------|
@@ -47,7 +47,7 @@ Reference copy resolution order: `--expect-guard` → `--source` → `PLANRUN_HO
 Priority:
 
 1. `DSH_GROWTH_PLAN` — explicit path
-2. Walk up from **current working directory** for `.dsh/growth/plan.md` or `.cursorGrowth/plan.md`
+2. Walk up from **current working directory** for `.growing/plan.md` or `.growing/plan.md`
 3. Fallback: PlanRun repo root (when `scripts/` live in the planrun checkout)
 
 Target projects: run `install-planrun.sh` to copy guard scripts to `scripts/` and merge npm scripts into `package.json`.
@@ -97,7 +97,7 @@ Super Cursor–compatible columns:
 |--------------|-----------------|
 | `.cursor/bin/runner.sh` | `scripts/dsh-guard.sh` |
 | `.cursor/config/workflow.json` | env + plan HTML meta |
-| `.cursorGrowth/plan.md` | `.dsh/growth/plan.md` (+ mother `.cursorGrowth/`) |
+| `.growing/plan.md` | `.growing/plan.md` (+ mother `.growing/`) |
 | `release-tag` | **`release`** skill (not in guard MVP) |
 
 Future: `@planrun/workflow` Cordis plugin injects session hooks; **guard scripts remain the portable baseline** when the plugin is not mounted.

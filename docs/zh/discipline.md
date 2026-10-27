@@ -5,7 +5,7 @@
 ## 工作流
 
 1. **模型可见 ⟺ 可审计** — DSH 会话里模型需要的信息，应能从日志重建。
-2. **大改先规划** — 超过五个任务或范围不清 → 写 `.dsh/growth/plan.md`，确认后再 `run`。
+2. **大改先规划** — 超过五个任务或范围不清 → 写 `.growing/plan.md`，确认后再 `run`。
 3. **单一 ACTIVE** — `run` 一次只实现 plan 里一行 ACTIVE 任务。
 4. **verify 后才 ✅** — `task-verify` 通过才能标 DONE 或 commit。
 5. **一任务一 commit** — 每个完成的 TASK 单独提交（仅改 plan 除外）。
@@ -15,7 +15,7 @@
 ## Persona（12 人格）
 
 - **默认**：`dashu`（目录：`@planrun/skill-provider/config/roles.json`）
-- **呼叫**：用户说「呼叫老周」「切换御姐」→ **master** §人格 → 写 `.dsh/growth/session/persona.json`
+- **呼叫**：用户说「呼叫老周」「切换御姐」→ **master** §人格 → 写 `.growing/session/persona.json`
 - **必须**：用 `voice_cues` · `emotion_cues` · `speech_examples` 区分语气；**禁止**以 `given_name` 开场
 - **禁止**：因人设语气跳过 verify · gate-check · 高风险确认
 - **能力**：全员 `skills: full` — 只改语气，不降能力

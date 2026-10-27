@@ -4,7 +4,7 @@ Super Cursor `hooks.json` → DSH Cordis extension points via **`@planrun/workfl
 
 | Super Cursor | DSH event (`@planrun/workflow`) | Handler | Behavior |
 |---|---|---|---|
-| `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | Idempotent `.dsh/growth/` seed from `templates/growth` |
+| `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | Idempotent `.growing/` seed from `templates/growth` |
 | `sessionStart` → `run-start.sh` | `agent/created` | `buildRunStartContext()` + `buildPersonaStartContext()` | Inject plan gate / ACTIVE / AUTONOMOUS + **Persona hint** |
 | `stop` → `run-stop.sh` | `agent/turn-stopping` | `buildRunStopSteer()` | `agent.steer()` next TASK when `AUTONOMOUS:true` |
 
@@ -25,8 +25,8 @@ resumes on its own. Covered by `packages/workflow/tests/workflow.test.mjs`.
 ## Plan file resolution (same as `dsh-guard.sh`)
 
 1. `DSH_GROWTH_PLAN` env (absolute path)
-2. `<cwd>/.dsh/growth/plan.md`
-3. `<cwd>/.cursorGrowth/plan.md` (PlanRun mother-repo dev)
+2. `<cwd>/.growing/plan.md`
+3. `<cwd>/.growing/plan.md` (PlanRun mother-repo dev)
 
 ## Growth templates
 

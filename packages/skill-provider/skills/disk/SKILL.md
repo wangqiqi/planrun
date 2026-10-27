@@ -2,7 +2,7 @@
 name: disk
 description: >-
   Disk snapshot (no slash): structured HOME and configurable path usage, write to
-  .dsh/growth/disk-snapshots/, diff against prior snapshot. Trigger on 磁盘快照,
+  .growing/disk-snapshots/, diff against prior snapshot. Trigger on 磁盘快照,
   disk snapshot, 空间变动.
 disable-model-invocation: true
 user-invocable: true
@@ -12,7 +12,7 @@ user-invocable: true
 
 **工具技能**（无 slash · 非 sprint-plan/run 主路径）。**用这个**：占用快照与对比。**不是那个**：业务代码清理重构 → **refactor**；系统清理流程 → **maintain** skill。
 
-结构化采集磁盘占用，写入 **`.dsh/growth/disk-snapshots/`**（本地、**不提交 git**），支持对比两次快照的变动。
+结构化采集磁盘占用，写入 **`.growing/disk-snapshots/`**（本地、**不提交 git**），支持对比两次快照的变动。
 
 **Scripts**: bundled at `@planrun/skill-provider/skills/disk/scripts/` (planrun checkout: `packages/skill-provider/skills/disk/scripts/`).
 
@@ -33,8 +33,8 @@ python3 packages/skill-provider/skills/disk/scripts/collect-disk.py snapshot
 
 - `--home ~` — HOME 目录（默认 `~`）
 - `--project-dir .` — 相对路径类条目（`./build` 等）的基准目录
-- `--snapshot-dir .dsh/growth/disk-snapshots`（默认已是）
-- `--config .dsh/growth/disk-paths.json` — 自定义采集表（可复制 `skills/disk/config/default-paths.json` 为起点）
+- `--snapshot-dir .growing/disk-snapshots`（默认已是）
+- `--config .growing/disk-paths.json` — 自定义采集表（可复制 `skills/disk/config/default-paths.json` 为起点）
 
 ### 2. 对比变动（需 ≥2 份快照）
 
@@ -42,7 +42,7 @@ python3 packages/skill-provider/skills/disk/scripts/collect-disk.py snapshot
 python3 packages/skill-provider/skills/disk/scripts/collect-disk.py diff
 ```
 
-输出 `.dsh/growth/disk-snapshots/diff-latest.md`，并打印 Markdown 对比表。
+输出 `.growing/disk-snapshots/diff-latest.md`，并打印 Markdown 对比表。
 
 ### 3. 查看
 
@@ -54,10 +54,10 @@ python3 packages/skill-provider/skills/disk/scripts/collect-disk.py report
 ### 4. 确认
 
 ```bash
-git status   # .dsh/growth/ 不应出现在待提交列表
+git status   # .growing/ 不应出现在待提交列表
 ```
 
-**禁止** `git add .dsh/growth/disk-snapshots/`。
+**禁止** `git add .growing/disk-snapshots/`。
 
 ## 快照结构
 
@@ -70,7 +70,7 @@ git status   # .dsh/growth/ 不应出现在待提交列表
 | IDE | `ide.cursor` · `ide.cursor_state` · `ide.vscode` |
 | 当前项目 | `pkg.build` · `pkg.node_modules` · `pkg.target`（相对 `--project-dir`） |
 
-对比时按 **变动绝对值** 排序。可在 `.dsh/growth/disk-paths.json` 增删路径，**勿写入个人信息**。
+对比时按 **变动绝对值** 排序。可在 `.growing/disk-paths.json` 增删路径，**勿写入个人信息**。
 
 ## 与 maintain 的分工
 

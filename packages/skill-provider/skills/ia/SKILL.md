@@ -15,7 +15,7 @@ user-invocable: true
 **学科位置**：**IA ⊂ UX** — 管导航、分组、角色入口、工作流分支；不管 token 配色（→ 项目设计规范 · **delivery** §1）。UX 总分流 → **ux** skill。
 
 **项目实例文档**：`docs/design/<产品>-ia.md` 或 `docs/design/*信息架构*` / `*information-architecture*`（仓库内约定）  
-**项目认知摘要**：**`learn`** → `.dsh/growth/learn/`（可选）
+**项目认知摘要**：**`learn`** → `.growing/learn/`（可选）
 
 ## 何时进入
 
@@ -72,7 +72,7 @@ user-invocable: true
 | 产出 | 路径 |
 |------|------|
 | 讨论稿 / ASCII / 线框 | `docs/design/<产品>-ia.md` |
-| 验收用例 | `.dsh/growth/learn/` 或 plan Done when |
+| 验收用例 | `.growing/learn/` 或 plan Done when |
 | 实现 | 用户确认后 **`sprint-plan`** — **ia** 默认不直接大改代码 |
 
 ## 审查清单

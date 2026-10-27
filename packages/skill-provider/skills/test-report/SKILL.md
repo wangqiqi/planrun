@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：在 **verify / test 已跑或即将跑** 后，生成或更新**可单独发布**的测试报告（摘要表 · 矩阵 · 复现命令 · 结论）。**不是那个**：写/跑测试 → **test**；门禁脚本本身 → 项目 `scripts/verify.sh`；上线 7 维走查 → **`delivery`**；Sprint 编排 → **`sprint-plan`** `DOC-*`。
 
-母版正文**零**业务词、零具体套件名、零仓库路径。项目命令、文档路径、锚点 → **Report Contract**（`config/test-report.yaml` 优先；无则 `.dsh/growth/learn/test-report.md`）。
+母版正文**零**业务词、零具体套件名、零仓库路径。项目命令、文档路径、锚点 → **Report Contract**（`config/test-report.yaml` 优先；无则 `.growing/learn/test-report.md`）。
 
 Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
@@ -26,11 +26,11 @@ Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
 ## 流程（五段 · 概览）
 
-1. **读 Contract** — `config/test-report.yaml` 或 `.dsh/growth/learn/test-report.md`；无则 `ask_user_question` + 项目 `templates/test-report-contract.example.yaml` 起草
+1. **读 Contract** — `config/test-report.yaml` 或 `.growing/learn/test-report.md`；无则 `ask_user_question` + 项目 `templates/test-report-contract.example.yaml` 起草
 2. **执行或复用日志** — 按 Contract `run.suites[]` 跑命令，或 `--from-logs` 解析 `run.log_dir` 已有 `*.log`
 3. **解析** — 按 `reference/parse-sources.md` 提取 PASS/FAIL · 计数 · 墙钟 · skip 说明
 4. **渲染** — 填 `report-template.md` 结构 → 写入 `report.doc_path`；更新版本头 / sprint / commit
-5. **验收** — L1 锚点脚本 + 可选 `.dsh/growth/archive/reviews/` 摘要（非 SSOT）
+5. **验收** — L1 锚点脚本 + 可选 `.growing/archive/reviews/` 摘要（非 SSOT）
 
 ## 运行模式
 

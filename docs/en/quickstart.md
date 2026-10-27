@@ -41,7 +41,7 @@ dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ./scripts/install-planrun.sh --here
 ```
 
-Creates `.dsh/growth/` at the Git project root.
+Creates `.growing/` at the Git project root.
 
 ## 4. Use in a session
 

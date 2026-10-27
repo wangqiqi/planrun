@@ -195,11 +195,11 @@ check_install_seed() {
     FAIL=1
     return
   fi
-  if [[ ! -f "$tmp/.dsh/growth/plan.md" ]]; then
-    echo "FAIL: .dsh/growth/plan.md not created"
+  if [[ ! -f "$tmp/.growing/plan.md" ]]; then
+    echo "FAIL: .growing/plan.md not created"
     FAIL=1
   else
-    echo "OK: install-planrun.sh → .dsh/growth/plan.md"
+    echo "OK: install-planrun.sh → .growing/plan.md"
   fi
   if [[ ! -f "$tmp/scripts/dsh-guard.sh" ]]; then
     echo "FAIL: scripts/dsh-guard.sh not created"
@@ -208,7 +208,7 @@ check_install_seed() {
     echo "OK: install-planrun.sh → scripts/dsh-guard.sh"
   fi
   # The manifest is what lets `doctor` prove which version seeded the project.
-  local manifest="$tmp/.dsh/growth/.planrun-manifest.json"
+  local manifest="$tmp/.growing/.planrun-manifest.json"
   local manifest_ok=false
   if [[ -f "$manifest" ]] && node -e '
       const fs = require("node:fs")
@@ -220,7 +220,7 @@ check_install_seed() {
     manifest_ok=true
   fi
   if [[ "$manifest_ok" != true ]]; then
-    echo "FAIL: .dsh/growth/.planrun-manifest.json missing or unusable (schema/version/guard sha256)"
+    echo "FAIL: .growing/.planrun-manifest.json missing or unusable (schema/version/guard sha256)"
     FAIL=1
   else
     local manifest_version

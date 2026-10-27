@@ -2,7 +2,7 @@
 name: week
 description: >-
   Weekly report (no slash): scan workspace CHANGELOG.md files, summarize by week
-  number, write to .dsh/growth/week-report/. Trigger on 周报, weekly report, 本周总结.
+  number, write to .growing/week-report/. Trigger on 周报, weekly report, 本周总结.
 disable-model-invocation: true
 user-invocable: true
 ---
@@ -11,7 +11,7 @@ user-invocable: true
 
 **工具技能**（无 slash · 非 sprint-plan/run 主路径）。**用这个**：汇总多仓 CHANGELOG 周报。**不是那个**：本仓约定沉淀 → **`learn`**；打版 → **`release`**。
 
-扫描工作区各仓库 **CHANGELOG.md**，归纳后写入 **`.dsh/growth/week-report/第{N}周任务总结.md`**（本地、**不提交 git**）。
+扫描工作区各仓库 **CHANGELOG.md**，归纳后写入 **`.growing/week-report/第{N}周任务总结.md`**（本地、**不提交 git**）。
 
 **Scripts**: bundled at `@planrun/skill-provider/skills/week/scripts/` (planrun checkout: `packages/skill-provider/skills/week/scripts/`).
 
@@ -48,10 +48,10 @@ When installed via npm, prefix with `node_modules/@planrun/skill-provider/` inst
 ### 2. 归纳并写入
 
 ```bash
-mkdir -p .dsh/growth/week-report
+mkdir -p .growing/week-report
 ```
 
-输出：`.dsh/growth/week-report/第{N}周任务总结.md`（同周已存在则覆盖）。
+输出：`.growing/week-report/第{N}周任务总结.md`（同周已存在则覆盖）。
 
 **不要**只粘贴 CHANGELOG 原文。结构：
 
@@ -80,10 +80,10 @@ mkdir -p .dsh/growth/week-report
 ### 3. 确认
 
 ```bash
-git status   # .dsh/growth/ 不应出现在待提交列表
+git status   # .growing/ 不应出现在待提交列表
 ```
 
-**禁止** `git add .dsh/growth/week-report/`。
+**禁止** `git add .growing/week-report/`。
 
 ## 与 release 的关系
 

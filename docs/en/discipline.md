@@ -5,7 +5,7 @@ Compressed standing rules adapted from Super Cursor `core.mdc` + `workflow.mdc` 
 ## Workflow
 
 1. **Model-visible ⟺ logged** — when using DSH, anything the model needs must be reconstructable from the session log.
-2. **Plan before large work** — more than five tasks or unclear scope → write `.dsh/growth/plan.md`, confirm, then `run`.
+2. **Plan before large work** — more than five tasks or unclear scope → write `.growing/plan.md`, confirm, then `run`.
 3. **One ACTIVE task** — `run` implements a single ACTIVE row at a time.
 4. **Verify before ✅** — task verify must pass before marking DONE or committing.
 5. **Commit per task** — each completed TASK gets a git commit (plan-only edits excluded).
@@ -15,7 +15,7 @@ Compressed standing rules adapted from Super Cursor `core.mdc` + `workflow.mdc` 
 ## Persona (12 personas)
 
 - **Default**: `dashu` (catalog: `@planrun/skill-provider/config/roles.json`)
-- **Summon**: user says「呼叫老周」「切换御姐」→ **master** §人格·呼叫 → write `.dsh/growth/session/persona.json`
+- **Summon**: user says「呼叫老周」「切换御姐」→ **master** §人格·呼叫 → write `.growing/session/persona.json`
 - **Must**: distinguish by `voice_cues` + `emotion_cues` + `speech_examples`; **forbid** opening with `given_name`
 - **Must not**: skip verify, gate-check, or high-risk confirmation because of persona tone
 - **Skills policy**: full for every persona — voice only, not capability

@@ -11,7 +11,7 @@ user-invocable: true
 
 **用这个**：生成或更新**可单独发布**的操作手册（故事线 + **实机截图** + 可选 **Mermaid 示意图** + 双层验收）。**不是那个**：上线前文档↔实现走查 → **`delivery`**；行为红绿测试 → **test**；大改版 Sprint 编排 → **`sprint-plan`** `DOC-*`。
 
-母版正文**零**业务词、零演示账号、零具体仓库路径。项目命令与命名 → **Manual Contract**（`config/manual.yaml` 优先；无则 `.dsh/growth/learn/user-manual.md`）。
+母版正文**零**业务词、零演示账号、零具体仓库路径。项目命令与命名 → **Manual Contract**（`config/manual.yaml` 优先；无则 `.growing/learn/user-manual.md`）。
 
 Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
@@ -25,7 +25,7 @@ Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
 ## 流程（五段 · 概览）
 
-1. **读 Contract** — `config/manual.yaml` 或 `.dsh/growth/learn/user-manual.md`；无则 `ask_user_question` + 用项目 `templates/manual-contract.example.yaml` 起草
+1. **读 Contract** — `config/manual.yaml` 或 `.growing/learn/user-manual.md`；无则 `ask_user_question` + 用项目 `templates/manual-contract.example.yaml` 起草
 2. **提取 / 学习** — 按 `reference/extract-sources.md` 优先级补全 storylines · shots
 3. **门禁** — 项目 `verify` / `pnpm run task-verify` 全绿后才 regen（发版档）；见 `reference/regen-gates.md`
 4. **Capture regen** — 按 `capture.profile` 跑 walkthrough → sync assets → 更新 doc（**仅** `storylines[].shots` 列出的实机图）

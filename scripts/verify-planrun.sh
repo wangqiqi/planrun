@@ -393,8 +393,8 @@ fi
 
 echo "==> Checking guard cwd resolution"
 GUARD_TMP="$(mktemp -d)"
-mkdir -p "$GUARD_TMP/nested/.dsh/growth"
-cp "$ROOT/templates/dogfood/plan-fixture.md" "$GUARD_TMP/nested/.dsh/growth/plan.md"
+mkdir -p "$GUARD_TMP/nested/.growing"
+cp "$ROOT/templates/dogfood/plan-fixture.md" "$GUARD_TMP/nested/.growing/plan.md"
 if ! (cd "$GUARD_TMP/nested" && "$BASH_BIN" "$ROOT/scripts/dsh-guard.sh" gate-check >/dev/null); then
   echo "FAIL: gate-check from nested cwd"
   FAIL=1

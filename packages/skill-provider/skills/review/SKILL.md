@@ -17,8 +17,8 @@ user-invocable: true
 
 | Axis | Question | Evidence |
 |---|---|---|
-| **Standards** | Matches documented project conventions? | `AGENTS.md`, package READMEs, `.dsh/growth/learn/dev-conventions.md` |
-| **Spec** | Meets Goal / issue / PR intent? | PR body, `.dsh/growth/plan.md` Target, acceptance commands |
+| **Standards** | Matches documented project conventions? | `AGENTS.md`, package READMEs, `.growing/learn/dev-conventions.md` |
+| **Spec** | Meets Goal / issue / PR intent? | PR body, `.growing/plan.md` Target, acceptance commands |
 
 Each axis: **Pass / Concern / Blocker** + `file:line` + one-line rationale.
 

@@ -59,7 +59,7 @@ packages/skill-provider/skills/maintain/scripts/dev-maintain.sh --diff
 | 文件 | 用途 |
 |------|------|
 | `skills/maintain/config/default-protected.json` | 默认受保护目录与缓存列表 |
-| `.dsh/growth/maintain-config.json` | 本机覆盖（可复制 default-protected 结构自定义） |
+| `.growing/maintain-config.json` | 本机覆盖（可复制 default-protected 结构自定义） |
 
 Playwright 浏览器缓存（`~/.cache/ms-playwright*`）默认在 `protected_dirs`，清理时保留。薄封装可通过环境变量 `MAINTAIN_BUILTIN_PROTECTED`（`|` 分隔路径）追加白名单。
 

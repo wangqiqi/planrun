@@ -59,7 +59,7 @@ pnpm dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 ./scripts/install-planrun.sh --here
 ```
 
-会在 Git 项目根创建 `.dsh/growth/`（plan · learn · archive）。
+会在 Git 项目根创建 `.growing/`（plan · learn · archive）。
 
 ## 4. Workflow guard（Sprint 闸门）
 
@@ -73,7 +73,7 @@ pnpm run next-task      # 找下一项
 pnpm run doctor         # 版本漂移体检：guard 脚本 · 模板 · 包版本
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发 PlanRun 本身可用 `.cursorGrowth/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
+plan 路径：`.growing/plan.md`（开发 PlanRun 本身可用 `.growing/plan.md`）。详见 [workflow-guard.md](workflow-guard.md)。
 
 ## 5. 在会话中使用
 

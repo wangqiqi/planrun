@@ -16,7 +16,7 @@ Details: [reference/hierarchy.md](reference/hierarchy.md) · [reference/pacing-c
 ## When to enter
 
 - user **`/long <Epic goal>`** or「长程开发」「多 Sprint 做到底」
-- **`/long resume`** — read `.dsh/growth/long-state.json`
+- **`/long resume`** — read `.growing/long-state.json`
 - **`master`** keyword route
 
 **Existing single-Sprint ACTIVE** and user only says **`run`** → do **not** intercept; continue **`run`**.
@@ -26,7 +26,7 @@ Details: [reference/hierarchy.md](reference/hierarchy.md) · [reference/pacing-c
 | layer | limit | carrier |
 |-------|-------|---------|
 | Epic → Sprint | ≤5 | `long-state.json` |
-| Sprint → Task | ≤5 | `.dsh/growth/plan.md` |
+| Sprint → Task | ≤5 | `.growing/plan.md` |
 | Task depth | L2 only | no sub-task IDs |
 
 Overflow → merge abstractly or split Epics. See [hierarchy.md](reference/hierarchy.md).
@@ -35,8 +35,8 @@ Overflow → merge abstractly or split Epics. See [hierarchy.md](reference/hiera
 
 ### 1. Epic planning (L0)
 
-1. read `.dsh/growth/learn/` · plan candidates · user goal
-2. write/update `.dsh/growth/long-state.json` ([schema](reference/pacing-checkpoint.md#long-statejson))
+1. read `.growing/learn/` · plan candidates · user goal
+2. write/update `.growing/long-state.json` ([schema](reference/pacing-checkpoint.md#long-statejson))
 3. split **≤5** Sprints (Goal + dependency each); **`ask_user_question`** confirm (≤4 options)
 4. `status: active` · `active_sprint_index: 0`
 
@@ -59,7 +59,7 @@ Between Sprints: optional pause; cross-day use **`/long resume`**.
 
 ### 3. Resume
 
-1. read `long-state.json` + `.dsh/growth/plan.md`
+1. read `long-state.json` + `.growing/plan.md`
 2. `paused` / interrupt → explain `interrupt_reason`; confirm with user
 3. open Sprint → continue **`run`** (ACTIVE)
 4. closed Sprint → **`sprint-plan`** for next Sprint (steps 2a–f)

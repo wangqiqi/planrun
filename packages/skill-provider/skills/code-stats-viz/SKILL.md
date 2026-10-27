@@ -2,7 +2,7 @@
 name: code-stats-viz
 description: >-
   Code stats dashboard (no slash): Git-tracked line counts, language distribution,
-  commit calendar heatmap; interactive HTML to .dsh/growth/code-stats/. Trigger on
+  commit calendar heatmap; interactive HTML to .growing/code-stats/. Trigger on
   代码统计, code stats, 语言分布, 提交热力图.
 disable-model-invocation: true
 user-invocable: true
@@ -14,7 +14,7 @@ user-invocable: true
 
 基于 `git ls-files`（默认）扫描代码行数，用 ECharts 生成交互式 HTML：**语言饼图/柱状图** · **提交日历热力图** · **小时/周分布** · **可过滤目录与文件类型**。
 
-产出写入 **`.dsh/growth/code-stats/`**（本地、**不提交 git**）。
+产出写入 **`.growing/code-stats/`**（本地、**不提交 git**）。
 
 **Scripts**: bundled at `@planrun/skill-provider/skills/code-stats-viz/scripts/` (planrun checkout: `packages/skill-provider/skills/code-stats-viz/scripts/`).
 
@@ -35,10 +35,10 @@ user-invocable: true
 ### 1. 生成仪表板
 
 ```bash
-mkdir -p .dsh/growth/code-stats
+mkdir -p .growing/code-stats
 python3 packages/skill-provider/skills/code-stats-viz/scripts/code_stats_viz.py \
   --dir . \
-  --output ".dsh/growth/code-stats/$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")_code_stats.html" \
+  --output ".growing/code-stats/$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")_code_stats.html" \
   --open
 ```
 
@@ -74,10 +74,10 @@ python3 packages/skill-provider/skills/code-stats-viz/scripts/code_stats_viz.py 
 
 ```bash
 bash packages/skill-provider/skills/code-stats-viz/scripts/verify_code_stats_viz.sh
-git status   # .dsh/growth/code-stats/ 不应出现在待提交列表
+git status   # .growing/code-stats/ 不应出现在待提交列表
 ```
 
-**禁止** `git add .dsh/growth/code-stats/`。
+**禁止** `git add .growing/code-stats/`。
 
 ## 与 disk / week 分工
 

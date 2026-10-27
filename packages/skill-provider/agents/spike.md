@@ -10,14 +10,14 @@
 
 - Comparison table (pros / cons / risk / effort)
 - Recommendation and suggested `TASK-*` split
-- Archive notes under `.dsh/growth/archive/` or update plan `SPIKE-*` row; hand structured conclusion back to parent for **`sprint-plan`**
+- Archive notes under `.growing/archive/` or update plan `SPIKE-*` row; hand structured conclusion back to parent for **`sprint-plan`**
 
 ## Experiment loop (when applicable)
 
 | Step | Deliverable |
 |------|-------------|
 | 1 Hypothesis | Falsifiable statement + pass/fail criteria |
-| 2 Config | Scripts / env notes in `.dsh/growth/learn/` (project-local) |
+| 2 Config | Scripts / env notes in `.growing/learn/` (project-local) |
 | 3 Batch run | Artifact dir + summary metrics |
 | 4 Report | Markdown: hypothesis · method · results · conclusion |
 | 5 Index | archive or learn README entry |

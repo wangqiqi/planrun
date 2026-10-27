@@ -1,7 +1,7 @@
 ---
 name: learn
 description: >-
-  Learn this repo (/learn): absorb CHANGELOG, git, archive into .dsh/growth/learn/.
+  Learn this repo (/learn): absorb CHANGELOG, git, archive into .growing/learn/.
   Not study (new tech). Writes project conventions only — not harness SOP changes.
 disable-model-invocation: true
 user-invocable: true
@@ -9,7 +9,7 @@ user-invocable: true
 
 # learn
 
-**用这个**：沉淀**本仓库**约定 → `.dsh/growth/learn/`。**不是那个**：学 Rust/新框架等通用技术 → **`study`**（或 `SPIKE-*` 只读调研）。
+**用这个**：沉淀**本仓库**约定 → `.growing/learn/`。**不是那个**：学 Rust/新框架等通用技术 → **`study`**（或 `SPIKE-*` 只读调研）。
 
 Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
@@ -17,13 +17,13 @@ Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
 | Layer | Rule |
 |-------|------|
-| **Write** | This skill outputs `.dsh/growth/learn/` only (plus **`sprint-plan`** / **`run`** writing plan · archive) |
+| **Write** | This skill outputs `.growing/learn/` only (plus **`sprint-plan`** / **`run`** writing plan · archive) |
 | **Read** | **`run`** may read existing `learn/`; **`learn`** absorbs local `archive/` · plan mirror — **project context only** |
 | **Not** | Treating archive as install payload; embedding growth paths in bundled npm code |
 
 ## Bootstrap
 
-1. **`install-planrun.sh`** — copies `templates/growth/` → target `.dsh/growth/`
+1. **`install-planrun.sh`** — copies `templates/growth/` → target `.growing/`
 2. First **`learn`** run fills seed files and absorbs CHANGELOG / archive / plan mirror
 
 | File | Content |
@@ -36,7 +36,7 @@ Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 | `last-sync.md` | last sync time, sources, open questions |
 | `acceptance.md` | (optional) design tokens · i18n · OpenAPI — for **`delivery`** |
 
-Templates: `.dsh/growth/learn/README.md` (seeded by `install-planrun.sh`)
+Templates: `.growing/learn/README.md` (seeded by `install-planrun.sh`)
 
 ## When to run
 
@@ -85,20 +85,20 @@ When user says「重复工作」or too many follow-up patches:
 
 1. Read `CHANGELOG.md` recent window
 2. Cluster symptom keywords
-3. Update `.dsh/growth/learn/changelog-insights.md` §重复工作模式（project symbols only）
+3. Update `.growing/learn/changelog-insights.md` §重复工作模式（project symbols only）
 4. Suggest next Sprint candidate via **`sprint-plan`**, not silent scope expansion
 
 ## Merge principles
 
 - **Incremental merge**: mark `（已废弃）` instead of silent delete
 - **Uncertain** → `（待确认）`
-- **Do not commit** `.dsh/growth/` (usually gitignored)
+- **Do not commit** `.growing/` (usually gitignored)
 - Read order: project docs → **learn/** → skills
 
 ## Evolution loop
 
 | Change type | Where | Who writes |
 |-------------|-------|------------|
-| project conventions | `.dsh/growth/learn/` | **learn** |
+| project conventions | `.growing/learn/` | **learn** |
 | bundled skill text | plan TASK + user intent | **`sprint-plan`** / **`run`** |
-| Sprint decisions | `.dsh/growth/archive/` + plan mirror | **`sprint-plan`** closeout |
+| Sprint decisions | `.growing/archive/` + plan mirror | **`sprint-plan`** closeout |

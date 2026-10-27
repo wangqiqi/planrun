@@ -9,7 +9,7 @@ user-invocable: true
 
 # test
 
-Prefer commands from `.dsh/growth/plan.md` TASK verify column; else project `./scripts/test.sh` or stack default (e.g. harness `pnpm run test`).
+Prefer commands from `.growing/plan.md` TASK verify column; else project `./scripts/test.sh` or stack default (e.g. harness `pnpm run test`).
 
 ## TDD short loop
 
@@ -48,7 +48,7 @@ Full release **test report** → **`test-report`** skill.
 
 - new domain: L1 in task verify; L3 in Sprint Done when or nightly
 - stay red at L1 while fixing; don't skip to L3 for ✅
-- project coordinates → `.dsh/growth/learn/dev-conventions.md`
+- project coordinates → `.growing/learn/dev-conventions.md`
 
 ## Playwright / E2E (when stack supports)
 

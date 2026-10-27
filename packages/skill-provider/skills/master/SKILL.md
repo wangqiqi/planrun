@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 # master · Router
 
-**Daily loop: `sprint-plan` ↔ `run`. When lost, load `master`.** Other skills (`review`, `security`, `delivery`, …) are chosen from the Sprint Goal and Done-when in `.dsh/growth/plan.md`.
+**Daily loop: `sprint-plan` ↔ `run`. When lost, load `master`.** Other skills (`review`, `security`, `delivery`, …) are chosen from the Sprint Goal and Done-when in `.growing/plan.md`.
 
 **Route only — never substitute for downstream skills.** After routing, hand off and tell the user which skill to load next.
 
@@ -28,7 +28,7 @@ Canonical route table: [routes.md](routes.md)
 
 ## Flow
 
-1. **Quick sense** (optional): read `.dsh/growth/plan.md`, `git status`, project scripts — do not dump internals to the user.
+1. **Quick sense** (optional): read `.growing/plan.md`, `git status`, project scripts — do not dump internals to the user.
 2. **ask_user_question** when the choice is genuinely ambiguous (≤7 options). If unavailable, numbered prose options.
 3. **Hand off** with one concrete next skill name.
 
@@ -40,7 +40,7 @@ Canonical route table: [routes.md](routes.md)
 | Sprint / multi-task planning | **`sprint-plan`** | Not DSH `/plan` plan mode |
 | Multi-Sprint Epic | **`long`** | Epic → Sprint chains |
 | Continue implementation | **`run`** | Requires plan mirror ACTIVE row |
-| Learn this repo | **`learn`** | `.dsh/growth/learn/` |
+| Learn this repo | **`learn`** | `.growing/learn/` |
 | Git / commit / merge | **`git`** | Links harness pre-push when applicable |
 | Bug / verify blocked | **`run`** / **`debug`** / **`sprint-plan`** | Re-plan if scope drift |
 | Ship / release | **`release`** | After Sprint done |

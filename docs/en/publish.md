@@ -117,7 +117,7 @@ After the bundle is installed:
 ./scripts/install-planrun.sh --here --copy-plan
 ```
 
-This seeds `.dsh/growth/` and copies **guard scripts** to `scripts/` with npm scripts merged into `package.json`.
+This seeds `.growing/` and copies **guard scripts** to `scripts/` with npm scripts merged into `package.json`.
 
 ## Related
 

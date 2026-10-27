@@ -27,7 +27,7 @@ node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 
 ## 版本漂移体检（`doctor`）
 
-`install-planrun.sh` 会在 `.dsh/growth/.planrun-manifest.json` 落一份清单（PlanRun 版本 · guard sha256 · 模板 schema · 安装时间）。`doctor` 把它读回来，报四项检查：
+`install-planrun.sh` 会在 `.growing/.planrun-manifest.json` 落一份清单（PlanRun 版本 · guard sha256 · 模板 schema · 安装时间）。`doctor` 把它读回来，报四项检查：
 
 | 检查 | 何时 FAIL |
 |------|-----------|
@@ -43,7 +43,7 @@ node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 ## plan 路径解析
 
 1. `DSH_GROWTH_PLAN` — 显式路径  
-2. 从 **当前 cwd** 向上找 `.dsh/growth/plan.md` 或 `.cursorGrowth/plan.md`  
+2. 从 **当前 cwd** 向上找 `.growing/plan.md` 或 `.growing/plan.md`  
 3. 回退：PlanRun 本仓根（含 `scripts/` 时）
 
 目标项目：跑 `install-planrun.sh` 复制 guard 到 `scripts/` 并合并 `package.json` scripts。
@@ -88,7 +88,7 @@ node scripts/run-bash.mjs scripts/dsh-guard.sh gate-check
 |--------------|----------------|
 | `.cursor/bin/runner.sh` | `scripts/dsh-guard.sh` |
 | `.cursor/config/workflow.json` | env + plan HTML meta |
-| `.cursorGrowth/plan.md` | `.dsh/growth/plan.md` |
+| `.growing/plan.md` | `.growing/plan.md` |
 
 `@planrun/workflow` 可注入会话 hook；**未挂载 plugin 时 guard 脚本仍是可移植基线**。
 

@@ -13,7 +13,7 @@ user-invocable: true
 
 Standing discipline: [Discipline](https://znza.top/planrun/en/discipline)
 
-After code is green and `.dsh/growth/archive/` notes exist: **merge to mainline, then tag** (if shipping).
+After code is green and `.growing/archive/` notes exist: **merge to mainline, then tag** (if shipping).
 
 ```bash
 pnpm run verify          # planrun repo

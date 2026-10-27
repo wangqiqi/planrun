@@ -6,8 +6,8 @@ Epic-level **three layers** for multi-Sprint work. No fourth task-ID layer. Alig
 
 | Layer | ID shape | Carrier | Role | peer limit |
 |-------|----------|---------|------|------------|
-| **L0 Epic** | `EPIC-*` or title | `.dsh/growth/long-state.json` | total Goal · Done when · Sprint list | **≤5** Sprints |
-| **L1 Sprint** | `SPRINT-*` | `.dsh/growth/plan.md` Active block | single-iteration Goal · TASK table | **≤5** TASKs |
+| **L0 Epic** | `EPIC-*` or title | `.growing/long-state.json` | total Goal · Done when · Sprint list | **≤5** Sprints |
+| **L1 Sprint** | `SPRINT-*` | `.growing/plan.md` Active block | single-iteration Goal · TASK table | **≤5** TASKs |
 | **L2 Task** | `TASK-*` | plan TASK table | verifiable increment · one commit | **≤5** (scale gate) |
 
 Sprint Goal = **capability delivery**; tag/merge exits → **`release`** (v0.2+).

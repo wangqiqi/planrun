@@ -33,7 +33,7 @@ resolve_plan_file() {
   fi
   dir="$(pwd)"
   while [[ "$dir" != "/" ]]; do
-    for candidate in "$dir/.dsh/growth/plan.md" "$dir/.cursorGrowth/plan.md"; do
+    for candidate in "$dir/.growing/plan.md" "$dir/.dsh/growth/plan.md" "$dir/.cursorGrowth/plan.md"; do
       if [[ -f "$candidate" ]]; then
         echo "$(cd "$(dirname "$candidate")" && pwd)/$(basename "$candidate")"
         return 0
@@ -41,7 +41,7 @@ resolve_plan_file() {
     done
     dir="$(dirname "$dir")"
   done
-  for candidate in "$ROOT/.dsh/growth/plan.md" "$ROOT/.cursorGrowth/plan.md"; do
+  for candidate in "$ROOT/.growing/plan.md" "$ROOT/.dsh/growth/plan.md" "$ROOT/.cursorGrowth/plan.md"; do
     if [[ -f "$candidate" ]]; then
       echo "$candidate"
       return 0
@@ -81,7 +81,7 @@ cmd="${1:-status}"
 # ./plan.md from the cwd. Refuse instead.
 require_plan() {
   if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
-    echo "FAIL: plan 不存在（.dsh/growth/plan.md 或 .cursorGrowth/plan.md 或 DSH_GROWTH_PLAN）" >&2
+    echo "FAIL: plan 不存在（.growing/plan.md · 或旧路径 · 或 DSH_GROWTH_PLAN）" >&2
     return 1
   fi
 }
@@ -90,7 +90,7 @@ gate_check() {
   local reason
   if [[ -z "$PLAN" || ! -f "$PLAN" ]]; then
     echo "=== dsh-guard gate-check ==="
-    echo "BLOCK: plan 不存在（.dsh/growth/plan.md 或 .cursorGrowth/plan.md 或 DSH_GROWTH_PLAN）"
+    echo "BLOCK: plan 不存在（.growing/plan.md · 或旧路径 · 或 DSH_GROWTH_PLAN）"
     return 1
   fi
   reason="$(plan_gate_ok || true)"
@@ -430,8 +430,8 @@ case "$cmd" in
 
 Plan 路径（优先级）:
   1. 环境变量 DSH_GROWTH_PLAN
-  2. .dsh/growth/plan.md（目标项目）
-  3. .cursorGrowth/plan.md（母版仓开发）
+  2. .growing/plan.md（目标项目 · 与 Super Cursor 对齐）
+  3. .dsh/growth/plan.md · .cursorGrowth/plan.md（旧路径 · 只读回退）
 
 环境变量:
   DSH_GROWTH_PLAN          显式 plan 路径

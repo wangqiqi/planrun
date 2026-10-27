@@ -63,8 +63,8 @@ List CREATE / SKIP files; explain `post_apply` and verify.
 
 - run manifest `post_apply`
 - `./scripts/verify.sh` or project equivalent
-- **`install-planrun.sh --here --copy-plan`** → `.dsh/growth/plan.md`
-- **`learn`** → write stack conventions to `.dsh/growth/learn/dev-conventions.md`
+- **`install-planrun.sh --here --copy-plan`** → `.growing/plan.md`
+- **`learn`** → write stack conventions to `.growing/learn/dev-conventions.md`
 - **`sprint-plan`** → first Sprint if multi-step work remains
 
 ## Flow (existing project)
@@ -83,7 +83,7 @@ List CREATE / SKIP files; explain `post_apply` and verify.
 | planned init | Sprint `TASK-001` acceptance: scaffold apply + verify |
 | advice only | `SPIKE-*` research, archive, then `TASK-*` |
 
-**`run`** scaffold tasks still require clear Goal / ACTIVE row in `.dsh/growth/plan.md`.
+**`run`** scaffold tasks still require clear Goal / ACTIVE row in `.growing/plan.md`.
 
 ## Forbidden
 

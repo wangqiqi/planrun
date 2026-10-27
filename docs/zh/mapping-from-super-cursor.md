@@ -35,7 +35,7 @@
 |--------------|---------|------|
 | hooks.json | `@planrun/workflow` | **keep**（v1.1） |
 | runner.sh | `dsh-guard.sh` + `pnpm run gate-check` | **keep** |
-| plan HTML meta | `.dsh/growth/plan.md` + guard | **keep** |
+| plan HTML meta | `.growing/plan.md` + guard | **keep** |
 | commands/*.md | skill 描述 + 用户 slash | **merge** |
 | agents ship/review/spike | subagent presets（`presets.patch.yml` 声明）+ `agents/*.md` | **keep**（v1.6） |
 
@@ -44,7 +44,7 @@
 | Super Cursor | PlanRun |
 |--------------|---------|
 | 复制 `.cursor/` | `dsh plugin add "github:wangqiqi/planrun#<tag>"`（npm：`@planrun/bundle`，尚未发布） |
-| `.cursorGrowth/` 种子 | `install-planrun.sh` → `.dsh/growth/` |
+| `.growing/` 种子 | `install-planrun.sh` → `.growing/` |
 
 ## 与 deepseek-harness 去重
 

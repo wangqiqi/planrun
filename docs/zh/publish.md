@@ -82,7 +82,7 @@ pnpm 取源码后，DSH 直接挂载 `./cordis.patch.yml`（相对行名转成 `
 ./scripts/install-planrun.sh --here --copy-plan
 ```
 
-种子 `.dsh/growth/` 并复制 guard 到 `scripts/`。
+种子 `.growing/` 并复制 guard 到 `scripts/`。
 
 ## 相关
 

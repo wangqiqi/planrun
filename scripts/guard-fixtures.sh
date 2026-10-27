@@ -388,7 +388,7 @@ case_doctor() {
 
   # 1) 干净安装：exit 0，且 --json 的四项检查一致
   dir="$(doctor_project clean)"
-  if [[ ! -f "$dir/.dsh/growth/.planrun-manifest.json" ]]; then
+  if [[ ! -f "$dir/.growing/.planrun-manifest.json" ]]; then
     fail "doctor clean: 安装没写出版本清单"
   else
     run_doctor "$dir"
@@ -428,7 +428,7 @@ case_doctor() {
     const manifest = JSON.parse(fs.readFileSync(file, "utf8"))
     manifest.planTemplateSchema = 0
     fs.writeFileSync(file, JSON.stringify(manifest, null, 2))
-  ' "$dir/.dsh/growth/.planrun-manifest.json"
+  ' "$dir/.growing/.planrun-manifest.json"
   expect_doctor_drift "schema-drift" "$dir" "模板 schema 漂移"
 
   # 4) 包版本漂移（装着的 planrun 与项目记录的版本不一致 —— 就是本 Sprint 的现场）
@@ -439,8 +439,8 @@ case_doctor() {
 
   # 5) 清单缺失（装过，但证明不了版本）
   dir="$(doctor_project no-manifest)"
-  rm -f "$dir/.dsh/growth/.planrun-manifest.json"
-  expect_doctor_drift "no-manifest" "$dir" "没有 .dsh/growth/.planrun-manifest.json"
+  rm -f "$dir/.growing/.planrun-manifest.json"
+  expect_doctor_drift "no-manifest" "$dir" "没有 .growing/.planrun-manifest.json"
 
   # 6) 非 PlanRun 项目 → 无法判定 exit 2
   dir="$TMP/doctor-not-a-project"
@@ -534,7 +534,7 @@ case_path_canonicalization() {
   fi
 
   dir="$(doctor_project pathcanon)"
-  if [[ -f "$dir/.dsh/growth/.planrun-manifest.json" ]]; then
+  if [[ -f "$dir/.growing/.planrun-manifest.json" ]]; then
     pass "path-canon: 安装写出了版本清单"
   else
     fail "path-canon: 安装没写出版本清单"

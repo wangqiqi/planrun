@@ -46,7 +46,7 @@
 | Super Cursor | PlanRun |
 |---|---|
 | `/plan` slash | DSH **`/plan`** = plan mode (single-task design). Multi-task Sprint → **`sprint-plan`** skill |
-| `.dsh/growth/plan.md` | Human plan mirror; session todos parallel in DSH |
+| `.growing/plan.md` | Human plan mirror; session todos parallel in DSH |
 | User choices | **`ask_user_question`** tool |
 | Gate before run | `pnpm run gate-check` · [Workflow guard](https://znza.top/planrun/en/workflow-guard) |
 
@@ -65,11 +65,11 @@
 ### 呼叫流程
 
 1. `bash scripts/resolve-persona.sh '<称呼>' [项目根]` — 唯一命中 → JSON persona；exit 2 → `ask_user_question` 消歧
-2. **唯一命中** → 写 `.dsh/growth/session/persona.json`（`persona_id` · `resolved_via` · `updated_at` ISO8601）
+2. **唯一命中** → 写 `.growing/session/persona.json`（`persona_id` · `resolved_via` · `updated_at` ISO8601）
 3. **本会话**改用该人格语气（`skills` 仍 full；**禁止**因人设跳过 verify / gate-check）
 4. **禁止**以 `given_name` 或 nicknames 开场（`speech_rules.forbid_self_name_opener`）
 
-项目昵称覆盖：`.dsh/growth/session/aliases.json`（优先于 roles.json nicknames）。
+项目昵称覆盖：`.growing/session/aliases.json`（优先于 roles.json nicknames）。
 
 `@planrun/workflow` 在 `agent/created` 注入 Persona hint（含 `voice_cues` · `emotion_cues`）。
 

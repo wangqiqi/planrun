@@ -22,7 +22,7 @@ PlanRun 自带的 **skills** 面向 **DSH**。本仓 `.cursor/` 是 **Super Curs
 | **DeepSeek Harness** + `dsh` CLI | 路径 A/A′/B 必需 |
 | **Node.js** `^22.19` 或 `>=24` | 构建与 guard |
 | **pnpm** | 本仓 monorepo |
-| **Git** | 目标项目 `.dsh/growth/` |
+| **Git** | 目标项目 `.growing/` |
 | **POSIX shell**（`bash`/`sh`） | `install-planrun.sh` · `dsh-guard.sh` · `pnpm run` 的 verify/guard 脚本 —— 由 `scripts/run-bash.mjs` 自动定位（Windows 用 Git for Windows 或 WSL），不要求 `bash` 在 `PATH` 上 |
 
 ## 路径 A — npm 用户（尚未发布）
@@ -105,7 +105,7 @@ pnpm run doctor        # 版本漂移体检：guard 脚本 · 模板 · 包版�
 | GitHub 安装失败、pnpm 提示 build script 被忽略 | 该通道不应声明 `prepare`/`prepublish`（运行时是提交进仓库的）；跑 `pnpm run verify:lib` 并把 `packages/*/lib/*.js` 提交 |
 | bundle 不可见 | `dsh plugin add` 后重启 profile |
 | 预设/技能/插件更新后界面还是旧的 | DSH **不监听** profile 文件变化。在 **设置 → 内置插件** 里对该 bundle 做一次**关/开**（触发 in-process reload），或重启 `dsh web`。只把文件换掉不够——运行中的实例仍持旧定义，例如预设会一直显示「加载失败」 |
-| `gate-check` BLOCK | `.dsh/growth/plan.md` 设 `PLAN_APPROVED` |
+| `gate-check` BLOCK | `.growing/plan.md` 设 `PLAN_APPROVED` |
 | `doctor` FAIL：guard 脚本漂移 | 重跑 `install-planrun.sh --here`（会记录新 hash），或把 `templates/growth/scripts/*` 复制进 `scripts/` |
 | `doctor` FAIL：包版本不一致 | DSH profile 与项目装自不同 tag —— 对齐两边，FAIL 行会打印具体命令 |
 

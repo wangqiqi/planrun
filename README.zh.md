@@ -4,7 +4,7 @@
 
 > **Plan once · Run with gates · Ship with receipts.**
 
-把 [Super Cursor](https://github.com/wangqiqi/cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.dsh/growth/` 模板。不是 DSH fork，也不是 Cursor 插件。
+把 [Super Cursor](https://github.com/wangqiqi/cursor-ai) 的 Agent 工作流 SOP 搬进 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — **28** 个 workflow skill、**12** 人格、一套 profile bundle、项目级 `.growing/` 模板。不是 DSH fork，也不是 Cursor 插件。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](package.json)
 [![文档](https://img.shields.io/badge/文档-znza.top%2Fplanrun-orange)](https://znza.top/planrun/zh/)
@@ -24,7 +24,7 @@ PlanRun 填这个缝：
 |---|---|
 | 28 个 bundled **skills** + **12 人格**（Cordis 插件挂载） | 不是 fork `deepseek-harness` |
 | **`@planrun/bundle`** — 一套 bundle 把 28 skills + 12 人格装进 DSH profile（当前走 GitHub tag；npm 尚未发布） | 不是 Cursor rules 复制粘贴 |
-| **`.dsh/growth/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
+| **`.growing/`** — plan · learn · archive 项目本地镜像 | 不是替代 DSH 内置 `/plan` plan mode |
 
 日常口诀：**一次 sprint-plan 批准 · 一次 run 连跑 · 决策才停 · verify 才勾 ✅**
 
@@ -58,7 +58,7 @@ PlanRun 填这个缝：
 | | **PlanRun**（`@planrun/bundle`） | **Super Cursor**（母版 `.cursor/`） |
 |--|--------------------------------|-------------------------------------|
 | **宿主** | DeepSeek Harness profile | Cursor IDE 项目 |
-| **plan 文件** | `.dsh/growth/plan.md` | `.cursorGrowth/plan.md` |
+| **plan 文件** | `.growing/plan.md` | `.growing/plan.md` |
 | **安装** | `dsh plugin add "github:wangqiqi/planrun#<tag>"`（npm：尚未发布） | `install-super-cursor.sh` → 目标 `.cursor/` |
 | **本仓** | `packages/*` — npm 待发布（当前走 GitHub tag） | `.cursor/` skills/rules（母版开发） |
 
@@ -81,7 +81,7 @@ flowchart LR
 |---|---|---|
 | **路由** | `master` | 不知道下一步加载谁 |
 | **规划** | `sprint-plan` · `long` | 多任务 Sprint / Epic（≠ DSH `/plan` 单任务设计） |
-| **执行** | `run` · `debug` · `test` | 按 `.dsh/growth/plan.md` ACTIVE 行实现 + verify |
+| **执行** | `run` · `debug` · `test` | 按 `.growing/plan.md` ACTIVE 行实现 + verify |
 | **沉淀** | `learn` · `git` · `scaffold` | 项目约定 · 分支提交 · 空仓脚手架 |
 | **交付** | `review` · `delivery` · `release` | PR 回顾 · 7 维走查 · merge / tag / CHANGELOG |
 
@@ -106,7 +106,7 @@ docs/                   # en/ · zh/ — VitePress 文档站
 | Bundled skills | `@planrun/skill-provider` | 28 workflow skills + `config/roles.json`（12 人格） |
 | Profile bundle | `@planrun/bundle` | `cordis.patch.yml` 挂载 skill provider + **workflow**；`presets.patch.yml` 声明 4 个 agent preset |
 | Agent presets | `presets/` → `presets.patch.yml` | 官方 `@deepseek-ai/dsh-agent-preset` 声明（由 `scripts/gen-presets.mjs` 生成） |
-| Growth 模板 | `templates/growth/` | 项目本地 `.dsh/growth/` 种子 |
+| Growth 模板 | `templates/growth/` | 项目本地 `.growing/` 种子 |
 | 安装脚本 | `scripts/install-planrun.sh` | 复制 growth 模板 + 打印 profile 说明 |
 | Workflow guard | `scripts/dsh-guard.sh` | `gate-check` · `plan-check` · `task-verify` · `next-task` · `doctor` |
 
@@ -179,7 +179,7 @@ export PLANRUN_HOME=/path/to/planrun
 "$PLANRUN_HOME/scripts/install-planrun.sh" --here --copy-plan
 ```
 
-创建 `.dsh/growth/`（plan · learn · archive），通常 gitignore。
+创建 `.growing/`（plan · learn · archive），通常 gitignore。
 
 ### 3b · Workflow guard（Sprint 闸门）
 
@@ -193,7 +193,7 @@ pnpm run next-task     # 下一待办 TASK id
 pnpm run doctor        # 版本漂移：guard 脚本 · 模板 · 包版本
 ```
 
-plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGrowth/plan.md`）。详见 [docs/zh/workflow-guard.md](docs/zh/workflow-guard.md)。
+plan 路径：`.growing/plan.md`（开发本仓时自动回退读 `.growing/plan.md`）。详见 [docs/zh/workflow-guard.md](docs/zh/workflow-guard.md)。
 
 ### 4 · 在会话中使用
 
@@ -206,7 +206,7 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGro
 | `sprint-plan` | 多任务 Sprint 规划 |
 | `run` | 执行 plan.md ACTIVE 行 |
 | `review` | PR / 代码结构化回顾 |
-| `learn` | 沉淀项目约定 → `.dsh/growth/learn/` |
+| `learn` | 沉淀项目约定 → `.growing/learn/` |
 | `git` | 分支 · 提交 · 合并 |
 | `scaffold` | 空仓库脚手架 |
 | `long` | 跨 Sprint Epic |
@@ -223,7 +223,7 @@ plan 路径：`.dsh/growth/plan.md`（开发本仓时自动回退读 `.cursorGro
 | `user-manual` | 可发布使用说明书 · 配图 regen |
 | `test-report` | 可发布测试报告 · verify 汇总 |
 
-单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。两者不是二选一：`/plan` 在会话内设计单任务，`sprint-plan` 通过 `.dsh/growth/plan.md` 跑多任务 Sprint。plan mode 生效期间，PlanRun 的自主链会**主动让位**（不注入 run-start、不在回合末 steer），避免两套策略互相打架——退出 plan mode 后自动恢复。
+单任务方案设计 → DSH 内置 **`/plan`** plan mode（不是 `sprint-plan`）。两者不是二选一：`/plan` 在会话内设计单任务，`sprint-plan` 通过 `.growing/plan.md` 跑多任务 Sprint。plan mode 生效期间，PlanRun 的自主链会**主动让位**（不注入 run-start、不在回合末 steer），避免两套策略互相打架——退出 plan mode 后自动恢复。
 
 Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 那样热加载。
 
@@ -234,7 +234,7 @@ Bundle 变更后需**重启** profile（`dsh web`），不像 profile 级 patch 
 | Super Cursor | PlanRun | 说明 |
 |---|---|---|
 | `plan` skill | **`sprint-plan`** | 避免与 DSH `/plan` plan mode 冲突；skill 与宿主命令共用 `/` 面板，同名时优先解析为宿主命令 |
-| `.cursorGrowth/` | **`.dsh/growth/`** | 项目本地，通常 gitignore |
+| `.growing/` | **`.growing/`** | 项目本地，通常 gitignore |
 | `AskQuestion` | **`ask_user_question`** | DSH 交互工具 |
 | `rules/*.mdc` | **`docs/zh/discipline.md`** | 常驻纪律摘要 |
 
@@ -258,7 +258,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.cursorGrowth` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
+`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.growing` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
 
 `verify-plugin-e2e.sh` 是唯一能证明插件**真的能加载**的检查：它打包三个包、装进一次性 profile、断言 `--dump-config` 里的 bundle 行、导入 skill catalog，并 headless boot。以下情况会失败：`failed to import`、dsh peer 范围不兼容、或 session format 拒绝的 message source kind。
 

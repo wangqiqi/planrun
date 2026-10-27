@@ -13,7 +13,7 @@ user-invocable: true
 
 After **task-verify** is green, before **`release`** (merge/PR) or when Sprint **Done when** requires delivery.
 
-Project-specific paths (design tokens, i18n, OpenAPI) → `.dsh/growth/learn/acceptance.md` (or **`ask_user_question`** / grep conventions).
+Project-specific paths (design tokens, i18n, OpenAPI) → `.growing/learn/acceptance.md` (or **`ask_user_question`** / grep conventions).
 
 **Checklists**: [reference/checklist-core.md](reference/checklist-core.md) (§1–7) · [reference/checklist-optional.md](reference/checklist-optional.md) (§8–11)
 
@@ -26,7 +26,7 @@ Project-specific paths (design tokens, i18n, OpenAPI) → `.dsh/growth/learn/acc
 
 ## Flow
 
-1. read `.dsh/growth/learn/acceptance.md` if present · scan `.dsh/growth/plan.md` Goal / Done when
+1. read `.growing/learn/acceptance.md` if present · scan `.growing/plan.md` Goal / Done when
 2. walk **checklist-core** §1–7 (grep · Read · compare docs/OpenAPI)
 3. optional **checklist-optional** §8–11 (long tasks · import · browser · a11y)
 4. API subset → **`api`** (v0.2+); production → **`security`** (v0.2+)

@@ -53,7 +53,7 @@ user-invocable: true
 |------|------|
 | IA 讨论稿 | `docs/design/<产品>-ia.md` |
 | 视觉 / 壳型 | 项目 `设计规范` 或 `docs/design/` |
-| 验收约定 | `.dsh/growth/learn/acceptance.md` |
+| 验收约定 | `.growing/learn/acceptance.md` |
 
 ## 禁止
 

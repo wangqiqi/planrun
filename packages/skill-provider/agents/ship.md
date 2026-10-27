@@ -13,7 +13,7 @@ pnpm run verify          # must be green
 git status               # no surprise WIP
 ```
 
-- [ ] Sprint P0 tasks ✅ when `.dsh/growth/plan.md` applies
+- [ ] Sprint P0 tasks ✅ when `.growing/plan.md` applies
 - [ ] **`security`** pass — no unhandled Critical/High
 - [ ] UI/feature: **`delivery`** walkthrough recommended (no Blocker)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-planrun.sh — seed .dsh/growth/ and print profile instructions
+# install-planrun.sh — seed .growing/ and print profile instructions
 set -euo pipefail
 
 usage() {
@@ -76,7 +76,16 @@ if [[ -z "$TARGET" ]]; then
 fi
 TARGET="$(find_git_root "$(cd "$TARGET" && pwd)")"
 
-GROWTH="$TARGET/.dsh/growth"
+GROWTH="$TARGET/.growing"
+if [[ -d "$TARGET/.dsh/growth" && ! -e "$GROWTH" ]]; then
+  mv "$TARGET/.dsh/growth" "$GROWTH"
+  echo "已迁移 .dsh/growth/ → .growing/"
+elif [[ -d "$TARGET/.cursorGrowth" && ! -e "$GROWTH" ]]; then
+  mv "$TARGET/.cursorGrowth" "$GROWTH"
+  echo "已迁移 .cursorGrowth/ → .growing/"
+elif [[ -d "$TARGET/.dsh/growth" && -d "$GROWTH" ]]; then
+  echo "WARN: 同时存在 .dsh/growth/ 与 .growing/ — 请手动合并后删除 .dsh/growth/" >&2
+fi
 mkdir -p "$GROWTH/learn" "$GROWTH/archive"
 
 if [[ ! -f "$GROWTH/plan.md" || "$COPY_PLAN" == true ]]; then

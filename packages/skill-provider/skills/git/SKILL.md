@@ -34,7 +34,7 @@ Format: `type(scope): summary` (scope optional)
 
 ## Before commit
 
-- [ ] `git status` — no `.env`, secrets, accidental large files; **do not** stage `.dsh/growth/plan.md` or growth tree (gitignored)
+- [ ] `git status` — no `.env`, secrets, accidental large files; **do not** stage `.growing/plan.md` or growth tree (gitignored)
 - [ ] `git diff --stat` — scope matches current TASK
 - [ ] project verify for the task (e.g. `pnpm run verify`, `./scripts/verify.sh`)
 - [ ] in **deepseek-harness**: follow [dsh-pre-push-checks](https://github.com/deepseek-ai/deepseek-harness/blob/main/.agents/skills/dsh-pre-push-checks/SKILL.md) before push
@@ -45,7 +45,7 @@ Format: `type(scope): summary` (scope optional)
 
 When **`run`** is active: each TASK ✅ and Sprint closeout require **commit in the same turn**; do not leave commits to the user unless working tree is clean.
 
-**`.dsh/growth/plan.md`** is local-only (gitignored). Commits include tracked code, CHANGELOG, README — not growth mirror files.
+**`.growing/plan.md`** is local-only (gitignored). Commits include tracked code, CHANGELOG, README — not growth mirror files.
 
 ## Branch and merge
 

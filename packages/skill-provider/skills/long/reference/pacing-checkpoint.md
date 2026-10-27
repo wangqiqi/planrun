@@ -25,14 +25,14 @@ Do not weaken verify to avoid limits; use **checkpoint + resume**.
 ## Checkpoint (end of each Sprint)
 
 1. project verify (Sprint Done when)
-2. Sprint notes → `.dsh/growth/archive/` (`YYYYMMDD_HHMMSS_<topic>.md`)
+2. Sprint notes → `.growing/archive/` (`YYYYMMDD_HHMMSS_<topic>.md`)
 3. update **long-state.json** (below)
-4. **plan mirror reconciliation** — remove closed Active block from `.dsh/growth/plan.md`
+4. **plan mirror reconciliation** — remove closed Active block from `.growing/plan.md`
 5. optional short break or new session for next Sprint
 
 ## long-state.json
 
-Path: **`.dsh/growth/long-state.json`** (gitignored, beside plan mirror).
+Path: **`.growing/long-state.json`** (gitignored, beside plan mirror).
 
 ```json
 {

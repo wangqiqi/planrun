@@ -7,7 +7,7 @@
 ## Input
 
 - PR description or file list / diff scope
-- Optional: `.dsh/growth/plan.md` `REV-*` row
+- Optional: `.growing/plan.md` `REV-*` row
 
 ## Flow
 

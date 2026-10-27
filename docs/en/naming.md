@@ -5,7 +5,7 @@
 | `plan` skill | **`sprint-plan`** | Avoid clash with DSH `/plan` plan mode |
 | `/plan` slash | DSH **`/plan`** | Plan mode — explore then `exit_plan_mode` |
 | Load sprint planning | **`sprint-plan` skill** | User slash `/sprint-plan` where supported |
-| `.cursorGrowth/` | **`.dsh/growth/`** | Project-local, usually gitignored |
+| `.growing/` | **`.growing/`** | Project-local, usually gitignored |
 | `AskQuestion` | **`ask_user_question`** | DSH interaction tool |
 | `rules/*.mdc` | **`docs/en/discipline.md`** + skills | No glob rule engine in v0.1 |
 | `install-super-cursor.sh` | **`install-planrun.sh`** | |
@@ -18,7 +18,7 @@ Both plan, at different scopes — they are not alternatives to each other:
 | | DSH `/plan` | PlanRun `sprint-plan` |
 |---|---|---|
 | Scope | one task, designed in-session | multi-task Sprint across sessions |
-| Artifact | the plan you approve through `exit_plan_mode` | `.dsh/growth/plan.md` (HTML meta + TASK table) |
+| Artifact | the plan you approve through `exit_plan_mode` | `.growing/plan.md` (HTML meta + TASK table) |
 | Gate | plan mode's own policy | `gate-check` · `plan-check` · `PLAN_APPROVED` |
 | Autonomous nudge | none | the chain driven by `AUTONOMOUS:true` |
 
@@ -38,4 +38,4 @@ PlanRun's autonomous chain stands down (see [workflow-hooks-map.md](workflow-hoo
 
 ## Personas (12)
 
-`config/roles.json` in `@planrun/skill-provider` · default `dashu` · session state `.dsh/growth/session/persona.json`
+`config/roles.json` in `@planrun/skill-provider` · default `dashu` · session state `.growing/session/persona.json`

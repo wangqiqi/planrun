@@ -113,10 +113,10 @@ if [[ "$boot_code" -ne 0 ]] && ! grep -q 'MISSING_CREDENTIAL' <<< "$boot_out"; t
 else
   ok "plugins loaded from the GitHub-installed bundle"
 fi
-if [[ -f "$WORK/project/.dsh/growth/plan.md" ]]; then
-  ok "workflow plugin seeded .dsh/growth/plan.md"
+if [[ -f "$WORK/project/.growing/plan.md" ]]; then
+  ok "workflow plugin seeded .growing/plan.md"
 else
-  fail "workflow plugin did not seed .dsh/growth/plan.md"
+  fail "workflow plugin did not seed .growing/plan.md"
 fi
 
 if [[ "$FAIL" -ne 0 ]]; then exit 1; fi

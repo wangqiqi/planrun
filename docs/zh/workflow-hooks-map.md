@@ -4,7 +4,7 @@ Super Cursor `hooks.json` → DSH Cordis 扩展点（**`@planrun/workflow`**）�
 
 | Super Cursor | DSH 事件 | 处理 | 行为 |
 |--------------|----------|------|------|
-| `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | 幂等种子 `.dsh/growth/` |
+| `beforeSubmitPrompt` → `growth-init.sh` | `agent/pre-step` | `ensureGrowth()` | 幂等种子 `.growing/` |
 | `sessionStart` → `run-start.sh` | `agent/created` | `buildRunStartContext()` + Persona | 注入 plan 闸门 / ACTIVE / Persona hint |
 | `stop` → `run-stop.sh` | `agent/turn-stopping` | `buildRunStopSteer()` | `AUTONOMOUS:true` 时 steer 下一 TASK |
 
@@ -17,8 +17,8 @@ Super Cursor `hooks.json` → DSH Cordis 扩展点（**`@planrun/workflow`**）�
 ## plan 路径（同 dsh-guard）
 
 1. `DSH_GROWTH_PLAN`  
-2. `<cwd>/.dsh/growth/plan.md`  
-3. `<cwd>/.cursorGrowth/plan.md`（本仓开发）
+2. `<cwd>/.growing/plan.md`  
+3. `<cwd>/.growing/plan.md`（本仓开发）
 
 ## Growth 模板
 
