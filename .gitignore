@@ -54,3 +54,7 @@ tmp/
 .DS_Store
 .vscode/
 .idea/
+.growing/
+.cursor/rules/local
+.cursor/hooks/state/*
+!.cursor/hooks/state/README.md

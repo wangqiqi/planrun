@@ -18,7 +18,7 @@ The harness packages are **optional peer dependencies** resolved from your DSH p
 **From GitHub, pinned (recommended — the only channel that works today)** — no npm registry, no build permission (the runtime is committed):
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
 ```
 
 **From npm (not published yet)** — `@planrun/bundle` returns 404 on `registry.npmjs.org`, so this command starts working only after the maintainer publishes the scope (steps in [publish.md](publish.md)):

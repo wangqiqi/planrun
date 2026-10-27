@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-10-28
+
+### Changed
+
+- **Super Cursor `.cursor/` synced from upstream cursor-ai** — harness pack layout, growth
+  coordinates moved to `.growing/` (installer migrates legacy `.cursorGrowth/`), refreshed
+  hooks, verify gates, and templates. PlanRun continues to ship the same DSH bundle; this
+  bump aligns the in-repo Super Cursor SOP with the current mother template.
+
 ### Added
 
 - **`doctor` proves what an install actually is.** `install-planrun.sh` now records

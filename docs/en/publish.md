@@ -27,7 +27,7 @@ file is in the tarball.
 **Today (works) — GitHub tag, pinned:**
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
 ```
 
 **After the npm scope is published (not yet — this command currently returns 404):**
@@ -95,7 +95,7 @@ version).
 **This is the channel users can install today.** The repository root is itself a DSH bundle, so it needs no npm publish:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
 ```
 
 pnpm fetches sources and DSH mounts `./cordis.patch.yml` (relative rows become `file://` URLs)

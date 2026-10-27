@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "mddocx": {
-      "command": "python",
-      "args": ["-m", "mddocx.mcp"],
-      "env": {}
-    }
-  }
-}

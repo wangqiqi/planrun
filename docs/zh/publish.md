@@ -19,7 +19,7 @@
 **当前可用（GitHub tag，必须固定版本）：**
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.1
 ```
 
 **npm scope 发布之后（目前该命令返回 404）：**
@@ -70,7 +70,7 @@ bash scripts/publish-packages.sh --pack-only
 **这是用户当前唯一可用的安装通道。** 仓库根本身就是 DSH bundle，因此不需要先发布 npm：
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.1
 ```
 
 pnpm 取源码后，DSH 直接挂载 `./cordis.patch.yml`（相对行名转成 `file://` URL）与 preset 声明。根 manifest 不声明 `prepare`，运行时（`packages/*/lib/*.js`）随源码提交，因此安装**不执行任何构建脚本**，也不需要 `allowBuilds` 授权。`pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错。

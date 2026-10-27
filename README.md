@@ -138,7 +138,7 @@ The harness packages (`@deepseek-ai/cordis` `^4.0.0`, plus `@deepseek-ai/dsh-age
 **From GitHub, pinned (works today — the only install channel that works)**. The repo root is itself a bundle and its runtime entry points are committed, so pnpm runs no build script at all:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.0
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
 ```
 
 **From npm (not published yet)**: `@planrun/bundle`, `@planrun/workflow` and `@planrun/skill-provider` are **not on the registry** — `registry.npmjs.org` returns 404 for all three, so the command below only works after the maintainer publishes the scope (see [publish.md](docs/en/publish.md)):

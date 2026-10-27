@@ -13,6 +13,6 @@
     }
   },
   "dependencies": {
-    "planrun": "github:wangqiqi/planrun#v1.9.0"
+    "planrun": "github:wangqiqi/planrun#v1.9.1"
   }
 }
