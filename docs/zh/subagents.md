@@ -7,7 +7,7 @@
 四个 preset **随 bundle 一起安装**（`packages/bundle-planrun/presets.patch.yml` 里的官方 `@deepseek-ai/dsh-agent-preset` 声明）：
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.1
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.2
 
 # npm（尚未发布）：
 dsh plugin --profile web add @planrun/bundle

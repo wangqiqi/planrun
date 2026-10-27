@@ -54,14 +54,14 @@ dsh --profile web --dump-config | grep planrun-skills
 仓库根本身就是一个 DSH bundle：`dsh.bundle.patch` 指向 `cordis.patch.yml`（行名用相对本文件的路径，DSH 会转成 `file://` URL）以及 `packages/bundle-planrun/presets.patch.yml`（四个 agent preset）。不需要发布到 npm：
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.1
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.2
 ```
 
 git 安装只取源码。运行时入口（`packages/*/lib/*.js`）已**随源码提交**，且根 manifest 不声明 `prepare`，因此 pnpm 不会执行任何构建脚本：不需要 `allowBuilds` 授权，也不需要本地工具链。
 
 `pnpm run verify:lib` 会在提交的运行时与 `src/` 不一致时报错；`pnpm run verify:github` 端到端跑通整条通道（`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#ref` 可验证尚未 push 的本地提交）。
 
-请固定 tag（当前版本 `#v1.9.1`）或 commit，避免后续 push 改变安装内容。验证方式同路径 A。**路径 A 与 A′ 只能选一个**：同一 skill provider 挂载两次会在 skill registry 冲突。
+请固定 tag（当前版本 `#v1.9.2`）或 commit，避免后续 push 改变安装内容。验证方式同路径 A。**路径 A 与 A′ 只能选一个**：同一 skill provider 挂载两次会在 skill registry 冲突。
 
 ## 路径 B — 本仓开发
 

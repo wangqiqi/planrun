@@ -71,7 +71,7 @@ paths relative to the patch, which DSH turns into `file://` URLs) and at
 published to npm:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.2
 ```
 
 A git install fetches sources only. The runtime entry points (`packages/*/lib/*.js`) are
@@ -82,7 +82,7 @@ without running any build script: no `allowBuilds` permission, no local toolchai
 `pnpm run verify:github` exercises the whole channel (`PLANRUN_GIT_SPEC=git+file:///path/to/checkout#ref`
 tests an unpushed commit).
 
-Pin a tag (`#v1.9.1` is the current release) or a commit so a later push cannot change what you install. Verify as in
+Pin a tag (`#v1.9.2` is the current release) or a commit so a later push cannot change what you install. Verify as in
 Path A. Install **Path A or Path A′**, never both: two mounts of the same skill provider collide
 in the skill registry.
 

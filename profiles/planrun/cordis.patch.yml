@@ -10,9 +10,9 @@
 # today: `registry.npmjs.org` returns 404 for `@planrun/bundle`,
 # `@planrun/workflow` and `@planrun/skill-provider`. The `github:` install packs
 # the whole repo, whose committed `packages/*/lib/*.js` needs no build step.
-# When the scope is published, `"planrun": "^1.9.1"` becomes equivalent.
+# When the scope is published, `"planrun": "^1.9.2"` becomes equivalent.
 #
 #   cp -r profiles/planrun "$DSH_HOME/profiles/planrun"
-#   dsh plugin --profile planrun add "github:wangqiqi/planrun#v1.9.1"
+#   dsh plugin --profile planrun add "github:wangqiqi/planrun#v1.9.2"
 
 []

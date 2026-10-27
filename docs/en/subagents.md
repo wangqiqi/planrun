@@ -9,7 +9,7 @@ declarations (`packages/bundle-planrun/presets.patch.yml`), so installing the
 bundle is all it takes:
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.1
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # current release: #v1.9.2
 
 # npm (not published yet):
 dsh plugin --profile web add @planrun/bundle

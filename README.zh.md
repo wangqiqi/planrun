@@ -138,7 +138,7 @@ harness 相关包（`@deepseek-ai/cordis` `^4.0.0`，`workflow` 另需 `@deepsee
 **GitHub 直装、固定版本（当前唯一可用的安装通道）**。仓库根本身就是 bundle，且运行时入口已随源码提交，pnpm 不会执行任何构建脚本：
 
 ```sh
-dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.1
+dsh plugin --profile web add "github:wangqiqi/planrun#<tag>"   # 当前版本：#v1.9.2
 ```
 
 **npm 通道（尚未发布）**：`@planrun/bundle` · `@planrun/workflow` · `@planrun/skill-provider` **都不在 registry 上** —— `registry.npmjs.org` 对三者均返回 404，下面的命令要等维护者发布该 scope 之后才可用（见 [publish.md](docs/zh/publish.md)）：

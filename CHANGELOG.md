@@ -2,11 +2,13 @@
 
 ## [Unreleased]
 
+## [1.9.2] - 2026-10-28
+
 ### Changed
 
 - **Growth 目录统一到 `.growing/`** — `install-planrun.sh`、`@planrun/workflow`、`dsh-guard`、doctor/manifest
   与 28 个 bundled skills 均以 `.growing/` 为写入真源（与 Super Cursor `workflow.json` 一致）；`.dsh/growth/`
-  与 `.cursorGrowth/` 保留只读回退，安装时自动迁移到 `.growing/`。
+  与 `.cursorGrowth/` 保留只读回退，安装时自动迁移到 `.growing/`（**不会**在 `git pull` 时改你本机 growth 目录）。
 
 ## [1.9.1] - 2026-10-28
 
