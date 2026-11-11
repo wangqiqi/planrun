@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.9.3] - 2026-11-11
+
 ### Fixed
 
 - **DSH 0.2 compatibility: the four `planrun*` agent presets no longer mount** — they were

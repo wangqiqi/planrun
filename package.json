@@ -1,7 +1,7 @@
 {
   "name": "planrun",
   "private": true,
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "PlanRun — DSH-native agent workflow SOP (plan-run-verify) adapted from Super Cursor",
   "homepage": "https://znza.top/planrun/",
   "type": "module",
