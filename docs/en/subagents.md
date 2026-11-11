@@ -51,21 +51,27 @@ fails when the generated patch is stale.
 
 ## Named delegation tools (preset `planrun`)
 
-| Tool | Mode | Readonly |
-|------|------|----------|
-| `subagent_review` | one-shot | yes (`toolFilter` denies write/bash/subagent) |
-| `subagent_spike` | one-shot | yes |
-| `subagent_ship` | continuable background | no (release writes); denies nested subagent tools |
-| `subagent` | continuable | inherits parent preset |
-| `subagent_fork` | one-shot fork | inherits parent preset |
+| Tool | Child preset | Readonly |
+|------|--------------|----------|
+| `subagent_review` | `agentPreset: planrun-review` | yes (the child preset ships no write/bash/delegation tools) |
+| `subagent_spike` | `agentPreset: planrun-spike` | yes |
+| `subagent_ship` | `agentPreset: planrun-ship` | no (release writes; the child preset ships no delegation tools) |
+| `subagent` | inherits parent preset | inherits parent preset |
+| `subagent_fork` | inherits parent preset | inherits parent preset |
+
+> DSH ≥0.2 removed the per-tool `persona` and `toolFilter` config: a delegation
+> tool now selects a child **agent preset** with `agentPreset`, and the preset's
+> plugin list is the restriction. The readonly guarantee therefore lives in
+> `planrun-review` / `planrun-spike` (no `tool-bash` / `tool-fs` write rows, no
+> subagent rows); keep those presets installed or the named tools lose their
+> isolation.
 
 ### Example: review a diff
 
 ```
 subagent_review(
-  label: "REV-001",
-  prompt: "Load review skill. Review packages/workflow since main.",
-  run_in_background: false
+  description: "review REV-001",
+  prompt: "Load review skill. Review packages/workflow since main."
 )
 ```
 
@@ -73,21 +79,22 @@ subagent_review(
 
 ```
 subagent_spike(
-  label: "SPIKE-001",
-  prompt: "Compare npm vs git install for @planrun/bundle. Table + TASK split.",
-  run_in_background: false
+  description: "SPIKE-001 research",
+  prompt: "Compare npm vs git install for @planrun/bundle. Table + TASK split."
 )
 ```
 
-### Example: ship release (background)
+### Example: ship release
 
 ```
 subagent_ship(
-  label: "ship v1.6.0",
-  prompt: "Load release skill. verify green → CHANGELOG → tag.",
-  run_in_background: true
+  description: "ship v1.8.3",
+  prompt: "Load release skill. verify green → CHANGELOG → tag."
 )
 ```
+
+The spawn provider is continuable, so `send_message` continues a finished child;
+`run_in_background` / `label` are gone from the tool surface.
 
 Use `list_agents` / `send_message` (from `dsh-tool-subagent-control`) for continuable children.
 

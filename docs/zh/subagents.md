@@ -43,21 +43,25 @@ dsh plugin --profile web add "file:$PLANRUN_HOME/dist-local/bundle-planrun"
 
 ## 命名委派工具（planrun preset）
 
-| 工具 | 模式 | 只读 |
-|------|------|------|
-| `subagent_review` | one-shot | 是 |
-| `subagent_spike` | one-shot | 是 |
-| `subagent_ship` | 后台可续 | 否（release 写入） |
-| `subagent` | 可续 | 继承父 preset |
-| `subagent_fork` | one-shot fork | 继承父 preset |
+| 工具 | 子 preset | 只读 |
+|------|-----------|------|
+| `subagent_review` | `agentPreset: planrun-review` | 是（子 preset 不含 write/bash/委派工具） |
+| `subagent_spike` | `agentPreset: planrun-spike` | 是 |
+| `subagent_ship` | `agentPreset: planrun-ship` | 否（release 写入；子 preset 不含委派工具） |
+| `subagent` | 继承父 preset | 继承父 preset |
+| `subagent_fork` | 继承父 preset | 继承父 preset |
+
+> DSH ≥0.2 已移除 tool-subagent 的逐工具 `persona` 与 toolFilter 配置：委派工具改用
+> `agentPreset` 选择子 agent preset，限制由 preset 的插件清单决定。只读保证因此落在
+> `planrun-review` / `planrun-spike`（不含 write/bash 行、不含 subagent 行）；这两个
+> preset 必须保持安装，否则命名工具失去隔离。
 
 ### 示例：review
 
 ```
 subagent_review(
-  label: "REV-001",
-  prompt: "Load review skill. Review packages/workflow since main.",
-  run_in_background: false
+  description: "review REV-001",
+  prompt: "Load review skill. Review packages/workflow since main."
 )
 ```
 
@@ -65,9 +69,8 @@ subagent_review(
 
 ```
 subagent_spike(
-  label: "SPIKE-001",
+  description: "SPIKE-001 research",
   prompt: "Compare npm vs git install for @planrun/bundle.",
-  run_in_background: false
 )
 ```
 
@@ -75,11 +78,13 @@ subagent_spike(
 
 ```
 subagent_ship(
-  label: "ship v1.6.2",
-  prompt: "Load release skill. verify → CHANGELOG → tag.",
-  run_in_background: true
+  description: "ship v1.8.3",
+  prompt: "Load release skill. verify → CHANGELOG → tag."
 )
 ```
+
+spawn provider 可续（子 agent 结束后可用 `send_message` 继续）；`run_in_background` / `label`
+参数已不在工具面上。
 
 ## Agent 定义（npm）
 

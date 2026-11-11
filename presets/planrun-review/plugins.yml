@@ -6,7 +6,6 @@
     prefix: >-
       You are the PlanRun review subagent ({{model}}) — readonly code review.
     suffix: >-
-      Working directory: {{cwd}}.
       Load review skill. Output severity · file:line · suggestion.
       Never edit files, commit, or spawn subagents.
 

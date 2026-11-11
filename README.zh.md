@@ -258,7 +258,7 @@ pnpm run gate-check    # 有 plan 时
 pnpm run typecheck
 ```
 
-`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.growing` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH API（`agent/session-start` · `kind: 'plugin'`）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
+`verify-planrun.sh` 校验 **28** 个 skill 目录、**12** 人格 catalog、**4** 个 subagent preset、bundled `agents/*.md`、long/delivery reference、guard 脚本与 npm scripts，并确保 Super Cursor 残留 token（`.growing` · `AskQuestion` · `runner.sh`）不出现在 bundled skills 中。它还会在这些情况报错：bundle 内 skill 名与官方 DSH skill（`dsh-badge` · `office-*` · `cordis-*`）或命令（`plan` · `compact` · `goal` · `feedback`）冲突、`presets.patch.yml` 过期、以及使用了已废弃的 DSH 表面（`agent/session-start` · `kind: 'plugin'` · 逐工具 `persona`/`toolFilter` · `backgroundMode`/`enableRunInBackground` · `list-agents` 子路径 · `{{cwd}}` 提示词变量）。bundle 内 skill 仍指向已废弃入口（`install-planrun.sh --preset` · `.agent-presets`）、或任何仓库内 markdown 相对链接失效时，它同样会报错——这样一次文档搬家不会留下断链。
 
 `verify-plugin-e2e.sh` 是唯一能证明插件**真的能加载**的检查：它打包三个包、装进一次性 profile、断言 `--dump-config` 里的 bundle 行、导入 skill catalog，并 headless boot。以下情况会失败：`failed to import`、dsh peer 范围不兼容、或 session format 拒绝的 message source kind。
 

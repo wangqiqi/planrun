@@ -92,6 +92,14 @@ bundle.dependencies['@planrun/skill-provider'] = 'file:../skill-provider'
 bundle.dependencies['@planrun/workflow'] = 'file:../workflow'
 fs.writeFileSync(bundlePath, `${JSON.stringify(bundle, null, 2)}\n`)
 
+// @planrun/workflow resolves `@planrun/skill-provider/config/roles.json` through
+// createRequire, so its workspace: range must become a file: range too or the
+// staged profile fails ERR_PNPM_WORKSPACE_PKG_NOT_FOUND.
+const workflowPath = path.join(out, 'workflow', 'package.json')
+const workflow = JSON.parse(fs.readFileSync(workflowPath, 'utf8'))
+workflow.dependencies['@planrun/skill-provider'] = 'file:../skill-provider'
+fs.writeFileSync(workflowPath, `${JSON.stringify(workflow, null, 2)}\n`)
+
 for (const pkg of ['skill-provider', 'workflow', 'bundle-planrun']) {
   const file = path.join(out, pkg, 'package.json')
   const manifest = JSON.parse(fs.readFileSync(file, 'utf8'))

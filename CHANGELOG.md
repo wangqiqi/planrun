@@ -2,6 +2,43 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **DSH 0.2 compatibility: the four `planrun*` agent presets no longer mount** — they were
+  written against DSH 0.1-era surfaces and broke on DSH 0.2 (`0.2.2-rc.1`), which the shipped
+  `planrun` bundle still resolves:
+
+  - `@deepseek-ai/dsh-tool-subagent` removed the per-tool `persona` and `toolFilter` config and
+    throws at mount time (`persona is no longer supported`), so `subagent_review` /
+    `subagent_spike` / `subagent_ship` never activated. Each named tool now selects its child
+    preset with `agentPreset: planrun-{review,spike,ship}`; the readonly guarantee (no
+    write/bash/delegation rows) lives in those presets' plugin lists instead.
+  - `@deepseek-ai/dsh-tool-subagent-control/list-agents` is no longer a subpath export — the
+    control plugin registers `list_agents` (with `send_message` / `interrupt_agent`) from its
+    main entry, so the extra insert row was dropped.
+  - `{{cwd}}` is no longer a prompt variable (only `provider` / `model` interpolate strictly);
+    the working directory is injected by the host as the `working-directory:current` context
+    section, so the persona suffix no longer references it.
+  - `backgroundMode` / `enableRunInBackground` config keys are gone; continuability now follows
+    the spawn provider's capability.
+
+  `scripts/verify-planrun.sh` now fails on the retired keys and the retired variable token, so
+  a future DSH rename cannot silently reintroduce them.
+
+### Changed
+
+- **`verify-plugin-e2e.sh` smoke import** — the throwaway-profile smoke script now lives inside
+  the profile instead of the work root, so `@planrun/skill-provider` resolves through the
+  profile's `node_modules` (ESM resolves beside the importing file, not the process cwd). The
+  catalog assertion (shared `SKILL_COUNT` manifest, `master` body) now actually runs.
+- **`pack-local.sh` rewrites `workflow`'s own `@planrun/skill-provider` range** — `@planrun/workflow`
+  resolves `@planrun/skill-provider/config/roles.json` through `createRequire`, so its
+  `workspace:^` dependency must become `file:../skill-provider` in the staged layout; the new
+  staging guard otherwise aborts the e2e with `workflow/package.json 仍含 workspace: 协议`.
+- **docs/{en,zh}/subagents.md** — delegation table now documents the child-preset mapping and
+  current tool parameters (`description` / `prompt`); retired `label` / `run_in_background`
+  examples replaced.
+
 ## [1.9.2] - 2026-10-28
 
 ### Changed

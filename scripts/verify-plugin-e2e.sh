@@ -95,7 +95,10 @@ done
 [[ "$FAIL" == 0 ]] && ok "bundle rows + preset declarations appear in the composed profile"
 
 echo "==> import plugin + skill catalog"
-cat > "$WORK/smoke.mjs" <<'JS'
+# Resolve @planrun/* from the profile: ESM resolves bare specifiers beside the
+# importing file, not beside the process cwd, so the script must live inside
+# the profile whose node_modules holds the staged packages.
+cat > "$PROFILE/smoke.mjs" <<'JS'
 import { SKILL_COUNT } from 'SKILLS_MANIFEST_SPECIFIER'
 import { apply } from '@planrun/skill-provider'
 let provider
@@ -117,8 +120,8 @@ node -e "
   const file = process.argv[process.argv.length - 1]
   const specifier = pathToFileURL(process.argv[process.argv.length - 2]).href
   writeFileSync(file, readFileSync(file, 'utf8').replace('SKILLS_MANIFEST_SPECIFIER', specifier))
-" "$ROOT/scripts/skills-manifest.mjs" "$WORK/smoke.mjs"
-if ! (cd "$PROFILE" && node "$WORK/smoke.mjs") >"$WORK/smoke.log" 2>&1; then
+" "$ROOT/scripts/skills-manifest.mjs" "$PROFILE/smoke.mjs"
+if ! (cd "$PROFILE" && node smoke.mjs) >"$WORK/smoke.log" 2>&1; then
   fail "plugin import / catalog failed"; tail -20 "$WORK/smoke.log" >&2
 else
   ok "$(cat "$WORK/smoke.log")"

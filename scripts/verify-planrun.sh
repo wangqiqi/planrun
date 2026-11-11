@@ -430,11 +430,18 @@ done
 if ! grep -q 'tool-subagent-review' "$ROOT/presets/planrun/plugins.yml"; then
   echo "MISSING: planrun preset delegation tool-subagent-review"
   FAIL=1
-elif ! grep -q 'toolFilter' "$ROOT/presets/planrun/plugins.yml"; then
-  echo "MISSING: planrun preset toolFilter for readonly subagents"
+elif ! grep -q 'agentPreset: planrun-review' "$ROOT/presets/planrun/plugins.yml"; then
+  echo "MISSING: planrun preset agentPreset planrun-review for readonly subagents"
+  FAIL=1
+elif grep -Eq 'toolFilter|backgroundMode|enableRunInBackground|list-agents' "$ROOT/presets/planrun/plugins.yml"; then
+  echo "STALE: planrun preset carries DSH-retired keys (toolFilter/backgroundMode/enableRunInBackground/list-agents)"
   FAIL=1
 else
-  echo "OK: planrun delegation + toolFilter"
+  echo "OK: planrun delegation + agentPreset"
+fi
+if grep -rq '{{cwd}}' "$ROOT/presets"; then
+  echo "STALE: retired prompt variable {{cwd}} in presets (the host injects the working directory as a context section)"
+  FAIL=1
 fi
 # DSH rejects a preset row whose plugin config omits a required key at mount time
 # and then shows the whole preset as broken — all four planrun presets did.

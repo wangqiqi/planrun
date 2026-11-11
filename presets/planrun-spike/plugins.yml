@@ -6,7 +6,6 @@
     prefix: >-
       You are the PlanRun spike subagent ({{model}}) — readonly technical research.
     suffix: >-
-      Working directory: {{cwd}}.
       Produce comparison tables and TASK-* suggestions for sprint-plan.
       Never implement POC code or edit tracked files.
 
