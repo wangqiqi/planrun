@@ -1,25 +1,25 @@
 # `core_rules_export`（Kiro · Trae）
 
-`install-map` token **`core_rules_export`**：把 Harness **rules** 子集安装到项目规则型 IDE 根目录，**不**拷贝 skills · bin · config · templates 全量。
+`install-map` token **`core_rules_export`**：把 Harness **rules** 子集安装到项目规则型 IDE 根目录，**不**拷贝 skills · bin · config · templates 全量。Trae 另有 **`core_skills_export`** 单独导出 skills（`.trae/skills/`），见 [adaptors/trae/docs/layout.md](../../../adaptors/trae/docs/layout.md)。
 
 ## 适用 adaptor
 
-| id | `install_dir` | 脚本 |
-|----|---------------|------|
-| `kiro` | `.kiro/` | `install-adaptor-rules-export.sh --adaptor kiro` |
-| `trae` | `.trae/` | `install-adaptor-rules-export.sh --adaptor trae` |
+| id | `install_dir` | 规则子目录 | 脚本 |
+|----|---------------|-----------|------|
+| `kiro` | `.kiro/` | `steering/`（官方 `.kiro/steering/*.md`） | `install-adaptor-rules-export.sh --adaptor kiro` |
+| `trae` | `.trae/` | `rules/`（官方 `.trae/rules/*.md`） | `install-adaptor-rules-export.sh --adaptor trae` |
 
-Kiro 与 Trae **导出内容相同**；仅安装根不同。官方目录规范 **待确认** — 布局见 `adaptors/kiro/docs/layout.md` · `adaptors/trae/docs/layout.md`。
+两者均导出 `harness/core/rules`，且 `.mdc` 重命名为 `.md`；但**目标子目录不同**（kiro 用 `steering`、trae 用 `rules`）。官方机制 → `adaptors/kiro/docs/layout.md` · `adaptors/trae/docs/layout.md`。
 
 ## 导出范围
 
 | 包含 | 排除 |
 |------|------|
-| `harness/core/rules/**` → `<install_dir>/rules/**` | `rules/local`（消费方 → `.growing/rules/local`） |
-| 生成 `<install_dir>/RULES.md`（`.mdc` 路径索引） | skills · bin · hooks · adaptors |
+| `harness/core/rules/**` → `<install_dir>/<subdir>/**`（`.mdc` → `.md`） | `rules/local`（消费方 → `.growing/rules/local`） |
+| 生成 `<install_dir>/RULES.md`（`.md` 路径索引） | skills · bin · hooks · adaptors |
 | `adaptors/<id>/README.md` → `<install_dir>/README.md` | |
 
-拷贝：`sc_copy_tree` + `rules/local` exclude（与 `.dsh` core 安装同策略）。
+拷贝：`sc_copy_tree` + `rules/local` exclude；`.mdc` 经 `mv` 重命名 `.md`。
 
 ## Growth
 
@@ -36,4 +36,5 @@ bash .cursor/bin/verify-install-rules-export.sh
 ## 相关
 
 - [adaptor-contract.md](adaptor-contract.md) §`includes` token
-- dsh 全量 core → [adaptors/dsh/docs/layout.md](../../../adaptors/dsh/docs/layout.md)
+- Trae skills 导出（`core_skills_export`）→ [adaptors/trae/docs/layout.md](../../../adaptors/trae/docs/layout.md)
+- dsh（guide-only）→ [adaptors/dsh/docs/layout.md](../../../adaptors/dsh/docs/layout.md)

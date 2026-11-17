@@ -19,9 +19,10 @@ fi
 HARNESS="$CURSOR_ROOT/harness"
 MANIFEST="$HARNESS/layout-manifest.json"
 CUR="$CURSOR_ROOT"
+CORE="$HARNESS/core"
 
 # shellcheck source=../lib/verify-common.sh
-source "$CUR/lib/verify-common.sh" "verify-harness-layout"
+source "$CORE/lib/verify-common.sh" "verify-harness-layout"
 
 echo "=== verify-harness-layout ==="
 
@@ -36,8 +37,8 @@ if [[ ! -f "$MANIFEST" ]]; then
 fi
 
 mkdir -p "$HARNESS/core" "$CUR/adaptors/cursor" "$CUR/adaptors/dsh" "$CUR/adaptors/kiro" \
-  "$CUR/adaptors/trae" "$CUR/adaptors/opencode"
-for d in harness/core adaptors/cursor adaptors/dsh adaptors/kiro adaptors/trae adaptors/opencode; do
+  "$CUR/adaptors/trae" "$CUR/adaptors/opencode" "$CUR/adaptors/zcode"
+for d in harness/core adaptors/cursor adaptors/dsh adaptors/kiro adaptors/trae adaptors/opencode adaptors/zcode; do
   [[ -d "$CUR/$d" ]] && vc_ok ".cursor/$d" || vc_fail ".cursor/$d"
 done
 
@@ -48,7 +49,7 @@ if [[ ! -d "$HARNESS/core/skills" ]]; then
 fi
 
 # shellcheck source=../lib/platform.sh
-source "$CUR/lib/platform.sh"
+source "$CORE/lib/platform.sh"
 if ! sc_has_json_tool; then
   vc_fail "need jq or python for layout-manifest.json"
 else
@@ -79,10 +80,10 @@ for f in verify-cursor-plugin-mvp.sh verify-cursor-platform-contract.sh verify-s
 done
 [[ -f "$ac/docs/cursor-cloud.md" ]] && vc_ok "adaptors/cursor/docs/cursor-cloud.md" || vc_fail "missing adaptors/cursor/docs/cursor-cloud.md"
 
-for id in dsh kiro trae opencode; do
+for id in dsh kiro trae opencode zcode; do
   [[ -f "$CUR/adaptors/$id/README.md" ]] && vc_ok "adaptors/$id/README.md" || vc_fail "missing adaptors/$id/README.md"
 done
 
-[[ -f "$CUR/rules/core.mdc" ]] && vc_ok ".cursor IDE link (core.mdc)" || vc_fail ".cursor missing core.mdc — run .cursor/harness/link-cursor-ide.sh"
+[[ -f "$CORE/rules/core.mdc" ]] && vc_ok ".cursor IDE link (core.mdc)" || vc_fail ".cursor missing core.mdc — run .cursor/harness/link-cursor-ide.sh"
 
 vc_summary "verify-harness-layout passed."

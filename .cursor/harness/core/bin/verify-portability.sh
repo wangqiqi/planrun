@@ -14,8 +14,8 @@
 # 自检脚本本身把模式当**数据**用，故排除；`lib/platform.sh` 是解析器，允许 `command -v python3`。
 set -euo pipefail
 
-CUR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$(cd "$CUR/.." && pwd)"
+# shellcheck source=../lib/pack-root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/pack-root.sh"
 # shellcheck source=../lib/verify-common.sh
 source "$CUR/lib/verify-common.sh" "verify-portability"
 
@@ -78,6 +78,9 @@ for path in files:
     rel = path.relative_to(root).as_posix()
     text = path.read_text(encoding="utf-8", errors="replace")
     lines = text.splitlines()
+
+    if "\r" in text:
+        fails.append(f"{rel}: contains CR (CRLF); use LF per .gitattributes")
 
     if not lines or not lines[0].startswith("#!/usr/bin/env bash"):
         fails.append(f"{rel}:1 shebang must be '#!/usr/bin/env bash'")
@@ -176,6 +179,30 @@ if not RESERVED_BASH_RE.search("BASH_CMDS+=('x')"):
 _bad_xargs = "printf '%s\\0' \"$@\" | xargs -0 -P 4 -I{} bash -c 'run_one \"$1\"' _ {}"
 if not XARGS_I_BASH_C_RE.search(_bad_xargs):
     fails.append("selftest: XARGS_I_BASH_C_RE did not match fragile parallel idiom")
+
+# --- Git 索引：harness/core/bin/*.sh 须 100755（link-cursor-ide → sc_chmod_scripts 否则只脏 mode）---
+if (root / "install-super-cursor.sh").is_file():
+    import subprocess
+
+    for prefix in (".cursor/harness/core/bin",):
+        r = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-s", "--", prefix],
+            capture_output=True,
+            text=True,
+        )
+        if r.returncode != 0:
+            fails.append(f"git ls-files -s {prefix} failed: {r.stderr.strip() or r.returncode}")
+            continue
+        for line in r.stdout.splitlines():
+            parts = line.split(maxsplit=3)
+            if len(parts) < 4:
+                continue
+            mode, path = parts[0], parts[3].strip()
+            if path.endswith(".sh") and mode != "100755":
+                fails.append(
+                    f"git index {path} mode={mode} (expected 100755; run "
+                    f"'git update-index --chmod=+x {path}')"
+                )
 
 # --- 行尾策略：Windows autocrlf=true 会把 *.sh 变 CRLF → 脚本秒退 ---
 if (root / "install-super-cursor.sh").is_file():

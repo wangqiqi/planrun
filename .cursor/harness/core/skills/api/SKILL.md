@@ -46,6 +46,15 @@ description: REST/OpenAPI 设计审查。
 - 仅改后端字段名不更新 client
 - 200 + `{ "error": "..." }` 代替 4xx
 - 示例与 schema 不一致
+- **同 method+path 重复注册**（后者被遮蔽或行为不确定）
+
+## 路由表面（HTTP 注册）
+
+- [ ] 应用内 `(method, normalized-path)` **无新增 duplicate**
+- [ ] 框架**先注册优先**时：不同 handler 不得共用同 path（常见 bug：复制粘贴 path）
+- [ ] intentional 保留的未接线路由：Growth 决策 + **契约测试清单**（CI 可读，不依赖 `.growing/` 目录存在）
+- [ ] 已删除的路由族（steering/ADR）有 **禁止回退** 断言
+- [ ] path/method 变更：OpenAPI · client · mocks · CHANGELOG 同 PR
 
 ## API 测试
 

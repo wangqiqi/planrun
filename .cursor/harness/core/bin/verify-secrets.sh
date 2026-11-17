@@ -5,10 +5,12 @@
 #   **security** skill 是人工清单，CI 需要一道机器门禁。
 #
 # 误报豁免：`.env.example` / 本文档中的示例占位 / `config/denylist.txt`（模式本体）。
+#   测试 fixture 的假密钥：值须含占位字样（placeholder/dummy/example/changeme 等），
+#   且勿使用真实的 `-----BEGIN ... PRIVATE KEY-----` 结构行——结构行无法按行豁免。
 set -euo pipefail
 
-CUR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$(cd "$CUR/.." && pwd)"
+# shellcheck source=../lib/pack-root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/pack-root.sh"
 # shellcheck source=../lib/verify-common.sh
 source "$CUR/lib/verify-common.sh" "verify-secrets"
 

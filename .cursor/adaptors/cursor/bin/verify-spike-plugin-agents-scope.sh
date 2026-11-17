@@ -8,7 +8,9 @@ ARCHIVE_DIR="$ROOT/.growing/archive/meta"
 
 # 归档为本地私有（.growing/ 不入 git）→ 未引导时 SKIP；本地有 meta/ 仍严格校验
 # shellcheck source=../lib/growth-archive.sh
-source "$ROOT/.cursor/lib/growth-archive.sh"
+CORE_LIB="$ROOT/.cursor/harness/core/lib"
+[[ -d "$CORE_LIB" ]] || CORE_LIB="$ROOT/.cursor/lib"
+source "$CORE_LIB/growth-archive.sh"
 sc_growth_archive_available "$ARCHIVE_DIR" "verify-spike-plugin-agents-scope" || exit 0
 
 shopt -s nullglob
@@ -18,7 +20,7 @@ if [[ ${#files[@]} -eq 0 ]]; then
   exit 1
 fi
 latest="$(printf '%s\n' "${files[@]}" | sort | tail -1)"
-for needle in "ship" "review" "spike" "sync-plugin-subset" "super-cursor-mvp" "0.2.0"; do
+for needle in "ship" "review" "spike" "sync-plugin-subset" "super-cursor-mvp" "0.3.0"; do
   grep -qF "$needle" "$latest" || { echo "FAIL: missing '$needle' in $latest" >&2; exit 1; }
 done
 echo "OK: plugin agents scope spike archive $latest"

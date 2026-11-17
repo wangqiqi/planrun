@@ -22,7 +22,7 @@ disable-model-invocation: true
 
 - **python3**（标准库 + `git` 在 PATH）
 - 分析目录为 **Git 仓库**（默认 `git_only`）；非 git 仓用 `--no-git-only`
-- 生成 HTML 需联网加载 ECharts CDN（`cdn.jsdelivr.net`）；离线环境仅保留 HTML 文件本地打开可能无图表
+- 图表库：生成时优先从项目 `node_modules/echarts/dist/echarts.min.js` 复制到 HTML **同目录**（`file://` 离线可用）；未找到则回退 CDN（`cdn.jsdelivr.net`，内网/离线时图表会空白）
 
 ## 流程（Agent 一次跑完）
 
@@ -44,7 +44,8 @@ python3 .cursor/skills/code-stats-viz/scripts/code_stats_viz.py \
 |----|------|
 | 文件范围 | 仅 **git 跟踪** 文件（`git ls-files`） |
 | 排除目录 | `.git` `.cursor` `.growing` `node_modules` `venv` `3rdparty` 等（见脚本 `DEFAULT_EXCLUDE_DIRS`） |
-| 跳过后缀 | 模型/二进制/媒体（`.onnx` `.pt` 图片音视频等） |
+| 跳过后缀 | 模型/二进制/媒体/办公档（`.onnx` `.pt` 图片音视频 `.docx` `.jar` 等） |
+| 图表默认类型 | **源码 + Markdown**；JSON/YAML/Other 等默认不勾选（可点「全部类型」） |
 | 提交统计 | **当前分支** · 最近 **365 天** |
 | 子模块 | 自动排除 git submodule 内文件 |
 

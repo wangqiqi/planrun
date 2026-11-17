@@ -64,7 +64,7 @@
 
 | 范围 | 标准 |
 |------|------|
-| 结构 | 28 skills · 3 agents · 54 rules · config/hooks/bin 齐全（无 `commands/`） |
+| 结构 | 28 skills · 3 agents · 56 rules · config/hooks/bin 齐全（无 `commands/`） |
 | 注册 | 每个 `rules/**/*.mdc` 在 `verify-super-cursor.sh` 有 check |
 | layout | **mother** 纯空仓 · **hybrid** 业务树共存（自动 SKIP 纯母版项）— `rules/feedback/verify.mdc` |
 | 交叉引用 | AGENTS ↔ 磁盘 · routes ↔ skills/agents · roles=12 |
@@ -72,13 +72,15 @@
 
 审计旧版时：对照本表 **已迁移** 列即可；未列项视为 intentional skip，非缺口。
 
-## 分发三轨（install · skills-bundle · Plugin）
+## 分发三轨（CLI · 拖放 · bundle · Plugin）
 
-与旧版「单一路径装 rules」不同，母版对外有 **三条并行分发轨**（能力矩阵见 `learn/cursor-platform.md` §分发三轨 · SPIKE 归档 `archive/meta/*_SPIKE_plugin_phase2_scope.md`）：
+消费方装 `.cursor/` 的 **双轨 SSOT** → [reference/install-paths.md](reference/install-paths.md)（**CLI install** · **`--pack-dropin` 复制/拖放**）。  
+Plugin / skills-bundle 矩阵见 `learn/cursor-platform.md` §分发三轨 · SPIKE 归档 `archive/meta/*_SPIKE_plugin_phase2_scope.md`。
 
 | 轨 | 入口 | skills 规模 | config / hooks | 典型场景 |
 |----|------|-------------|----------------|----------|
-| **install 全量** | `install-super-cursor.sh`（默认） | **28** | 完整 `.cursor/config/` + `hooks/` | 目标项目 SSOT · `runner.sh` 闸门 |
+| **CLI install** | `install-super-cursor.sh`（默认） | **28** | 完整 `.cursor/config/` + `hooks/` | 目标项目 SSOT · `runner.sh` 闸门 · `.growing/` |
+| **拖放 / 复制** | `--pack-dropin` → 解压或拖 `.cursor/` | **28**（与 install 同构） | 同 CLI | 无 Git · 内网 · 先试规则 |
 | **`--skills-bundle core`** | 同上 + `--skills-bundle core` | **23**（`skill-bundles.json`） | 同 install 全量 | 精简工具 skill，**不是** Plugin |
 | **`.cursor-plugin/`** | 本地加载 Plugin 子集 | **5** lifecycle + **agents** | **无** 打包 config；hooks 依赖已 install 的 `workflow.json` | 可选叠加；须 **先 install** |
 
@@ -108,9 +110,9 @@ Marketplace 上架：**Defer**（三轨决策见 `*_SPIKE_plugin_phase2_scope.md
 | 组 | 脚本 | 守护 |
 |----|------|------|
 | **core** | `verify-rules-globs` · `verify-portability` · `verify-config` · `verify-roo-compat` · `verify-secrets` · `verify-scripts-layout` · `verify-docs-layout` · `verify-changelog` · `verify-doc-super-cursor` · `verify-growth-layout` · `verify-harness-layout` · `verify-adaptor-contract` · `verify-mother-root-bin` · `verify-onekey-template` | 规则 glob · 可移植 · schema · 协议字段 · 密钥 · scripts/docs 布局 · CHANGELOG · 门面计数 · harness/adaptors 分区 · **占位 adaptor README + install-map** · **母版根 `bin/super-cursor-sync`** · **project-onekey 模板**（母版根不得有 `onekey_start.sh`） |
-| **install** | `verify-skill-bundles-ssot` · `verify-install-skills-bundle` · `verify-install-dsh` · `verify-install-rules-export` · `verify-install-opencode` · `verify-spike-skills-bundle-scope` · `verify-spike-onekey-bootstrap-scope` | `skill-bundles.json` ↔ 磁盘 · install 冒烟 · **`.dsh/`** · **`.kiro/`/`.trae/`** · **`.opencode/`** · onekey SPIKE |
+| **install** | `verify-skill-bundles-ssot` · `verify-install-skills-bundle` · `verify-install-rules-export` · `verify-install-skills-export` · `verify-install-opencode` · `verify-spike-skills-bundle-scope` · `verify-spike-onekey-bootstrap-scope` | `skill-bundles.json` ↔ 磁盘 · install 冒烟 · **`.kiro/steering/`/`.trae/rules/`** · **`.trae/skills/`** · **`AGENTS.md` + `opencode.json`** · onekey SPIKE |
 | **docs-sync** | `verify-spike-docs-sync-scope` | project-docs / docs-init SPIKE |
-| **plugin** | `verify-cursor-plugin-manifest` · `verify-cursor-plugin-mvp` · `verify-spike-plugin-mvp-scope` · `verify-spike-plugin-agents-scope` · `verify-spike-plugin-phase2-scope` · `verify-spike-marketplace-prep-scope` | `.cursor-plugin/` 子集 · 三轨 · Marketplace prep 归档 |
+| **plugin** | `verify-cursor-plugin-manifest` · `verify-cursor-plugin-mvp` · `verify-plugin-marketplace-pack` · `verify-spike-plugin-mvp-scope` · `verify-spike-plugin-agents-scope` · `verify-spike-plugin-phase2-scope` · `verify-spike-marketplace-prep-scope`（`pack-plugin-marketplace`） | `.cursor-plugin/` 子集 · 市集打包布局 · 三轨 · Marketplace prep 归档 |
 | **platform** | `verify-cursor-platform-contract` · `verify-spike-tools-skills-archive` | 官方对齐 · tools/skills SPIKE |
 | **hygiene** | `verify-spike-mother-hygiene-scope` | 门面漂移审计（`archive/meta/*_SPIKE_mother_hygiene_scope.md`） |
 | **E2E** | `consumer-smoke.sh`（经 `template-verify`） | 目标项目：install → 闸门 BLOCK → hook → 全绿 |
@@ -137,10 +139,12 @@ Marketplace 上架：**Defer**（三轨决策见 `*_SPIKE_plugin_phase2_scope.md
 
 | adaptor | 安装根 | 厚度 | layout SSOT |
 |---------|--------|------|-------------|
-| dsh | `.dsh/` | `includes: core` | [adaptors/dsh/docs/layout.md](../../adaptors/dsh/docs/layout.md) |
-| opencode | `.opencode/` | `includes: core` | [adaptors/opencode/docs/layout.md](../../adaptors/opencode/docs/layout.md) |
-| kiro | `.kiro/` | `core_rules_export` | [adaptors/kiro/docs/layout.md](../../adaptors/kiro/docs/layout.md) |
-| trae | `.trae/` | `core_rules_export` | [adaptors/trae/docs/layout.md](../../adaptors/trae/docs/layout.md) |
+| dsh | （用户级，无项目内安装） | guide-only | [adaptors/dsh/docs/layout.md](../../adaptors/dsh/docs/layout.md) |
+| opencode | 项目根 `AGENTS.md` + `opencode.json` | `core_rules_export` | [adaptors/opencode/docs/layout.md](../../adaptors/opencode/docs/layout.md) |
+| kiro | `.kiro/steering/` | `core_rules_export` | [adaptors/kiro/docs/layout.md](../../adaptors/kiro/docs/layout.md) |
+| trae | `.trae/rules/` + `.trae/skills/` | `core_rules_export` · `core_skills_export` | [adaptors/trae/docs/layout.md](../../adaptors/trae/docs/layout.md) |
+| zcode | `.zcode/` | `includes: core` + hooks | [adaptors/zcode/docs/layout.md](../../adaptors/zcode/docs/layout.md) |
+| workbuddy | `.workbuddy/` | `includes: core` | [adaptors/workbuddy/docs/layout.md](../../adaptors/workbuddy/docs/layout.md) |
 
 机器门禁：`bash .cursor/bin/verify-adaptor-contract.sh` · 矩阵 → [harness-ide-matrix.md](reference/harness-ide-matrix.md)。
 

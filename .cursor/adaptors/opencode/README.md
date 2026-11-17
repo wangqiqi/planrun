@@ -2,11 +2,11 @@
 
 # adaptor: opencode
 
-OpenCode · Harness Core 安装到 `.opencode/`。
+OpenCode · 生成 `AGENTS.md` + `opencode.json`（官方机制）。
 
 ## Status
 
-**implemented（core install）** — 官方 OpenCode layout **待确认**；当前按 [docs/layout.md](docs/layout.md) 平铺 core（同 dsh 模式）。
+**implemented（AGENTS.md + opencode.json）** — 官方 OpenCode 项目规则走根目录 `AGENTS.md`、配置走 `opencode.json`（`instructions` 引用 `.cursor/rules/*.mdc`），**无 `.opencode/` 目录**。本 adaptor 生成这两个文件，符合官方机制。详见 [docs/layout.md](docs/layout.md)。
 
 ## Identity
 
@@ -18,13 +18,13 @@ OpenCode · Harness Core 安装到 `.opencode/`。
 
 | 字段 | 值 |
 |------|-----|
-| `install_dir` | `.opencode` |
+| `install_dir` | **null**（无目录安装，生成根文件） |
 | `growth_dir` | `.growing` |
 | `hooks_manifest` | **null** |
 
 ## Includes
 
-- `core` — Harness Core 主体；见 [adaptor-contract.md](../../harness/core/docs/reference/adaptor-contract.md)。
+- `core_rules_export` — 生成 `opencode.json` 的 `instructions` 引用 `.cursor/rules/*.mdc`；见 [adaptor-contract.md](../../harness/core/docs/reference/adaptor-contract.md)。
 
 ## Install
 
@@ -37,4 +37,5 @@ install-super-cursor /path/to/project --adaptor opencode
 
 ## Next sprint
 
-OpenCode 官方安装根钉死后：对照 SPIKE 差距表更新 `layout.md` / `install-adaptor-opencode.sh`（另开 Sprint；当前与 dsh 同 core 平铺假设）。
+按需扩展 `opencode.json` 的 `instructions`（如引用 remote URL、追加自定义指令文件）；如需 skills，OpenCode 走 `~/.config/opencode/` 用户级（另开 Sprint）。
+

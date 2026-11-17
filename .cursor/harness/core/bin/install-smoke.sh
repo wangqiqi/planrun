@@ -3,12 +3,12 @@
 # skills-bundle full|core 契约 → verify-install-skills-bundle.sh（非本脚本；install 默认 full）
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-CURSOR_DIR="$ROOT/.cursor"
+# shellcheck source=../lib/pack-root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/pack-root.sh"
 # shellcheck source=../lib/temp-cleanup.sh
-source "$CURSOR_DIR/lib/temp-cleanup.sh"
+source "$CUR/lib/temp-cleanup.sh"
 # shellcheck source=../lib/smoke-git.sh
-source "$CURSOR_DIR/lib/smoke-git.sh"
+source "$CUR/lib/smoke-git.sh"
 sc_temp_trap_cleanup
 INSTALL="$ROOT/install-super-cursor.sh"
 sc_mktemp_dir sc-install-smoke
@@ -75,6 +75,11 @@ echo "=== install smoke ==="
 FULL="$TMP_ROOT/full-empty"
 run_install "full: install into empty target" "$TMP_ROOT/full.out" "$FULL" --profile full
 assert_file "$FULL/.growing/plan.md" "full: .growing/plan.md copied"
+if bash "$CUR/bin/verify-cursor-dropin.sh" "$FULL"; then
+  ok "full: bin/verify-cursor-dropin.sh contract"
+else
+  fail "full: bin/verify-cursor-dropin.sh"
+fi
 assert_file "$FULL/.growing/learn/plan-conventions.md" "full: learn seeds"
 # B4：安装输出必须把「首次必做 /learn」讲清楚，否则闸门与验收会空转
 assert_grep "$TMP_ROOT/full.out" '/learn' "full: output points at /learn first-run"
@@ -213,25 +218,37 @@ core_n="$(find -L "$CORE_BUNDLE/.cursor/skills" -mindepth 1 -maxdepth 1 -type d 
 [[ "$core_n" == "23" ]] && ok "core bundle: 23 skills" || fail "core bundle: skills=$core_n (expected 23)"
 assert_absent "$CORE_BUNDLE/.cursor/skills/week/SKILL.md" "core bundle: no week skill"
 
-# 9. adaptor dsh alongside .cursor
+# 9. dsh 已降级为 guide-only：--adaptor dsh 必须被拒绝，且不得生成 .dsh/
 DSH="$TMP_ROOT/dsh-adaptor"
-run_install "adaptor dsh: install" "$TMP_ROOT/dsh.out" "$DSH" --profile lite --adaptor dsh
-assert_file "$DSH/.dsh/rules/core.mdc" "adaptor dsh: .dsh/rules/core.mdc"
-assert_file "$DSH/.cursor/rules/core.mdc" "adaptor dsh: .cursor still installed"
-assert_absent "$DSH/.dsh/hooks.json" "adaptor dsh: no hooks.json in .dsh"
+if "$INSTALL" "$DSH" --profile lite --adaptor dsh >"$TMP_ROOT/dsh.out" 2>&1; then
+  fail "adaptor dsh: must be rejected (guide-only, no project install)"
+else
+  ok "adaptor dsh: rejected as guide-only"
+fi
+assert_absent "$DSH/.dsh" "adaptor dsh: no .dsh/ created"
 
-# 10. adaptor kiro rules export
+# 10. adaptor kiro → .kiro/steering/*.md（官方 steering，非 rules）
 KIRO="$TMP_ROOT/kiro-adaptor"
 run_install "adaptor kiro: install" "$TMP_ROOT/kiro.out" "$KIRO" --profile lite --adaptor kiro
-assert_file "$KIRO/.kiro/rules/core.mdc" "adaptor kiro: .kiro/rules/core.mdc"
+assert_file "$KIRO/.kiro/steering/core.md" "adaptor kiro: .kiro/steering/core.md"
 assert_file "$KIRO/.kiro/RULES.md" "adaptor kiro: RULES.md index"
+assert_absent "$KIRO/.kiro/rules" "adaptor kiro: no .kiro/rules/ (official is steering/)"
 assert_absent "$KIRO/.kiro/skills" "adaptor kiro: no skills/"
 
-# 11. adaptor opencode
+# 10b. adaptor trae → .trae/rules/*.md + .trae/skills/<id>/SKILL.md
+TRAE="$TMP_ROOT/trae-adaptor"
+run_install "adaptor trae: install" "$TMP_ROOT/trae.out" "$TRAE" --profile lite --adaptor trae
+assert_file "$TRAE/.trae/rules/core.md" "adaptor trae: .trae/rules/core.md"
+assert_file "$TRAE/.trae/RULES.md" "adaptor trae: RULES.md index"
+assert_file "$TRAE/.trae/skills/plan/SKILL.md" "adaptor trae: .trae/skills/plan/SKILL.md"
+assert_absent "$TRAE/.trae/rules/core.mdc" "adaptor trae: .mdc renamed to .md"
+
+# 11. adaptor opencode → 项目根 AGENTS.md + opencode.json（官方无 .opencode/ 目录）
 OC="$TMP_ROOT/opencode-adaptor"
 run_install "adaptor opencode: install" "$TMP_ROOT/opencode.out" "$OC" --profile lite --adaptor opencode
-assert_file "$OC/.opencode/rules/core.mdc" "adaptor opencode: .opencode/rules/core.mdc"
-assert_absent "$OC/.opencode/hooks.json" "adaptor opencode: no hooks.json"
+assert_file "$OC/AGENTS.md" "adaptor opencode: AGENTS.md"
+assert_file "$OC/opencode.json" "adaptor opencode: opencode.json"
+assert_absent "$OC/.opencode" "adaptor opencode: no .opencode/"
 
 # 12. self-replace guard（P0-4）：目标 == 母版目录时必须拒绝且不删 .cursor/
 # 需要符号链接来构造「source==target」；无符号链接权限的平台（Windows/Git Bash）显式 SKIP，

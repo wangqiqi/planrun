@@ -45,6 +45,7 @@ Usage:
 import argparse
 import subprocess
 import json
+import shutil
 import webbrowser
 from pathlib import Path
 from collections import defaultdict
@@ -58,7 +59,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>代码统计仪表板 - {project_name}</title>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    {echarts_script}
     <style>
         * {{
             margin: 0;
@@ -278,26 +279,41 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         
         .chart-container {{
             background: white;
-            padding: 20px;
+            padding: 20px 24px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            height: 400px;
+            min-height: 460px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
         }}
         
         .chart-container h3 {{
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #34495e;
             font-size: 1.2em;
+            flex-shrink: 0;
+        }}
+        
+        .chart-plot {{
+            flex: 1;
+            width: 100%;
+            min-height: 400px;
         }}
         
         /* 日历热力图 */
         .calendar-container {{
             background: white;
-            padding: 20px;
+            padding: 20px 24px 28px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             margin-bottom: 25px;
-            height: 250px;
+            min-height: 380px;
+            height: auto;
+        }}
+        
+        .calendar-container .chart-plot {{
+            min-height: 300px;
         }}
         
         /* 数据表格 */
@@ -376,11 +392,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         
         /* 响应式 */
-        @media (max-width: 768px) {{
+        @media (max-width: 1100px) {{
             .chart-row {{
                 grid-template-columns: 1fr;
             }}
-            
+        }}
+        
+        @media (max-width: 768px) {{
             .filter-sections {{
                 grid-template-columns: 1fr;
             }}
@@ -445,7 +463,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     <div class="filter-section">
                         <h4>📄 文件类型</h4>
                         <div class="file-types" id="typeFilters">
-                            <label><input type="checkbox" checked onchange="filterChanged()" data-ext="all"> 全部类型</label>
+                            <label><input type="checkbox" {type_all_checked} onchange="filterChanged()" data-ext="all"> 全部类型</label>
+                            <p style="font-size:0.85em;color:#718096;margin:6px 0 0">默认仅勾选<strong>源码</strong>与 <strong>Markdown</strong>；JSON/配置/Other 等需手动勾选或点「全部类型」</p>
                             {filetype_checkboxes}
                         </div>
                     </div>
@@ -472,6 +491,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
         
         <!-- 过滤指示器 -->
+        <div class="filter-indicator" id="echartsLoadError" style="display:none;background:#fed7d7;color:#742a2a;border:1px solid #fc8181;">
+            ⚠️ ECharts 未加载，图表无法绘制。请重新运行生成脚本（会从 node_modules 复制 echarts.min.js 到同目录），或确保网络可访问 CDN。
+        </div>
         <div class="filter-indicator" id="filterIndicator">
             <span>📁 已选择 <span id="selectedDirs">所有</span> 目录</span>
             <span>📄 已选择 <span id="selectedTypes">所有</span> 文件类型</span>
@@ -482,30 +504,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <!-- 图表区域 -->
         <div class="chart-row">
             <div class="chart-container">
-                <h3>📊 语言分布 (文件数)</h3>
-                <div id="pieChart" style="height: 320px;"></div>
+                <h3>📊 语言分布 (文件数) <span style="font-size:0.75em;font-weight:400;color:#718096">长尾合并为「其他」；明细见下表</span></h3>
+                <div id="pieChart" class="chart-plot"></div>
             </div>
             <div class="chart-container">
                 <h3>📊 语言分布 (代码行)</h3>
-                <div id="barChart" style="height: 320px;"></div>
+                <div id="barChart" class="chart-plot"></div>
             </div>
         </div>
         
         <!-- 日历热力图 -->
-        <div class="calendar-container" style="height:280px">
+        <div class="calendar-container">
             <h3>📅 提交活动日历 <span style="font-size:0.82em;font-weight:500;opacity:0.92;margin-left:8px">| 总提交数：{calendar_total_commits} | 工作天数：{calendar_commit_days}</span></h3>
-            <div id="calendarChart" style="height:220px"></div>
+            <div id="calendarChart" class="chart-plot"></div>
         </div>
         
         <!-- 时间分析 -->
         <div class="chart-row">
             <div class="chart-container">
                 <h3>⏰ 小时分布</h3>
-                <div id="hourChart" style="height: 320px;"></div>
+                <div id="hourChart" class="chart-plot"></div>
             </div>
             <div class="chart-container">
                 <h3>📆 周分布</h3>
-                <div id="weekChart" style="height: 320px;"></div>
+                <div id="weekChart" class="chart-plot"></div>
             </div>
         </div>
         
@@ -549,7 +571,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         let currentData = {{...rawData}};
         let filterState = {{
             segments: new Set((rawData.top_level_dirs || []).map(d => d.path)),
-            fileTypes: new Set(rawData.file_types.map(t => t.ext)),
+            fileTypes: new Set(),
             excludeDirs: new Set(['node_modules', '__pycache__', '.git', 'venv']),
             minLines: 0,
             maxLines: 1000000,
@@ -618,13 +640,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 return true;
             }});
             
-            // 更新统计
-            updateCharts(filteredFiles);
-            updateTable(filteredFiles);
+            // 先更新表格与计数（避免 echarts 未加载时图表抛错导致计数仍为 0）
             updateFileCount(filteredFiles);
+            updateTable(filteredFiles);
+            updateCharts(filteredFiles);
         }}
         
         function updateCharts(filteredFiles) {{
+            if (typeof echarts === 'undefined') {{
+                return;
+            }}
             // 按文件类型聚合
             const typeStats = {{}};
             filteredFiles.forEach(file => {{
@@ -643,11 +668,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 ext: t, name: typeStats[t].name, files: typeStats[t].files, lines: typeStats[t].lines
             }}));
             pairs.sort((a, b) => b.lines - a.lines);
-            const typeNames = pairs.map(p => p.name);
-            const fileCounts = pairs.map(p => p.files);
-            const lineCounts = pairs.map(p => p.lines);
-            updatePieChart(typeNames, fileCounts);
-            updateBarChart(typeNames, lineCounts);
+            const pieSeries = collapseTopPairs(pairs, 12, 'files');
+            const barSeries = collapseTopPairs(pairs, 15, 'lines');
+            updatePieChart(pieSeries.names, pieSeries.values);
+            updateBarChart(barSeries.names, barSeries.values);
             
             // 更新日历图
             updateCalendarChart();
@@ -656,17 +680,71 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             updateTimeCharts();
         }}
         
+        const CHART_IDS = ['pieChart', 'barChart', 'calendarChart', 'hourChart', 'weekChart'];
+
+        function collapseTopPairs(pairs, topN, metric) {{
+            if (pairs.length <= topN) {{
+                return {{
+                    names: pairs.map(p => p.name),
+                    values: pairs.map(p => (metric === 'files' ? p.files : p.lines)),
+                }};
+            }}
+            const head = pairs.slice(0, topN);
+            const tail = pairs.slice(topN);
+            const otherVal = tail.reduce((s, p) => s + (metric === 'files' ? p.files : p.lines), 0);
+            return {{
+                names: [...head.map(p => p.name), `其他（${{tail.length}} 种）`],
+                values: [...head.map(p => (metric === 'files' ? p.files : p.lines)), otherVal],
+            }};
+        }}
+
+        function setChartOption(domId, option) {{
+            const el = document.getElementById(domId);
+            if (!el || typeof echarts === 'undefined') {{
+                return null;
+            }}
+            let chart = echarts.getInstanceByDom(el);
+            if (!chart) {{
+                chart = echarts.init(el);
+            }}
+            chart.setOption(option, true);
+            return chart;
+        }}
+
+        function resizeAllCharts() {{
+            if (typeof echarts === 'undefined') {{
+                return;
+            }}
+            CHART_IDS.forEach((id) => {{
+                const el = document.getElementById(id);
+                const chart = el && echarts.getInstanceByDom(el);
+                if (chart) {{
+                    chart.resize();
+                }}
+            }});
+        }}
+
         function updatePieChart(types, counts) {{
-            const chart = echarts.init(document.getElementById('pieChart'));
-            chart.setOption({{
+            setChartOption('pieChart', {{
                 tooltip: {{ trigger: 'item', formatter: '{{b}}: {{c}} ({{d}}%)' }},
-                legend: {{ orient: 'vertical', left: 'left', top: 'center' }},
+                legend: {{
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 8,
+                    top: 16,
+                    bottom: 16,
+                    width: '46%',
+                    itemGap: 8,
+                    pageIconSize: 12,
+                    textStyle: {{ fontSize: 11, lineHeight: 14 }},
+                }},
                 series: [{{
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    center: ['30%', '52%'],
+                    radius: ['38%', '58%'],
                     avoidLabelOverlap: true,
                     itemStyle: {{
-                        borderRadius: 10,
+                        borderRadius: 8,
                         borderColor: '#fff',
                         borderWidth: 2
                     }},
@@ -678,14 +756,43 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         
         function updateBarChart(types, counts) {{
-            const chart = echarts.init(document.getElementById('barChart'));
-            chart.setOption({{
+            const horizontal = types.length > 8;
+            const showBarLabel = types.length <= 12;
+            if (horizontal) {{
+                setChartOption('barChart', {{
+                    tooltip: {{ trigger: 'axis', axisPointer: {{ type: 'shadow' }} }},
+                    grid: {{ left: '32%', right: '12%', bottom: 24, top: 16, containLabel: false }},
+                    xAxis: {{ type: 'value', name: '代码行数' }},
+                    yAxis: {{
+                        type: 'category',
+                        data: types.slice().reverse(),
+                        axisLabel: {{ fontSize: 11, width: 120, overflow: 'truncate' }},
+                    }},
+                    series: [{{
+                        name: '代码行',
+                        type: 'bar',
+                        data: counts.slice().reverse(),
+                        itemStyle: {{
+                            color: '#667eea',
+                            borderRadius: [0, 4, 4, 0]
+                        }},
+                        label: {{
+                            show: showBarLabel,
+                            position: 'right',
+                            fontSize: 10,
+                            formatter: (p) => p.value.toLocaleString()
+                        }}
+                    }}]
+                }});
+                return;
+            }}
+            setChartOption('barChart', {{
                 tooltip: {{ trigger: 'axis', axisPointer: {{ type: 'shadow' }} }},
-                grid: {{ left: '10%', right: '5%', bottom: '15%', top: '10%' }},
+                grid: {{ left: 56, right: 24, bottom: 72, top: 40, containLabel: true }},
                 xAxis: {{
                     type: 'category',
                     data: types,
-                    axisLabel: {{ rotate: 45, interval: 0 }}
+                    axisLabel: {{ rotate: 35, interval: 0, hideOverlap: true, fontSize: 11 }}
                 }},
                 yAxis: {{ type: 'value', name: '代码行数' }},
                 series: [{{
@@ -697,8 +804,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         borderRadius: [4,4,0,0]
                     }},
                     label: {{
-                        show: true,
+                        show: showBarLabel,
                         position: 'top',
+                        fontSize: 10,
                         formatter: (p) => p.value.toLocaleString()
                     }}
                 }}]
@@ -706,14 +814,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         
         function updateCalendarChart() {{
-            const chart = echarts.init(document.getElementById('calendarChart'));
             const calData = rawData.calendar_data || [];
             const range = rawData.calendar_range && rawData.calendar_range.length === 2
                 ? rawData.calendar_range
                 : [new Date().getFullYear() + '-01-01', new Date().getFullYear() + '-12-31'];
             const counts = calData.map(d => d[1]);
             const maxVal = counts.length ? Math.max.apply(null, counts) : 1;
-            chart.setOption({{
+            setChartOption('calendarChart', {{
                 tooltip: {{
                     trigger: 'item',
                     formatter: function (p) {{
@@ -729,12 +836,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     type: 'continuous',
                     min: 0,
                     max: maxVal,
+                    seriesIndex: 0,
                     orient: 'horizontal',
-                    left: '8%',
-                    right: '8%',
-                    bottom: 2,
-                    height: 18,
-                    calculable: true,
+                    left: 64,
+                    right: 64,
+                    bottom: 4,
+                    itemWidth: 'auto',
+                    itemHeight: 12,
+                    calculable: false,
                     inRange: {{
                         color: [
                             '#dbeafe', '#93c5fd', '#60a5fa', '#38bdf8',
@@ -746,11 +855,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 }},
                 calendar: {{
                     range: range,
-                    cellSize: ['auto', 16],
+                    top: 56,
+                    left: 52,
+                    right: 24,
+                    bottom: 44,
+                    cellSize: [12, 12],
                     itemStyle: {{ borderWidth: 1, borderColor: '#fff' }},
                     dayLabel: {{ show: false }},
-                    monthLabel: {{ show: true, margin: 8, color: '#334155' }},
-                    yearLabel: {{ show: true, margin: 24 }}
+                    monthLabel: {{ show: true, margin: 12, color: '#334155', fontSize: 11 }},
+                    yearLabel: {{ show: true, margin: 28, fontSize: 12 }}
                 }},
                 series: [{{
                     type: 'heatmap',
@@ -770,8 +883,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         
         function updateTimeCharts() {{
             // 小时分布图
-            const hourChart = echarts.init(document.getElementById('hourChart'));
-            hourChart.setOption({{
+            setChartOption('hourChart', {{
                 tooltip: {{ trigger: 'axis' }},
                 xAxis: {{
                     type: 'category',
@@ -786,8 +898,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }});
             
             // 周分布图
-            const weekChart = echarts.init(document.getElementById('weekChart'));
-            weekChart.setOption({{
+            setChartOption('weekChart', {{
                 tooltip: {{ trigger: 'axis' }},
                 xAxis: {{
                     type: 'category',
@@ -908,8 +1019,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         
         // 初始化
+        window.addEventListener('resize', () => {{
+            resizeAllCharts();
+        }});
+
         window.onload = function() {{
+            if (typeof echarts === 'undefined') {{
+                const err = document.getElementById('echartsLoadError');
+                if (err) {{
+                    err.style.display = 'block';
+                }}
+            }}
             applyFilters();
+            setTimeout(resizeAllCharts, 80);
         }};
     </script>
 </body>
@@ -937,7 +1059,37 @@ SKIP_EXTENSIONS = frozenset({
     '.zip', '.tar', '.gz', '.xz', '.7z', '.rar', '.bz2',
     '.ttf', '.woff', '.woff2', '.eot', '.otf',
     '.template',
+    # 办公 / 归档 / 本地杂项（非源码）
+    '.docx', '.xlsx', '.xls', '.pptx', '.ppt', '.jar', '.war', '.class',
+    '.db', '.sqlite', '.sqlite3', '.bak', '.orig', '.tgz', '.sha256',
+    '.snippet',
 })
+
+# 仪表板「文件类型」默认不勾选：配置 / 数据 / 未知后缀（源码 + .md 默认勾选）
+CHART_DEFAULT_OFF_EXTENSIONS = frozenset({
+    '.json', '.yaml', '.yml', '.toml', '.txt', '.xml', '.ini', '.cfg', '.conf',
+    '.svg', '.dockerignore',
+})
+
+
+def chart_default_type_checked(ext: str, type_name: str) -> bool:
+    """默认视图：编程语言映射内的后缀 + Markdown；其余（Other、配置类）默认关。"""
+    ext = (ext or '').lower()
+    if not ext or (type_name or '').startswith('Other'):
+        return False
+    if ext == '.md':
+        return True
+    if ext in CHART_DEFAULT_OFF_EXTENSIONS:
+        return False
+    # 在 file_extensions 词典里且非配置类的，视为源码
+    known_source = {
+        '.py', '.js', '.ts', '.jsx', '.tsx', '.vue', '.html', '.htm', '.css',
+        '.scss', '.sass', '.less', '.sh', '.bash', '.zsh', '.c', '.cpp', '.cc',
+        '.cxx', '.h', '.hpp', '.hxx', '.inl', '.tcc', '.ipp', '.cmake', '.sql',
+        '.go', '.rs', '.rb', '.php', '.java', '.kt', '.swift', '.dockerfile',
+        '.mjs', '.cjs', '.svelte', '.mdc',
+    }
+    return ext in known_source
 
 
 def _normalize_analyze_prefix(prefix):
@@ -945,6 +1097,43 @@ def _normalize_analyze_prefix(prefix):
         return None
     p = str(prefix).replace('\\', '/').strip().strip('./')
     return p if p else None
+
+
+ECHARTS_REL = Path('node_modules/echarts/dist/echarts.min.js')
+ECHARTS_VENDOR_FILENAME = 'echarts.min.js'
+ECHARTS_CDN = 'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js'
+
+
+def _find_echarts_bundle(*search_roots: Path) -> Path | None:
+    """Locate echarts.min.js for offline dashboards (node_modules or skill vendor/)."""
+    script_dir = Path(__file__).resolve().parent
+    candidates = list(search_roots) + [script_dir.parent.parent.parent]
+    seen: set[Path] = set()
+    for root in candidates:
+        if root is None:
+            continue
+        root = Path(root).resolve()
+        if root in seen:
+            continue
+        seen.add(root)
+        bundled = root / ECHARTS_REL
+        if bundled.is_file():
+            return bundled
+    skill_vendor = script_dir / 'vendor' / ECHARTS_VENDOR_FILENAME
+    if skill_vendor.is_file():
+        return skill_vendor
+    return None
+
+
+def _echarts_script_tag(output_html: Path, bundle_src: Path | None) -> tuple[str, Path | None]:
+    """
+    Copy echarts next to the HTML when possible; return <script> tag and vendor path written.
+    """
+    if bundle_src is not None:
+        vendor_dest = output_html.parent / ECHARTS_VENDOR_FILENAME
+        shutil.copy2(bundle_src, vendor_dest)
+        return f'    <script src="{ECHARTS_VENDOR_FILENAME}"></script>', vendor_dest
+    return f'    <script src="{ECHARTS_CDN}"></script>', None
 
 
 class CodeStatsVisualizer:
@@ -1263,10 +1452,17 @@ class CodeStatsVisualizer:
             f'<label><input type="checkbox" checked onchange="filterChanged()" data-dir="{d["path"]}"> 📁 {d["path"]} ({d["lines"]:,} 行)</label>'
             for d in top_level_dirs
         ])
-        type_checkboxes = '\n'.join([
-            f'<label><input type="checkbox" checked onchange="filterChanged()" data-ext="{t["ext"]}"> {t["name"]}</label>'
-            for t in file_types
-        ])
+        type_checkbox_rows = []
+        for t in file_types:
+            checked_attr = 'checked' if chart_default_type_checked(t['ext'], t['name']) else ''
+            type_checkbox_rows.append(
+                f'<label><input type="checkbox" {checked_attr} onchange="filterChanged()" '
+                f'data-ext="{t["ext"]}"> {t["name"]}</label>'
+            )
+        type_checkboxes = '\n'.join(type_checkbox_rows)
+        type_all_checked = (
+            '' if any(not chart_default_type_checked(t['ext'], t['name']) for t in file_types) else 'checked'
+        )
         json_data = {
             'top_level_dirs': top_level_dirs,
             'file_types': file_types,
@@ -1280,6 +1476,16 @@ class CodeStatsVisualizer:
         scope_note = '范围: 仅 Git 跟踪文件' if self.git_only else '范围: 全目录扫描'
         if self.analyze_prefix:
             scope_note += f' | 子目录: {self.analyze_prefix}'
+        out = Path(output_path)
+        bundle = _find_echarts_bundle(self.root_path, Path.cwd())
+        echarts_script, vendor_path = _echarts_script_tag(out, bundle)
+        if vendor_path:
+            print(f"   ECharts: 已复制本地 {ECHARTS_VENDOR_FILENAME}（离线可用）")
+        else:
+            print(
+                f"   ⚠️ ECharts: 未找到 {ECHARTS_REL}；HTML 依赖 CDN（离线/内网可能无法渲染图表）"
+            )
+
         html_content = HTML_TEMPLATE.format(
             project_name=self.root_path.name,
             generate_time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -1293,15 +1499,18 @@ class CodeStatsVisualizer:
             file_types_count=len(file_types),
             directory_checkboxes=dir_checkboxes,
             filetype_checkboxes=type_checkboxes,
-            json_data=json.dumps(json_data, ensure_ascii=False)
+            type_all_checked=type_all_checked,
+            json_data=json.dumps(json_data, ensure_ascii=False),
+            echarts_script=echarts_script,
         )
         
         # 写入文件
-        with open(output_path, 'w', encoding='utf-8') as f:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, 'w', encoding='utf-8') as f:
             f.write(html_content)
         
-        print(f"✅ HTML dashboard generated: {output_path}")
-        return output_path
+        print(f"✅ HTML dashboard generated: {out}")
+        return out
 
 
 def main():
@@ -1412,7 +1621,7 @@ def main():
     
     # 打开浏览器
     if args.open:
-        webbrowser.open(f'file://{output_path.absolute()}')
+        webbrowser.open(f'file://{Path(output_path).resolve()}')
     
     print("✨ Done!")
 

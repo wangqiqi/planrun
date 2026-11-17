@@ -56,6 +56,7 @@ Walkthrough 若用于**说明书配图**（非仅冒烟）→ 与 **user-manual*
 - 项目路径坐标 → Growth `learn/`（如 `dev-conventions.md`），**勿**写进 `.cursor/`；聚合脚本仅编排（见 verify.mdc）
 - 新项目 Day-1 骨架 → **scaffold** `apply-bundle verify-layers`（manifest SSOT · 示例 slice · `VERIFY_REGISTRY_STRICT`）
 - 增长纪律（防重复验收）→ [reference/verify-growth.md](reference/verify-growth.md)
+- E2E / 视觉档位（mock · real-stack · baseline）→ [reference/e2e-tiers.md](reference/e2e-tiers.md)
 
 ### Agent 终端 · 分层优先
 
